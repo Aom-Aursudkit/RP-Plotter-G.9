@@ -1,0 +1,10 @@
+13:47:39 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  30224	     12	   2408	  32644	   7f84	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+
+13:47:39 Build Finished. 0 errors, 0 warnings. (took 495ms)
+
