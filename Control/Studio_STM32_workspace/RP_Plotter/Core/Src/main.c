@@ -34,7 +34,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define R_ERR_TOL_RAD   0.0034f//0.00174533f/* ±0.1 degree */
+#define P_ERR_TOL_MM    0.10f//0.10f      /* ±0.1 mm */
+#define HOLD_TIME_US    1000000UL  /* 1s  in microseconds */
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -59,9 +61,6 @@ int32_t Receiver_Period[5];
 //uint16_t ADC_RawRead[300]={0};
 volatile uint32_t rise_time[3] = {0};     // For PC0, PC2, PC3
 volatile uint32_t pulse_width_us[3] = {0};
-
-uint8_t State;
-uint8_t Cal_side;
 
 uint32_t revolute_raw;
 uint32_t prismatic_raw;
@@ -101,16 +100,30 @@ float vx;
 float vy;
 float End_x;
 float End_y;
+float TargetX;
+float TargetY;
+float TargetR;
+float TargetP;
 float TargetRVel;
 float TargetPVel;
 float inv_L;
+float R_Pos_Error;
+float P_Pos_Error;
+float R_Velo_Error;
+float P_Velo_Error;
+uint64_t lock_timer_us = 0;
 
 arm_pid_instance_f32 PID = {0};
 float R_Speed;
 float P_Speed;
 
-uint8_t P_limit;
-uint8_t R_limit;
+uint8_t P_Limit;
+uint8_t R_Limit;
+
+uint8_t State;
+uint8_t EmergencyState;
+uint8_t IsPress;
+
 typedef enum {
     CALIB_IDLE,
     CALIB_WAIT_REMOTE,
@@ -128,7 +141,18 @@ typedef enum {
 } CalibState_t;
 CalibState_t calibState = CALIB_IDLE;
 uint64_t calib_timer = 0;
-uint8_t Cal_side = 0;
+uint8_t Cal_Side = 0;
+int servo_temp;
+
+typedef struct {
+    float integ;
+    float prevError;
+} PID_State;
+
+PID_State pid_r = {0};  // for Revolute
+PID_State pid_p = {0};  // for Prismatic
+
+int loop_counter;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -144,9 +168,12 @@ static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 float map(float x, float in_min, float in_max, float out_min, float out_max);
 uint64_t micros();
+float PID_Update(float error, float kP, float kI, float kD, float dt,
+		float outMin, float outMax, PID_State *state);
 void Revolute_PosVel_Update();
 void Prismatic_PosVel_Update();
 void Set_Motor(int motor_num,float speed);
+void Set_Servo(int Pen_Pos);
 void Reset_R();
 void Reset_P();
 /* USER CODE END PFP */
@@ -207,6 +234,8 @@ int main(void)
   HAL_TIM_Base_Start(&htim8);
   HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_4);
+  HAL_TIM_Base_Start(&htim15);
+  HAL_TIM_PWM_Start(&htim15, TIM_CHANNEL_1);
 //  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 //  HAL_ADC_Start_DMA(&hadc1, ADC_RawRead, 300);
   DWT_Init();
@@ -219,6 +248,8 @@ int main(void)
   Reset_R();
   Reset_P();
   calibState = CALIB_IDLE;
+
+  Set_Servo(0);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -276,28 +307,62 @@ int main(void)
 
 
 	  	//////////////////////// <<STATE>> ///////////////////////////
-		if(Receiver[4] < -30){
+		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) == 1) {
+			State = 0;
+			EmergencyState = 1;
+			__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 0);
+		}
+		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15) == 1) {
+			EmergencyState = 0;
+		}
+
+		if (EmergencyState == 1){
 			State = 0;
 		}
-		else if (Receiver[3] > 0) {
+		else if (Receiver[2] < -30 && Receiver[4] < -30) {
+			State = 0;
+		}
+		else if (Receiver[3] > 0 && IsPress == 0) {
+			IsPress = 1;
 			calibState = CALIB_IDLE;
-			if (Receiver[2] < -30 && Receiver[4] > -30 && Receiver[4] < 30) {
-				State = 1;
-			} else if (Receiver[2] > -30 && Receiver[2] < 30
-					&& Receiver[4] > -30 && Receiver[4] < 30) {
+			if (Receiver[2] > -30 && Receiver[2] < 30
+					&& Receiver[4] < -30) {
+				if(State != 1){
+					State = 1;
+				}
+				else{
+					TargetX = End_x;
+					TargetY = End_y;
+					TargetR = Revolute_QEIdata.RadPosition;
+					TargetP = Prismatic_QEIdata.mmPosition;
+				}
+			} else if (Receiver[2] > 30 && Receiver[4] < -30) {
 				State = 2;
-			} else if (Receiver[2] > 30 && Receiver[4] > -30
+			} else if (Receiver[2] < -30 && Receiver[4] > -30
 					&& Receiver[4] < 30) {
 				State = 3;
-			} else if (Receiver[2] < -30 && Receiver[4] > 30) {
+			} else if (Receiver[2] > -30 && Receiver[2] < 30
+					&& Receiver[4] > -30 && Receiver[4] < 30) {
 				State = 4;
+			} else if (Receiver[2] > 30 && Receiver[4] > -30
+					&& Receiver[4] < 30) {
+				State = 5;
+			} else if (Receiver[2] < -30 && Receiver[4] > 30) {
+				State = 6;
 			} else if (Receiver[2] > -30 && Receiver[2] < 30
 					&& Receiver[4] > 30) {
-				State = 5;
+				State = 7;
 			} else if (Receiver[2] > 30 && Receiver[4] > 30) {
-				State = 6;
+				loop_counter = 0;
+				TargetR = M_PI;
+				TargetP = 50;
+				State = 8;
 			}
 		}
+		else{
+			IsPress = 0;
+		}
+
 //		if (Receiver[3] > 0) {
 //			calibState = CALIB_IDLE;
 //			if (Receiver[2] < -30 && Receiver[4] < -30) {
@@ -334,9 +399,10 @@ int main(void)
 		if (State == 0) {
 			Set_Motor(0, 0);
 			Set_Motor(1, 0);
+			__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1500);
 		}
 
-
+		//////////////////////// <<MANUAL>> //////////////////////////
 		if (State == 1) {
 		//////////////////////// <<CONTROL>> /////////////////////////
 //		inv_L = (Prismatic_QEIdata.mmPosition > 1.0f) ? (1.0f / Prismatic_QEIdata.mmPosition) : 0.0f;
@@ -361,19 +427,27 @@ int main(void)
 //		arm_pid_init_f32(&PID, 1);
 //		P_Speed = arm_pid_f32(&PID, TargetPVel - Prismatic_QEIdata.Velocity_mm);
 
+			R_Velo_Error = TargetRVel - Revolute_QEIdata.AngularVelocity_rad;
 			PID.Kp = 100;
 			PID.Ki = 0.1;
 			PID.Kd = 0.0;
 			arm_pid_init_f32(&PID, 1);
-			R_Speed = arm_pid_f32(&PID,
-					TargetRVel - Revolute_QEIdata.AngularVelocity_rad);
+			R_Speed = arm_pid_f32(&PID, R_Velo_Error);
 
+			P_Velo_Error = TargetPVel - Prismatic_QEIdata.Velocity_mm;
 			PID.Kp = 0.2;
-			PID.Ki = 0.00005;
+			PID.Ki = 0.005;
 			PID.Kd = 0.0;
 			arm_pid_init_f32(&PID, 1);
-			P_Speed = arm_pid_f32(&PID,
-					TargetPVel - Prismatic_QEIdata.Velocity_mm);
+			P_Speed = arm_pid_f32(&PID, P_Velo_Error);
+
+			//Call every 0.01 s
+//			static uint64_t timestampState1 = 0;
+//			int64_t currentTimeState1 = micros();
+//			if (currentTimeState1 > timestampState1) {
+//				timestampState1 = currentTimeState1 + 10000;//us
+//				P_Speed = PID_Update(P_Velo_Error, 0.2, 0.005, 0.0, 0.01f, -100.0, 100.0);
+//			}
 
 			R_Speed = Receiver[0];
 //			P_Speed = Receiver[1];
@@ -395,31 +469,70 @@ int main(void)
 			Set_Motor(1, P_Speed);
 		//////////////////////////////////////////////////////////////
 		}
+		//////////////////////////////////////////////////////////////
 
 
-		if(State == 2){
+		//////////////////////// <<GOTO>> ////////////////////////////
+		if (State == 2) {
+			R_Pos_Error = (TargetR - Revolute_QEIdata.RadPosition)*-1;
+//			PID.Kp = 50;
+//			PID.Ki = 10;
+//			PID.Kd = 0.1;
+//			arm_pid_init_f32(&PID, 1);
+//			R_Speed = arm_pid_f32(&PID, R_Pos_Error);
+//
+			P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
+//			PID.Kp = 0.333333;
+//			PID.Ki = 0.05;
+//			PID.Kd = 0.25;
+//			arm_pid_init_f32(&PID, 1);
+//			P_Speed = arm_pid_f32(&PID, P_Pos_Error);
 
+			static uint64_t timestampState2 = 0;
+			int64_t currentTimeState2 = micros();
+			if (currentTimeState2 > timestampState2) {
+				timestampState2 = currentTimeState2 + 10000;//us
+				R_Speed = PID_Update(R_Pos_Error, 16.00f, 5.00f, 8.00f, 0.01f, -100.0f, 100.0f, &pid_r);
+				P_Speed = PID_Update(P_Pos_Error, 0.333f, 1.20f, 0.15f, 0.01f, -100.0f, 100.0f, &pid_p);
+			}
+
+			Set_Motor(0, R_Speed);
+			Set_Motor(1, P_Speed);
+			if (fabsf(R_Pos_Error) < R_ERR_TOL_RAD
+					&& fabsf(P_Pos_Error) < P_ERR_TOL_MM) {
+				/* within window —— start or continue timer */
+				if (lock_timer_us == 0)
+					lock_timer_us = micros(); /* start timing */
+
+				else if ((micros() - lock_timer_us) >= HOLD_TIME_US) {
+					Set_Servo(1);
+					State = 1;
+				}
+			} else {
+				lock_timer_us = 0;
+			}
 		}
+		//////////////////////////////////////////////////////////////
 
 
-		if(State == 3){
 		//////////////////////// <<CALIBRATING>> /////////////////////
+		if (State == 3) {
 			switch (calibState) {
 			case CALIB_IDLE:
 				Set_Motor(0, 0);
 				Set_Motor(1, 0);
-				P_limit = 0;
-				R_limit = 0;
+				P_Limit = 0;
+				R_Limit = 0;
 				calibState = CALIB_WAIT_REMOTE;
 				calib_timer = micros();
 				break;
 
 			case CALIB_WAIT_REMOTE:
 				if (Receiver[0] > 80) {
-					Cal_side = 1;
+					Cal_Side = 1;
 					calibState = CALIB_MOVE_P_TO_LIMIT;
 				} else if (Receiver[0] < -80) {
-					Cal_side = 2;
+					Cal_Side = 2;
 					calibState = CALIB_MOVE_P_TO_LIMIT;
 				}
 				break;
@@ -427,10 +540,10 @@ int main(void)
 			case CALIB_MOVE_P_TO_LIMIT:
 				Set_Motor(1, -15);
 
-				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1 || P_limit > 0) {
+				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1 || P_Limit > 0) {
 					Set_Motor(1, 0);
 					calib_timer = micros();
-					P_limit = 0;
+					P_Limit = 0;
 					calibState = CALIB_WAIT_BACKOFF_P;
 				}
 				break;
@@ -441,7 +554,7 @@ int main(void)
 				if (micros() - calib_timer > 100000) {
 					Set_Motor(1, 15);
 					calib_timer = micros();
-					P_limit = 0;
+					P_Limit = 0;
 					calibState = CALIB_BACKOFF_P;
 				}
 
@@ -451,7 +564,7 @@ int main(void)
 				if (micros() - calib_timer > 100000) {
 					Set_Motor(1, 0);
 					calib_timer = micros();
-					P_limit = 0;
+					P_Limit = 0;
 					calibState = CALIB_WAIT_RETOUCH_P;
 				}
 				break;
@@ -462,7 +575,7 @@ int main(void)
 				if (micros() - calib_timer > 100000) {
 					Set_Motor(1, -5);
 					calib_timer = micros();
-					P_limit = 0;
+					P_Limit = 0;
 					calibState = CALIB_RETOUCH_P;
 				}
 				break;
@@ -470,24 +583,24 @@ int main(void)
 			case CALIB_RETOUCH_P:
 				Set_Motor(1, -5);
 
-				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1 || P_limit > 0) {
+				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1 || P_Limit > 0) {
 					Set_Motor(1, 0);
 					Reset_P();
-					P_limit = 0;
+					P_Limit = 0;
 					calibState = CALIB_MOVE_R_TO_LIMIT;
 				}
 				break;
 
 			case CALIB_MOVE_R_TO_LIMIT:
-				if (Cal_side == 1)
+				if (Cal_Side == 1)
 					Set_Motor(0, 30);
 				else
 					Set_Motor(0, -30);
 
-				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1 || R_limit > 0) {
+				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1 || R_Limit > 0) {
 					Set_Motor(0, 0);
 					calib_timer = micros();
-					R_limit = 0;
+					R_Limit = 0;
 					calibState = CALIB_WAIT_BACKOFF_R;
 				}
 				break;
@@ -496,18 +609,18 @@ int main(void)
 				Set_Motor(0, 0);
 
 				if (micros() - calib_timer > 100000) {
-					if (Cal_side == 1)
+					if (Cal_Side == 1)
 						Set_Motor(0, -30);
 					else
 						Set_Motor(0, 30);
 					calib_timer = micros();
-					R_limit = 0;
+					R_Limit = 0;
 					calibState = CALIB_BACKOFF_R;
 				}
 				break;
 
 			case CALIB_BACKOFF_R:
-				if (Cal_side == 1)
+				if (Cal_Side == 1)
 					Set_Motor(0, -30);
 				else
 					Set_Motor(0, 30);
@@ -515,7 +628,7 @@ int main(void)
 				if (micros() - calib_timer > 200000) {
 					Set_Motor(0, 0);
 					calib_timer = micros();
-					R_limit = 0;
+					R_Limit = 0;
 					calibState = CALIB_WAIT_RETOUCH_R;
 				}
 				break;
@@ -524,129 +637,99 @@ int main(void)
 				Set_Motor(0, 0);
 
 				if (micros() - calib_timer > 100000) {
-					if (Cal_side == 1)
-						Set_Motor(0, 10);
+					if (Cal_Side == 1)
+						Set_Motor(0, 15);
 					else
-						Set_Motor(0, -10);
+						Set_Motor(0, -15);
 					calib_timer = micros();
-					R_limit = 0;
+					R_Limit = 0;
 					calibState = CALIB_RETOUCH_R;
 				}
 				break;
 
 			case CALIB_RETOUCH_R:
-				if (Cal_side == 1)
-					Set_Motor(0, 10);
+				if (Cal_Side == 1)
+					Set_Motor(0, 15);
 				else
-					Set_Motor(0, -10);
+					Set_Motor(0, -15);
 
-				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1 || R_limit > 0) {
+				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1 || R_Limit > 0) {
 					Set_Motor(0, 0);
 					Reset_R();
-					R_limit = 0;
+					R_Limit = 0;
 					calibState = CALIB_DONE;
 				}
 				break;
 
 			case CALIB_DONE:
-				Cal_side = 0;
+				Cal_Side = 0;
 				State = 0;
-				P_limit = 0;
-				R_limit = 0;
+				P_Limit = 0;
+				R_Limit = 0;
 				calibState = CALIB_IDLE;
 				break;
 			}
-//			Set_Motor(0, 0);
-//			Set_Motor(1, 0);
-//			while(1){
-//				if(Receiver[0] > 80){
-//					Cal_side = 1;
-//					break;
-//				}
-//				else if(Receiver[0] < -80){
-//					Cal_side = 2;
-//					break;
-//				}
-//			}
-//
-//			if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 0){
-//				while (P_limit == 0) {
-//					Set_Motor(1, -50);
-//				}
-//				P_limit = 0;
-//				Set_Motor(1, -50);
-//				HAL_Delay(100);
-//				Set_Motor(1, 0);
-//				HAL_Delay(100);
-//				while (P_limit == 0) {
-//					Set_Motor(1, 50);
-//				}
-//				Set_Motor(1, 50);
-//				HAL_Delay(100);
-//				Set_Motor(1, 0);
-//				HAL_Delay(100);
-//				while (P_limit == 0) {
-//					Set_Motor(1, -10);
-//				}
-//				P_limit = 0;
-//				Set_Motor(1, 0);
-//			}
-//			else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1){
-//				while (P_limit == 0) {
-//					Set_Motor(1, 50);
-//				}
-//				Set_Motor(1, 50);
-//				HAL_Delay(100);
-//				Set_Motor(1, 0);
-//				HAL_Delay(100);
-//				while (P_limit == 0) {
-//					Set_Motor(1, -10);
-//				}
-//				P_limit = 0;
-//				Set_Motor(1, 0);
-//				Reset_P();
-//			}
-//
-//
-//			if (Cal_side == 1) {
-//				while (R_limit == 0) {
-//					Set_Motor(0, 30);
-//				}
-//				R_limit = 0;
-//				Set_Motor(0, 0);
-//				HAL_Delay(100);
-//				Set_Motor(1, -30);
-//				HAL_Delay(200);
-//				while (R_limit == 0) {
-//					Set_Motor(0, 10);
-//				}
-//				R_limit = 0;
-//				Set_Motor(0, 0);
-//				HAL_Delay(100);
-//				Reset_R();
-//			}
-//			else if (Cal_side == 2){
-//				while (R_limit == 0) {
-//					Set_Motor(0, -30);
-//				}
-//				R_limit = 0;
-//				Set_Motor(0, 0);
-//				HAL_Delay(100);
-//				Set_Motor(1, 30);
-//				HAL_Delay(200);
-//				while (R_limit == 0) {
-//					Set_Motor(0, -10);
-//				}
-//				R_limit = 0;
-//				Set_Motor(0, 0);
-//				HAL_Delay(100);
-//				Reset_R();
-//			}
-//
-//			Cal_side = 0;
-//			State = 0;
-		//////////////////////////////////////////////////////////////
 		}
+
+		if(State == 6){
+			Set_Servo(0);
+		}
+		if(State == 7){
+			Set_Servo(1);
+		}
+		if(State == 8){
+			if (loop_counter < 100) {
+				static loop_temp = 0;
+
+				R_Pos_Error = (TargetR - Revolute_QEIdata.RadPosition) * -1;
+				P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
+
+				static uint64_t timestampState2 = 0;
+				int64_t currentTimeState2 = micros();
+				if (currentTimeState2 > timestampState2) {
+					timestampState2 = currentTimeState2 + 10000;		//us
+					R_Speed = PID_Update(R_Pos_Error, 16.00f, 5.00f, 8.00f, 0.01f, -100.0f, 100.0f, &pid_r);
+					P_Speed = PID_Update(P_Pos_Error, 0.333f, 1.20f, 0.15f, 0.01f, -100.0f, 100.0f, &pid_p);
+				}
+
+				Set_Motor(0, R_Speed);
+				Set_Motor(1, P_Speed);
+				if (fabsf(R_Pos_Error) < R_ERR_TOL_RAD
+						&& fabsf(P_Pos_Error) < P_ERR_TOL_MM) {
+					/* within window —— start or continue timer */
+					if (lock_timer_us == 0)
+						lock_timer_us = micros(); /* start timing */
+
+					else if ((micros() - lock_timer_us) >= HOLD_TIME_US) {
+						if(loop_temp == 0){
+							pid_r.integ = 0;
+							pid_r.prevError = 0;
+							pid_p.integ = 0;
+							pid_p.prevError = 0;
+							TargetR = 0;
+							TargetP = 250;
+							loop_temp = 1;
+						}
+						else{
+							pid_r.integ = 0;
+							pid_r.prevError = 0;
+							pid_p.integ = 0;
+							pid_p.prevError = 0;
+							TargetR = M_PI;
+							TargetP = 50;
+							loop_temp = 0;
+							loop_counter++;
+						}
+					}
+				} else {
+					lock_timer_us = 0;
+				}
+			}
+			else{
+				State = 0;
+			}
+		}
+		//////////////////////////////////////////////////////////////
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -996,7 +1079,7 @@ static void MX_TIM8_Init(void)
   htim8.Instance = TIM8;
   htim8.Init.Prescaler = 169;
   htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim8.Init.Period = 999;
+  htim8.Init.Period = 1000;
   htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim8.Init.RepetitionCounter = 0;
   htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -1021,7 +1104,7 @@ static void MX_TIM8_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 1999;
+  sConfigOC.Pulse = 1000;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
@@ -1080,9 +1163,9 @@ static void MX_TIM15_Init(void)
 
   /* USER CODE END TIM15_Init 1 */
   htim15.Instance = TIM15;
-  htim15.Init.Prescaler = 0;
+  htim15.Init.Prescaler = 169;
   htim15.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim15.Init.Period = 65535;
+  htim15.Init.Period = 2000;
   htim15.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim15.Init.RepetitionCounter = 0;
   htim15.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -1213,7 +1296,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : PC10 */
   GPIO_InitStruct.Pin = GPIO_PIN_10;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
@@ -1246,6 +1329,30 @@ void DWT_Init(void) {
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 }
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	if (GPIO_Pin == GPIO_PIN_10) {
+		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) == 1) {
+			State = 0;
+			EmergencyState = 1;
+		}
+	}
+	if (GPIO_Pin == GPIO_PIN_12) {
+		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1) {
+			P_Limit = 1;
+		} else {
+			P_Limit = 0;
+		}
+	}
+	if (GPIO_Pin == GPIO_PIN_13) {
+		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1) {
+			R_Limit = 1;
+		} else {
+			R_Limit = 0;
+		}
+	}
+	if (GPIO_Pin == GPIO_PIN_15) {
+		EmergencyState = 0;
+	}
+
     static uint8_t state[3] = {0};  // 0 = waiting for rise, 1 = waiting for fall
 
     uint32_t now = DWT->CYCCNT;
@@ -1266,13 +1373,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
         pulse_width_us[idx] = delta / (SystemCoreClock / 1000000);
         state[idx] = 0;
     }
-
-	if (GPIO_Pin == GPIO_PIN_12) {
-		P_limit += 1;
-	}
-	if (GPIO_Pin == GPIO_PIN_13) {
-		R_limit += 1;
-	}
 }
 
 //MicroSecondTimer Implement
@@ -1283,6 +1383,38 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 uint64_t micros() {
 	return __HAL_TIM_GET_COUNTER(&htim5) + _micros;
+}
+
+float PID_Update(float error, float kP, float kI, float kD, float dt,
+		float outMin, float outMax, PID_State *state) {
+	/* --- Proportional -------------------------------------- */
+	float Pout = kP * error;
+
+	/* --- Integral (with anti‑windup clamp) ----------------- */
+	state->integ += error * dt;
+	if (state->integ > outMax / kI)
+		state->integ = outMax / kI;
+	if (state->integ < outMin / kI)
+		state->integ = outMin / kI;
+	if (error > 0 && state->integ < 0)
+		state->integ = 0;
+	if (error < 0 && state->integ > 0)
+		state->integ = 0;
+	float Iout = kI * state->integ;
+
+	/* --- Derivative (on error) ----------------------------- */
+	float deriv = (error - state->prevError) / dt;
+	float Dout = kD * deriv;
+	state->prevError = error;
+
+	/* --- Sum and clamp ------------------------------------- */
+	float out = Pout + Iout + Dout;
+	if (out > outMax)
+		out = outMax;
+	if (out < outMin)
+		out = outMin;
+
+	return out;
 }
 
 void Revolute_PosVel_Update() {
@@ -1381,7 +1513,7 @@ void Prismatic_PosVel_Update() {
 void Set_Motor(int motor_num,float speed){
 	if (speed > 100.0f)  speed = 100.0f;
 	if (speed < -100.0f) speed = -100.0f;
-	uint32_t pwm_value = (uint32_t) ((fabs(speed) * 2000) / 100);
+	uint32_t pwm_value = (uint32_t) ((fabsf(speed) * 1000) / 100);
 	if(motor_num == 0){
 		if (speed > 0) {
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_SET);
@@ -1397,6 +1529,15 @@ void Set_Motor(int motor_num,float speed){
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
 		}
 		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_4, pwm_value);
+	}
+}
+
+void Set_Servo(int Pen_Pos){
+	if(Pen_Pos == 0){
+		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1500);
+	}
+	else{
+		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1900);
 	}
 }
 
