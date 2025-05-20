@@ -461,7 +461,7 @@ int main(void)
 //			}
 
 			R_Speed = Receiver[0];
-			P_Speed = Receiver[1];
+//			P_Speed = Receiver[1];
 
 			if (Revolute_QEIdata.RadPosition < -1.91986 && R_Speed > 0) {
 				R_Speed = 0;
@@ -1313,9 +1313,6 @@ static void MX_GPIO_Init(void)
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-
-  HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
 
   HAL_NVIC_SetPriority(EXTI3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI3_IRQn);

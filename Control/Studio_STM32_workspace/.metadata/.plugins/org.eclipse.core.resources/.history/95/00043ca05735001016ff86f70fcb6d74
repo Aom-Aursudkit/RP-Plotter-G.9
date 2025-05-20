@@ -123,7 +123,6 @@ uint8_t R_Limit;
 uint8_t State;
 uint8_t EmergencyState;
 uint8_t IsPress;
-uint8_t Pen_Status;
 
 typedef enum {
     CALIB_IDLE,
@@ -311,19 +310,10 @@ int main(void)
 		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) == 1) {
 			State = 0;
 			EmergencyState = 1;
-			Set_Servo(0);
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
+			__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1000);
 		}
 		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15) == 1) {
 			EmergencyState = 0;
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
-		}
-
-		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11) == 1) {
-			Pen_Status = 0;
-		}
-		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_2) == 1) {
-			Pen_Status = 1;
 		}
 
 		if (EmergencyState == 1){
@@ -331,7 +321,6 @@ int main(void)
 		}
 		else if (Receiver[2] < -30 && Receiver[4] < -30) {
 			State = 0;
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
 		}
 		else if (Receiver[3] > 0 && IsPress == 0) {
 			IsPress = 1;
@@ -410,7 +399,7 @@ int main(void)
 		if (State == 0) {
 			Set_Motor(0, 0);
 			Set_Motor(1, 0);
-			Set_Servo(0);
+			__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1000);
 		}
 
 		//////////////////////// <<MANUAL>> //////////////////////////
@@ -461,7 +450,7 @@ int main(void)
 //			}
 
 			R_Speed = Receiver[0];
-			P_Speed = Receiver[1];
+//			P_Speed = Receiver[1];
 
 			if (Revolute_QEIdata.RadPosition < -1.91986 && R_Speed > 0) {
 				R_Speed = 0;
@@ -1283,7 +1272,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : PB2 PB11 */
   GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_11;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB12 PB13 */
@@ -1545,7 +1534,7 @@ void Set_Motor(int motor_num,float speed){
 
 void Set_Servo(int Pen_Pos){
 	if(Pen_Pos == 0){
-		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 500);
+		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1000);
 	}
 	else{
 		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1500);

@@ -461,7 +461,7 @@ int main(void)
 //			}
 
 			R_Speed = Receiver[0];
-			P_Speed = Receiver[1];
+//			P_Speed = Receiver[1];
 
 			if (Revolute_QEIdata.RadPosition < -1.91986 && R_Speed > 0) {
 				R_Speed = 0;
