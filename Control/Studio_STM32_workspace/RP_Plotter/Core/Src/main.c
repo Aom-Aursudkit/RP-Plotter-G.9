@@ -34,7 +34,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define R_ERR_TOL_RAD   0.0034f//0.00174533f/* ±0.1 degree */
+#define R_ERR_TOL_RAD   0.034f//0.00174533f/* ±0.1 degree */
 #define P_ERR_TOL_MM    0.10f//0.10f      /* ±0.1 mm */
 #define HOLD_TIME_US    1000000UL  /* 1s  in microseconds */
 /* USER CODE END PD */
@@ -152,6 +152,8 @@ typedef struct {
 
 PID_State pid_r = {0};  // for Revolute
 PID_State pid_p = {0};  // for Prismatic
+PID_State pid_r_v = {0};  // for Revolute
+PID_State pid_p_v = {0};  // for Prismatic
 
 int loop_counter;
 /* USER CODE END PV */
@@ -198,7 +200,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -365,7 +367,7 @@ int main(void)
 				State = 7;
 			} else if (Receiver[2] > 30 && Receiver[4] > 30) {
 				loop_counter = 0;
-				TargetR = M_PI;
+				TargetR = 4.18879;
 				TargetP = 50;
 				State = 8;
 			}
@@ -419,13 +421,16 @@ int main(void)
 //		inv_L = (Prismatic_QEIdata.mmPosition > 1.0f) ? (1.0f / Prismatic_QEIdata.mmPosition) : 0.0f;
 //		TargetRVel 	= (-sinf(Revolute_QEIdata.RadPosition) * vx + cosf(Revolute_QEIdata.RadPosition) * vy) / inv_L;
 //		TargetPVel  =  cosf(Revolute_QEIdata.RadPosition) * vx + sinf(Revolute_QEIdata.RadPosition) * vy;
-			TargetRVel = map((float) Receiver[0], -100.00, 100.00, -1.00, 1.00);
+			TargetRVel = (map((float) Receiver[0], -100.00, 100.00, -1.00, 1.00))*-1;
 			TargetPVel = map((float) Receiver[1], -100.00, 100.00, -500.00,
 					500.00);
 		//////////////////////////////////////////////////////////////
 
 
 		//////////////////////// <<MOTOR>> ///////////////////////////
+			R_Velo_Error = (TargetRVel - Revolute_QEIdata.AngularVelocity_rad)*-1;
+			P_Velo_Error = TargetPVel - Prismatic_QEIdata.Velocity_mm;
+
 //		PID.Kp = 0.1;
 //		PID.Ki = 0.00001;
 //		PID.Kd = 0.0;
@@ -438,30 +443,31 @@ int main(void)
 //		arm_pid_init_f32(&PID, 1);
 //		P_Speed = arm_pid_f32(&PID, TargetPVel - Prismatic_QEIdata.Velocity_mm);
 
-			R_Velo_Error = TargetRVel - Revolute_QEIdata.AngularVelocity_rad;
-			PID.Kp = 100;
-			PID.Ki = 0.1;
-			PID.Kd = 0.0;
-			arm_pid_init_f32(&PID, 1);
-			R_Speed = arm_pid_f32(&PID, R_Velo_Error);
 
-			P_Velo_Error = TargetPVel - Prismatic_QEIdata.Velocity_mm;
-			PID.Kp = 0.2;
-			PID.Ki = 0.005;
-			PID.Kd = 0.0;
-			arm_pid_init_f32(&PID, 1);
-			P_Speed = arm_pid_f32(&PID, P_Velo_Error);
+//			PID.Kp = 100;
+//			PID.Ki = 0.1;
+//			PID.Kd = 0.0;
+//			arm_pid_init_f32(&PID, 1);
+//			R_Speed = arm_pid_f32(&PID, R_Velo_Error);
+//
+//			PID.Kp = 0.2;
+//			PID.Ki = 0.005;
+//			PID.Kd = 0.0;
+//			arm_pid_init_f32(&PID, 1);
+//			P_Speed = arm_pid_f32(&PID, P_Velo_Error);
 
-			//Call every 0.01 s
-//			static uint64_t timestampState1 = 0;
-//			int64_t currentTimeState1 = micros();
-//			if (currentTimeState1 > timestampState1) {
-//				timestampState1 = currentTimeState1 + 10000;//us
-//				P_Speed = PID_Update(P_Velo_Error, 0.2, 0.005, 0.0, 0.01f, -100.0, 100.0);
-//			}
+			static uint64_t timestampState1 = 0;
+			int64_t currentTimeState1 = micros();
+			if (currentTimeState1 > timestampState1) {
+				timestampState1 = currentTimeState1 + 10000;		//us
+				R_Speed = PID_Update(R_Velo_Error, 100.00f, 0.10f, 0.00f, 0.01f,
+						-100.0f, 100.0f, &pid_r_v);
+				P_Speed = PID_Update(P_Velo_Error, 0.2f, 1.5f, 0.00f, 0.01f,
+						-100.0f, 100.0f, &pid_p_v);
+			}
 
 			R_Speed = Receiver[0];
-			P_Speed = Receiver[1];
+//			P_Speed = Receiver[1];
 
 			if (Revolute_QEIdata.RadPosition < -1.91986 && R_Speed > 0) {
 				R_Speed = 0;
@@ -689,17 +695,27 @@ int main(void)
 			Set_Servo(1);
 		}
 		if(State == 8){
-			if (loop_counter < 100) {
-				static loop_temp = 0;
+			static uint64_t servo_timer;
+			if (loop_counter == 1 && micros() - servo_timer < 300000){
+				Set_Motor(0, 0);
+				Set_Motor(1, 0);
+				Set_Servo(1);
+			}
+			else if (loop_counter == 1 && micros() - servo_timer < 500000){
+				Set_Servo(0);
+			}
+			else if (loop_counter < 100) {
+				static uint16_t loop_temp = 0;
+				Set_Servo(0);
 
-				R_Pos_Error = (TargetR - Revolute_QEIdata.RadPosition) * -1;
+				R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
 				P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
 
-				static uint64_t timestampState2 = 0;
-				int64_t currentTimeState2 = micros();
-				if (currentTimeState2 > timestampState2) {
-					timestampState2 = currentTimeState2 + 10000;		//us
-					R_Speed = PID_Update(R_Pos_Error, 16.00f, 5.00f, 8.00f, 0.01f, -100.0f, 100.0f, &pid_r);
+				static uint64_t timestampState8 = 0;
+				int64_t currentTimeState8 = micros();
+				if (currentTimeState8 > timestampState8) {
+					timestampState8 = currentTimeState8 + 10000;		//us
+					R_Speed = -1*(PID_Update(R_Pos_Error, 16.00f, 5.00f, 8.00f, 0.01f, -100.0f, 100.0f, &pid_r));
 					P_Speed = PID_Update(P_Pos_Error, 0.333f, 1.20f, 0.15f, 0.01f, -100.0f, 100.0f, &pid_p);
 				}
 
@@ -717,7 +733,7 @@ int main(void)
 							pid_r.prevError = 0;
 							pid_p.integ = 0;
 							pid_p.prevError = 0;
-							TargetR = 0;
+							TargetR = -1.0472;
 							TargetP = 250;
 							loop_temp = 1;
 						}
@@ -726,10 +742,16 @@ int main(void)
 							pid_r.prevError = 0;
 							pid_p.integ = 0;
 							pid_p.prevError = 0;
-							TargetR = M_PI;
+							TargetR = 4.18879;
 							TargetP = 50;
 							loop_temp = 0;
 							loop_counter++;
+							if(loop_counter == 1){
+								servo_timer = micros();
+							}
+							if(loop_counter == 100){
+								servo_timer = micros();
+							}
 						}
 					}
 				} else {
@@ -737,7 +759,14 @@ int main(void)
 				}
 			}
 			else{
-				State = 0;
+				if (micros() - servo_timer < 500000) {
+					Set_Motor(0, 0);
+					Set_Motor(1, 0);
+					Set_Servo(1);
+				} else {
+					Set_Servo(0);
+					State = 0;
+				}
 			}
 		}
 		//////////////////////////////////////////////////////////////
@@ -1176,7 +1205,7 @@ static void MX_TIM15_Init(void)
   htim15.Instance = TIM15;
   htim15.Init.Prescaler = 169;
   htim15.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim15.Init.Period = 2000;
+  htim15.Init.Period = 20000;
   htim15.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim15.Init.RepetitionCounter = 0;
   htim15.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -1544,11 +1573,10 @@ void Set_Motor(int motor_num,float speed){
 }
 
 void Set_Servo(int Pen_Pos){
-	if(Pen_Pos == 0){
+	if (Pen_Pos == 0) {
 		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 500);
-	}
-	else{
-		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1500);
+	} else {
+		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1000);
 	}
 }
 

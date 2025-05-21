@@ -11,3 +11,14 @@ TargetPVel
 R_Speed
 P_Speed
 State
+EmergencyState
+TargetR
+TargetP
+P_Limit
+R_Limit
+P_Pos_Error
+R_Pos_Error
+pid_r
+pid_p
+loop_counter
+Pen_Status

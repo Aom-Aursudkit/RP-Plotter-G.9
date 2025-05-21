@@ -5667,3 +5667,857 @@ arm-none-eabi-size  RP_Plotter.elf
   32312	     12	   2496	  34820	   8804	RP_Plotter.elf
 Finished building: default.size.stdout
  
+14:40:52 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:242:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  242 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:697:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  697 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1342:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1342 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:242:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  242 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32160	     12	   2504	  34676	   8774	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+14:42:11 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32160	     12	   2504	  34676	   8774	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+14:42:43 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32160	     12	   2504	  34676	   8774	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+14:43:50 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32160	     12	   2504	  34676	   8774	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+14:44:18 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32160	     12	   2504	  34676	   8774	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+14:44:47 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32160	     12	   2504	  34676	   8774	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+14:45:31 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32160	     12	   2504	  34676	   8774	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+14:54:10 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:201:1: warning: statement with no effect [-Wunused-value]
+  201 | 2  HAL_Init();
+      | ^
+../Core/Src/main.c:201:2: error: expected ';' before 'HAL_Init'
+  201 | 2  HAL_Init();
+      |  ^ ~~~~~~~~
+      |  ;
+../Core/Src/main.c:242:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  242 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:697:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  697 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1342:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1342 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:242:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  242 |   DWT_Init();
+      |   ^~~~~~~~
+make: *** [Core/Src/subdir.mk:34: Core/Src/main.o] Error 1
+"make -j20 all" terminated with exit code 2. Build might be incomplete.
+14:54:39 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:242:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  242 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:697:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  697 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1342:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1342 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:242:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  242 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32144	     12	   2504	  34660	   8764	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+14:57:26 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:242:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  242 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:697:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  697 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1342:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1342 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:242:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  242 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32160	     12	   2504	  34676	   8774	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+15:05:20 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32160	     12	   2520	  34692	   8784	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+15:07:27 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32160	     12	   2520	  34692	   8784	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+15:17:12 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32168	     12	   2520	  34700	   878c	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+15:22:08 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+15:24:13 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+15:25:14 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+15:26:52 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+15:28:17 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+15:29:50 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32184	     12	   2520	  34716	   879c	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+15:32:59 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+15:38:10 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+15:52:23 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+16:07:59 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:261:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  261 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:716:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  716 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1361:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1361 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:261:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  261 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+16:08:20 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+16:22:15 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+16:26:47 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+16:28:27 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+16:47:55 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32176	     12	   2520	  34708	   8794	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+16:55:40 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32228	     12	   2528	  34768	   87d0	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+16:57:02 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32228	     12	   2528	  34768	   87d0	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+16:59:57 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:699:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  699 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1344:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1344 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32232	     12	   2528	  34772	   87d4	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+17:00:13 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32232	     12	   2528	  34772	   87d4	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+17:41:33 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:705:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  705 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1364:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1364 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32400	     12	   2528	  34940	   887c	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+17:43:24 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32400	     12	   2528	  34940	   887c	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+17:45:07 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c:705:40: warning: type defaults to 'int' in declaration of 'loop_temp' [-Wimplicit-int]
+  705 |                                 static loop_temp = 0;
+      |                                        ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1364:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1364 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32400	     12	   2528	  34940	   887c	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+17:52:04 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1364:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1364 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32400	     12	   2528	  34940	   887c	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+17:54:54 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1367:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1367 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32472	     12	   2528	  35012	   88c4	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+18:01:40 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1367:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1367 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32408	     12	   2528	  34948	   8884	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+18:08:11 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/College 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:244:3: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1367:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1367 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:244:3: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  244 |   DWT_Init();
+      |   ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\College 2.2\Studio\Studio_repository\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  32472	     12	   2528	  35012	   88c4	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+18:10:42 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j20 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  32472	     12	   2528	  35012	   88c4	RP_Plotter.elf
+Finished building: default.size.stdout
+ 

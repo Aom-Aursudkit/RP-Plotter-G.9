@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="tim2"/>
+		<item key="selection" value="EXTI"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="tim2"/>
-			<item value="htim2"/>
-			<item value="map"/>
-			<item value="float map"/>
-			<item value="Set_Motor"/>
-			<item value="Reset_R"/>
-			<item value="Reset_Pos"/>
-			<item value="3.1"/>
-			<item value="WHile"/>
-			<item value="NEW"/>
-			<item value="pulse_width_us"/>
-			<item value="absolute_pos"/>
-			<item value="HAL_NVIC_SetPriority"/>
+			<item value="exti"/>
+			<item value="htim15"/>
+			<item value="Set_Servo"/>
+			<item value="tim15"/>
+			<item value="500"/>
+			<item value="15"/>
+			<item value="State2"/>
+			<item value="void set"/>
+			<item value="servo_temp"/>
+			<item value="htim8"/>
+			<item value="EXTI15_10_IRQn"/>
+			<item value="EXTI"/>
+			<item value="EmergencyState"/>
+			<item value="fabsf"/>
+			<item value="fabsd"/>
 		</list>
 		<list key="replacehistory">
+			<item value="Cal_Side"/>
+			<item value="R_Limit"/>
+			<item value="P_Limit"/>
 			<item value="Reset_R"/>
 		</list>
 	</section>
@@ -31,6 +36,6 @@
 		<item key="DIALOG_Y_ORIGIN" value="485"/>
 		<item key="DIALOG_WIDTH" value="511"/>
 		<item key="DIALOG_HEIGHT" value="523"/>
-		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI"/>
 	</section>
 </section>
