@@ -432,9 +432,9 @@ int main(void)
 
 
 		//////////////////////// <<SERVO>> ///////////////////////////
-//		if (micros() - servo_timer > 200000 && Pen_Status_in == 0) {
-//			__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 500);
-//		}
+		if (micros() - servo_timer > 200000 && Pen_Status_in == 0) {
+			__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 500);
+		}
 		//////////////////////////////////////////////////////////////
 
 
@@ -1617,7 +1617,7 @@ void Set_Motor(int motor_num,float speed){
 
 void Set_Servo(int Pen_Pos){
 	if (Pen_Pos == 0) {
-		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 500);
+		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 300);
 		Pen_Status_in = 0;
 		servo_timer = micros();
 	} else {
