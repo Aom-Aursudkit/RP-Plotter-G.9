@@ -1,3 +1,4 @@
+"./Core/Src/ModBusRTU.o"
 "./Core/Src/main.o"
 "./Core/Src/stm32g4xx_hal_msp.o"
 "./Core/Src/stm32g4xx_it.o"
@@ -20,6 +21,8 @@
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o"
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o"
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o"
+"./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o"
+"./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o"
 "./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctions.o"
 "./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctionsF16.o"
 "./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctions.o"
