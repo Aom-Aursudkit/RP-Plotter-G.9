@@ -266,7 +266,7 @@ int main(void)
 		static uint64_t timestamp = 0;
 		int64_t currentTime = micros();
 		if (currentTime > timestamp) {
-			timestamp = currentTime + 10000;//us
+			timestamp = currentTime + 1000;//us
 			Prismatic_PosVel_Update();
 			Revolute_PosVel_Update();
 		}
@@ -274,7 +274,7 @@ int main(void)
 		static uint64_t timestamp1 = 0;
 		int64_t currentTime1 = micros();
 		if (currentTime1 > timestamp1) {
-			timestamp1 = currentTime1 + 100000;//us
+			timestamp1 = currentTime1 + 1000;//us
 
 		}
 		End_x = Prismatic_QEIdata.mmPosition * cosf(Revolute_QEIdata.RadPosition*-1);
