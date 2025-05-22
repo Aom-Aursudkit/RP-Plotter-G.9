@@ -130,7 +130,6 @@ uint8_t Mode;
 uint8_t EmergencyState;
 uint8_t IsPress;
 uint8_t Pen_Status;
-uint8_t Pen_Status_in;
 uint8_t P_Limit;
 uint8_t R_Limit;
 uint64_t lock_timer_us = 0;
@@ -432,7 +431,7 @@ int main(void)
 
 
 		//////////////////////// <<SERVO>> ///////////////////////////
-		if (micros() - servo_timer > 200000 && Pen_Status_in == 0) {
+		if (micros() - servo_timer > 100000) {
 			__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 500);
 		}
 		//////////////////////////////////////////////////////////////
@@ -1618,11 +1617,9 @@ void Set_Motor(int motor_num,float speed){
 void Set_Servo(int Pen_Pos){
 	if (Pen_Pos == 0) {
 		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 300);
-		Pen_Status_in = 0;
 		servo_timer = micros();
 	} else {
 		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1000);
-		Pen_Status_in = 1;
 	}
 }
 
