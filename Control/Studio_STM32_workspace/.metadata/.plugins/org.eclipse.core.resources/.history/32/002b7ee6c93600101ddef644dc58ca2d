@@ -56,17 +56,12 @@ TIM_HandleTypeDef htim15;
 /* USER CODE BEGIN PV */
 uint64_t _micros = 0;
 
-
-//Receiver////////////
 float Receiver[5];
 int32_t Receiver_Period[5];
 //uint16_t ADC_RawRead[300]={0};
 volatile uint32_t rise_time[3] = {0};     // For PC0, PC2, PC3
 volatile uint32_t pulse_width_us[3] = {0};
-//////////////////////
 
-
-//Encoder/////////////
 uint32_t revolute_raw;
 uint32_t prismatic_raw;
 
@@ -77,8 +72,8 @@ typedef struct {
 	float QEIPostion_1turn;
 	float QEIAngularVelocity;
 	float QEIAngularAcceleration;
-	float AngularVelocity_rad;			// rad/s
-	float AngularAcceleration_rad;		// rad/s^2
+	float AngularVelocity_rad;        // rad/s
+	float AngularAcceleration_rad;    // rad/s^2
 	int64_t AbsolutePosition;
 	float RadPosition;
 } Revolute_QEI_StructureTypeDef;
@@ -90,8 +85,8 @@ typedef struct {
 	uint64_t TimeStamp[2];
 	float QEIVelocity;
 	float QEIAcceleration;
-	float Velocity_mm;					// mm/s
-	float Acceleration_mm;				// mm/s^2
+	float Velocity_mm;        		// mm/s
+	float Acceleration_mm;    		// mm/s^2
 	int64_t AbsolutePosition;
 	float mmPosition;
 } Prismatic_QEI_StructureTypeDef;
@@ -100,10 +95,7 @@ Prismatic_QEI_StructureTypeDef Prismatic_QEIdata = {0};
 enum {
 	NEW, OLD
 };
-//////////////////////
 
-
-//Control/////////////
 float vx;
 float vy;
 float End_x;
@@ -119,39 +111,20 @@ float R_Pos_Error;
 float P_Pos_Error;
 float R_Velo_Error;
 float P_Velo_Error;
+uint64_t lock_timer_us = 0;
 
+arm_pid_instance_f32 PID = {0};
 float R_Speed;
 float P_Speed;
-//////////////////////
 
+uint8_t P_Limit;
+uint8_t R_Limit;
 
-//Mode & Status///////
-uint8_t Mode;
+uint8_t State;
 uint8_t EmergencyState;
 uint8_t IsPress;
 uint8_t Pen_Status;
-uint8_t P_Limit;
-uint8_t R_Limit;
-uint64_t lock_timer_us = 0;
-//////////////////////
 
-
-//PID/////////////////
-arm_pid_instance_f32 PID = {0};
-
-typedef struct {
-    float integ;
-    float prevError;
-} PID_State;
-
-PID_State pid_r = {0};  // for Revolute
-PID_State pid_p = {0};  // for Prismatic
-PID_State pid_r_v = {0};  // for Revolute
-PID_State pid_p_v = {0};  // for Prismatic
-//////////////////////
-
-
-//Mode3///////////////
 typedef enum {
     CALIB_IDLE,
     CALIB_WAIT_REMOTE,
@@ -170,13 +143,19 @@ typedef enum {
 CalibState_t calibState = CALIB_IDLE;
 uint64_t calib_timer = 0;
 uint8_t Cal_Side = 0;
-uint64_t servo_timer;
-//////////////////////
+int servo_temp;
 
+typedef struct {
+    float integ;
+    float prevError;
+} PID_State;
 
-//Mode8///////////////
+PID_State pid_r = {0};  // for Revolute
+PID_State pid_p = {0};  // for Prismatic
+PID_State pid_r_v = {0};  // for Revolute
+PID_State pid_p_v = {0};  // for Prismatic
+
 int loop_counter;
-//////////////////////
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -330,9 +309,9 @@ int main(void)
 		//////////////////////////////////////////////////////////////
 
 
-	  	//////////////////////// <<MODE>> ///////////////////////////
+	  	//////////////////////// <<STATE>> ///////////////////////////
 		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) == 1) {
-			Mode = 0;
+			State = 0;
 			EmergencyState = 1;
 			Set_Servo(0);
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
@@ -350,10 +329,10 @@ int main(void)
 		}
 
 		if (EmergencyState == 1){
-			Mode = 0;
+			State = 0;
 		}
 		else if (Receiver[2] < -30 && Receiver[4] < -30) {
-			Mode = 0;
+			State = 0;
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
 		}
 		else if (Receiver[3] > 0 && IsPress == 0) {
@@ -361,8 +340,8 @@ int main(void)
 			calibState = CALIB_IDLE;
 			if (Receiver[2] > -30 && Receiver[2] < 30
 					&& Receiver[4] < -30) {
-				if(Mode != 1){
-					Mode = 1;
+				if(State != 1){
+					State = 1;
 				}
 				else{
 					TargetX = End_x;
@@ -371,26 +350,26 @@ int main(void)
 					TargetP = Prismatic_QEIdata.mmPosition;
 				}
 			} else if (Receiver[2] > 30 && Receiver[4] < -30) {
-				Mode = 2;
+				State = 2;
 			} else if (Receiver[2] < -30 && Receiver[4] > -30
 					&& Receiver[4] < 30) {
-				Mode = 3;
+				State = 3;
 			} else if (Receiver[2] > -30 && Receiver[2] < 30
 					&& Receiver[4] > -30 && Receiver[4] < 30) {
-				Mode = 4;
+				State = 4;
 			} else if (Receiver[2] > 30 && Receiver[4] > -30
 					&& Receiver[4] < 30) {
-				Mode = 5;
+				State = 5;
 			} else if (Receiver[2] < -30 && Receiver[4] > 30) {
-				Mode = 6;
+				State = 6;
 			} else if (Receiver[2] > -30 && Receiver[2] < 30
 					&& Receiver[4] > 30) {
-				Mode = 7;
+				State = 7;
 			} else if (Receiver[2] > 30 && Receiver[4] > 30) {
 				loop_counter = 0;
 				TargetR = 4.18879;
 				TargetP = 50;
-				Mode = 8;
+				State = 8;
 			}
 		}
 		else{
@@ -430,24 +409,14 @@ int main(void)
 		//////////////////////////////////////////////////////////////
 
 
-		//////////////////////// <<SERVO>> ///////////////////////////
-		if (micros() - servo_timer > 100000) {
-			__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 500);
-		}
-		//////////////////////////////////////////////////////////////
-
-
-		//////////////////////// <<STOP>> ////////////////////////////
-		if (Mode == 0) {
+		if (State == 0) {
 			Set_Motor(0, 0);
 			Set_Motor(1, 0);
 			Set_Servo(0);
 		}
-		//////////////////////////////////////////////////////////////
-
 
 		//////////////////////// <<MANUAL>> //////////////////////////
-		if (Mode == 1) {
+		if (State == 1) {
 		//////////////////////// <<CONTROL>> /////////////////////////
 //		inv_L = (Prismatic_QEIdata.mmPosition > 1.0f) ? (1.0f / Prismatic_QEIdata.mmPosition) : 0.0f;
 //		TargetRVel 	= (-sinf(Revolute_QEIdata.RadPosition) * vx + cosf(Revolute_QEIdata.RadPosition) * vy) / inv_L;
@@ -521,7 +490,7 @@ int main(void)
 
 
 		//////////////////////// <<GOTO>> ////////////////////////////
-		if (Mode == 2) {
+		if (State == 2) {
 			R_Pos_Error = (TargetR - Revolute_QEIdata.RadPosition)*-1;
 //			PID.Kp = 50;
 //			PID.Ki = 10;
@@ -554,7 +523,7 @@ int main(void)
 
 				else if ((micros() - lock_timer_us) >= HOLD_TIME_US) {
 					Set_Servo(1);
-					Mode = 1;
+					State = 1;
 				}
 			} else {
 				lock_timer_us = 0;
@@ -564,7 +533,7 @@ int main(void)
 
 
 		//////////////////////// <<CALIBRATING>> /////////////////////
-		if (Mode == 3) {
+		if (State == 3) {
 			switch (calibState) {
 			case CALIB_IDLE:
 				Set_Motor(0, 0);
@@ -711,39 +680,28 @@ int main(void)
 
 			case CALIB_DONE:
 				Cal_Side = 0;
-				Mode = 0;
+				State = 0;
 				P_Limit = 0;
 				R_Limit = 0;
 				calibState = CALIB_IDLE;
 				break;
 			}
 		}
-		//////////////////////////////////////////////////////////////
 
-
-		//////////////////////////////////////////////////////////////
-		if(Mode == 6){
+		if(State == 6){
 			Set_Servo(0);
 		}
-		//////////////////////////////////////////////////////////////
-
-
-		//////////////////////////////////////////////////////////////
-		if(Mode == 7){
+		if(State == 7){
 			Set_Servo(1);
 		}
-		//////////////////////////////////////////////////////////////
-
-
-		//////////////////////////////////////////////////////////////
-		if(Mode == 8){
-			static uint64_t pen_delay_timer;
-			if (loop_counter == 1 && micros() - pen_delay_timer < 300000){
+		if(State == 8){
+			static uint64_t servo_timer;
+			if (loop_counter == 1 && micros() - servo_timer < 300000){
 				Set_Motor(0, 0);
 				Set_Motor(1, 0);
 				Set_Servo(1);
 			}
-			else if (loop_counter == 1 && micros() - pen_delay_timer < 500000){
+			else if (loop_counter == 1 && micros() - servo_timer < 500000){
 				Set_Servo(0);
 			}
 			else if (loop_counter < 100) {
@@ -789,10 +747,10 @@ int main(void)
 							loop_temp = 0;
 							loop_counter++;
 							if(loop_counter == 1){
-								pen_delay_timer = micros();
+								servo_timer = micros();
 							}
 							if(loop_counter == 100){
-								pen_delay_timer = micros();
+								servo_timer = micros();
 							}
 						}
 					}
@@ -801,13 +759,13 @@ int main(void)
 				}
 			}
 			else{
-				if (micros() - pen_delay_timer < 500000) {
+				if (micros() - servo_timer < 500000) {
 					Set_Motor(0, 0);
 					Set_Motor(1, 0);
 					Set_Servo(1);
 				} else {
 					Set_Servo(0);
-					Mode = 0;
+					State = 0;
 				}
 			}
 		}
@@ -1413,7 +1371,7 @@ void DWT_Init(void) {
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == GPIO_PIN_10) {
 		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) == 1) {
-			Mode = 0;
+			State = 0;
 			EmergencyState = 1;
 		}
 	}
@@ -1508,36 +1466,36 @@ void Revolute_PosVel_Update() {
 	Revolute_QEIdata.QEIPostion_1turn = Revolute_QEIdata.Position[NEW] % 16384;
 
 	// Calculate position difference
-	int32_t diffPosition_r = Revolute_QEIdata.Position[NEW] - Revolute_QEIdata.Position[OLD];
+	int32_t diffPosition = Revolute_QEIdata.Position[NEW] - Revolute_QEIdata.Position[OLD];
 
 	// Handle wrap-around
-	if (diffPosition_r > (65536 / 2))
-		diffPosition_r -= 65536;
-	else if (diffPosition_r < -(65536 / 2))
-		diffPosition_r += 65536;
+	if (diffPosition > (65536 / 2))
+		diffPosition -= 65536;
+	else if (diffPosition < -(65536 / 2))
+		diffPosition += 65536;
 
 	// Time difference in seconds
-	float diffTime_r = (Revolute_QEIdata.TimeStamp[NEW] - Revolute_QEIdata.TimeStamp[OLD]) * 0.000001f;
-	if (diffTime_r == 0)
+	float diffTime = (Revolute_QEIdata.TimeStamp[NEW] - Revolute_QEIdata.TimeStamp[OLD]) * 0.000001f;
+	if (diffTime == 0)
 		return;
 
 	// Raw angular velocity in counts/sec
-	float Vel_counts_r = (float) diffPosition_r / diffTime_r;
+	float Vel_counts = (float) diffPosition / diffTime;
 
 	// Raw angular acceleration in counts/sec²
-	Revolute_QEIdata.QEIAngularAcceleration = (Vel_counts_r - Revolute_QEIdata.QEIAngularVelocity) / diffTime_r;
+	Revolute_QEIdata.QEIAngularAcceleration = (Vel_counts - Revolute_QEIdata.QEIAngularVelocity) / diffTime;
 
 	// Store raw velocity
-	Revolute_QEIdata.QEIAngularVelocity = Vel_counts_r;
+	Revolute_QEIdata.QEIAngularVelocity = Vel_counts;
 
 	// Angular velocity in rad/s
-	Revolute_QEIdata.AngularVelocity_rad = Vel_counts_r * (2.0f * M_PI / 16384.0f);
+	Revolute_QEIdata.AngularVelocity_rad = Vel_counts * (2.0f * M_PI / 16384.0f);
 
 	// Angular acceleration in rad/s²
 	Revolute_QEIdata.AngularAcceleration_rad = Revolute_QEIdata.QEIAngularAcceleration * (2.0f * M_PI / 16384.0f);
 
 	// Absolute position update
-	Revolute_QEIdata.AbsolutePosition += diffPosition_r;
+	Revolute_QEIdata.AbsolutePosition += diffPosition;
 
 	// Rad position
 	Revolute_QEIdata.RadPosition = Revolute_QEIdata.AbsolutePosition * (2.0f * M_PI / 16384.0f);
@@ -1553,36 +1511,36 @@ void Prismatic_PosVel_Update() {
 	Prismatic_QEIdata.Position[NEW] = __HAL_TIM_GET_COUNTER(&htim3);
 
 	// Calculate position difference
-	int32_t diffPosition_p = Prismatic_QEIdata.Position[NEW] - Prismatic_QEIdata.Position[OLD];
+	int32_t diffPosition = Prismatic_QEIdata.Position[NEW] - Prismatic_QEIdata.Position[OLD];
 
 	// Handle wrap-around
-	if (diffPosition_p > (65536 / 2))
-		diffPosition_p -= 65536;
-	else if (diffPosition_p < -(65536 / 2))
-		diffPosition_p += 65536;
+	if (diffPosition > (65536 / 2))
+		diffPosition -= 65536;
+	else if (diffPosition < -(65536 / 2))
+		diffPosition += 65536;
 
 	// Time difference in seconds
-	float diffTime_p = (Prismatic_QEIdata.TimeStamp[NEW] - Prismatic_QEIdata.TimeStamp[OLD]) * 0.000001f;
-	if (diffTime_p == 0)
+	float diffTime = (Prismatic_QEIdata.TimeStamp[NEW] - Prismatic_QEIdata.TimeStamp[OLD]) * 0.000001f;
+	if (diffTime == 0)
 		return;
 
 	// Raw angular velocity in counts/sec
-	float Vel_counts_p = (float) diffPosition_p / diffTime_p;
+	float Vel_counts = (float) diffPosition / diffTime;
 
 	// Raw angular acceleration in counts/sec²
-	Prismatic_QEIdata.QEIAcceleration = (Vel_counts_p - Prismatic_QEIdata.QEIVelocity) / diffTime_p;
+	Prismatic_QEIdata.QEIAcceleration = (Vel_counts - Prismatic_QEIdata.QEIVelocity) / diffTime;
 
 	// Store raw velocity
-	Prismatic_QEIdata.QEIVelocity = Vel_counts_p;
+	Prismatic_QEIdata.QEIVelocity = Vel_counts;
 
 	// Velocity in mm/s
-	Prismatic_QEIdata.Velocity_mm = Vel_counts_p * (10.0f / 8192.0f);
+	Prismatic_QEIdata.Velocity_mm = Vel_counts * (10.0f / 8192.0f);
 
 	// Acceleration in mm/s²
 	Prismatic_QEIdata.Acceleration_mm = Prismatic_QEIdata.QEIAcceleration * (10.0f / 8192.0f);
 
 	// Absolute position update
-	Prismatic_QEIdata.AbsolutePosition += diffPosition_p;
+	Prismatic_QEIdata.AbsolutePosition += diffPosition;
 
 	// mm position
 	Prismatic_QEIdata.mmPosition = Prismatic_QEIdata.AbsolutePosition * (10.0f / 8192.0f);
@@ -1616,8 +1574,7 @@ void Set_Motor(int motor_num,float speed){
 
 void Set_Servo(int Pen_Pos){
 	if (Pen_Pos == 0) {
-		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 300);
-		servo_timer = micros();
+		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 500);
 	} else {
 		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1000);
 	}
