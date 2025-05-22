@@ -77,7 +77,31 @@ volatile uint32_t pulse_width_us[3] = { 0 };
 uint32_t revolute_raw;
 uint32_t prismatic_raw;
 
+typedef struct {
+	uint32_t Position[2];
+	uint64_t TimeStamp[2];
+	float QEIPostion_1turn;
+	float QEIAngularVelocity;
+	float QEIAngularAcceleration;
+	float AngularVelocity_rad;
+	float AngularAcceleration_rad;
+	int64_t AbsolutePosition;
+	float RadPosition;
+} Revolute_QEI_StructureTypeDef;
+
 Revolute_QEI_StructureTypeDef Revolute_QEIdata = { 0 };
+
+typedef struct {
+	uint32_t Position[2];
+	uint64_t TimeStamp[2];
+	float QEIVelocity;
+	float QEIAcceleration;
+	float Velocity_mm;
+	float Acceleration_mm;
+	int64_t AbsolutePosition;
+	float mmPosition;
+} Prismatic_QEI_StructureTypeDef;
+
 Prismatic_QEI_StructureTypeDef Prismatic_QEIdata = { 0 };
 
 enum {
@@ -164,6 +188,13 @@ uint8_t State_BaseSystem = 0;
 uint8_t Pen_BaseSystem = 0;
 ModbusHandleTypedef hmodbus;
 u16u8_t registerFrame[200];
+
+int16_t speed_theta  = 0;
+int16_t accel_theta  = 0;
+int16_t pos_theta    = 0;
+int16_t speed_r = 0;
+int16_t accel_r = 0;
+int16_t pos_r   = 0;
 //////////////////////
 /* USER CODE END PV */
 
@@ -286,6 +317,34 @@ int main(void) {
 	/* USER CODE BEGIN WHILE */
 	while (1) {
 		//BaseSystem//////////
+
+
+		speed_theta  = RAD_TO_DEG10(Revolute_QEIdata.AngularVelocity_rad);
+		accel_theta  = RAD_TO_DEG10(Revolute_QEIdata.AngularAcceleration_rad);
+		pos_theta    = RAD_TO_DEG10(Revolute_QEIdata.RadPosition);
+		speed_r = FLOAT_TO_intU16(Prismatic_QEIdata.Velocity_mm);
+		accel_r = FLOAT_TO_intU16(Prismatic_QEIdata.Acceleration_mm);
+		pos_r   = FLOAT_TO_intU16(Prismatic_QEIdata.mmPosition);
+
+		// Prismatic (Linear)
+//		REG16(REG_SPEED_R) = FLOAT_TO_intU16(Prismatic_QEIdata.Velocity_mm);
+//		REG16(REG_ACCELERATION_R) = FLOAT_TO_intU16(Prismatic_QEIdata.Acceleration_mm);
+//		REG16(REG_POSITION_R) = FLOAT_TO_intU16(Prismatic_QEIdata.mmPosition);
+//
+//		// Revolute (Rotary)
+//		REG16(REG_SPEED_THETA) = RAD_TO_DEG10(
+//				Revolute_QEIdata.AngularVelocity_rad);
+//		REG16(REG_ACCELERATION_THETA) = RAD_TO_DEG10(
+//				Revolute_QEIdata.AngularAcceleration_rad);
+//		REG16(REG_POSITION_THETA) = RAD_TO_DEG10(
+//				Revolute_QEIdata.RadPosition);
+
+//		REG16(REG_SPEED_R) = 100;
+//		REG16(REG_ACCELERATION_R) = 100;
+//		REG16(REG_POSITION_R) = 100;
+//		REG16(REG_SPEED_THETA) = 100;
+//		REG16(REG_ACCELERATION_THETA) = 100;
+//		REG16(REG_POSITION_THETA) = 100;
 		Modbus_Protocal_Worker();
 		//////////////////////
 
@@ -317,11 +376,11 @@ int main(void) {
 		Receiver_Period[0] = __HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_1);
 		Receiver_Period[1] = __HAL_TIM_GET_COMPARE(&htim1, TIM_CHANNEL_2);
 		float RX_temp = map(
-				__HAL_TIM_GET_COMPARE(&htim2,TIM_CHANNEL_2) - 1500.00, -500.00,
-				500.00, -100.00, 100.00);
+		__HAL_TIM_GET_COMPARE(&htim2,TIM_CHANNEL_2) - 1500.00, -500.00, 500.00,
+				-100.00, 100.00);
 		float RY_temp = map(
-				__HAL_TIM_GET_COMPARE(&htim1,TIM_CHANNEL_1) - 18530.00, -500.00,
-				500.00, -100.00, 100.00);
+		__HAL_TIM_GET_COMPARE(&htim1,TIM_CHANNEL_1) - 18530.00, -500.00, 500.00,
+				-100.00, 100.00);
 
 		if (RX_temp >= -4 && RX_temp <= 4)
 			Receiver[0] = 0.00;
@@ -1723,6 +1782,16 @@ void Reset_P() {
 	Prismatic_QEIdata.AbsolutePosition = -2.00 / (10.0f / 8192.0f);
 //	Prismatic_QEIdata.mmPosition = 0;
 }
+
+//void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
+//		float *rev_ang_vel_rad, float *rev_ang_acc_rad, float *rev_rad_pos) {
+//    if (prism_vel_mm)   *prism_vel_mm   = Prismatic_QEIdata.Velocity_mm;
+//    if (prism_acc_mm)   *prism_acc_mm   = Prismatic_QEIdata.Acceleration_mm;
+//    if (prism_mm_pos)   *prism_mm_pos   = Prismatic_QEIdata.mmPosition;
+//    if (rev_ang_vel_rad)*rev_ang_vel_rad= Revolute_QEIdata.AngularVelocity_rad;
+//    if (rev_ang_acc_rad)*rev_ang_acc_rad= Revolute_QEIdata.AngularAcceleration_rad;
+//    if (rev_rad_pos)    *rev_rad_pos    = Revolute_QEIdata.RadPosition;
+//}
 /* USER CODE END 4 */
 
 /**

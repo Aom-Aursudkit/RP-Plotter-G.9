@@ -160,35 +160,21 @@ enum {
 
 #define REG16(reg)   (registerFrame[(reg)].U16)     // 16-bit unsigned
 #define REG8_LO(reg) (registerFrame[(reg)].U8[0])   // Low byte
-#define REG8_HI(reg) (registerFrame[(reg)].U8[1])   // High byte
+#define REG8_HI(reg) (registerFrame[(reg)].U81])   // High byte
 
-// Declare your structs if not already included
-typedef struct {
-	uint32_t Position[2];
-	uint64_t TimeStamp[2];
-	float QEIPostion_1turn;
-	float QEIAngularVelocity;
-	float QEIAngularAcceleration;
-	float AngularVelocity_rad;
-	float AngularAcceleration_rad;
-	int64_t AbsolutePosition;
-	float RadPosition;
-} Revolute_QEI_StructureTypeDef;
+void Get_QRIdata(float *prism_vel_mm,
+                 float *prism_acc_mm,
+                 float *prism_mm_pos,
+                 float *rev_ang_vel_rad,
+                 float *rev_ang_acc_rad,
+                 float *rev_rad_pos);
 
-typedef struct {
-	uint32_t Position[2];
-	uint64_t TimeStamp[2];
-	float QEIVelocity;
-	float QEIAcceleration;
-	float Velocity_mm;
-	float Acceleration_mm;
-	int64_t AbsolutePosition;
-	float mmPosition;
-} Prismatic_QEI_StructureTypeDef;
+// Helper macro to clamp and round a float to uint16_t
+#define FLOAT_TO_intU16(value) ((int16_t)(value * 10.0f) + 0.5f)
 
+// Helper macro to convert radians to degrees * 10, safely
+#define RAD_TO_DEG10(value) ((int16_t)((value) * (1800.0f / M_PI) + 0.5f))
 // External variables
-extern Revolute_QEI_StructureTypeDef Revolute_QEIdata;
-extern Prismatic_QEI_StructureTypeDef Prismatic_QEIdata;
 
 extern uint8_t Pen_Status;
 extern uint8_t Pen_BaseSystem;

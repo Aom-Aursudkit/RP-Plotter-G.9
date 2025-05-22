@@ -136,9 +136,9 @@ unsigned short CRC16(puchMsg, usDataLen)
 }
 
 void ResetAllTargets(void) {
-    for (int i = 0; i < 10; i++) {
-        SET_TARGET(i, 0, 0);
-    }
+	for (int i = 0; i < 10; i++) {
+		SET_TARGET(i, 0, 0);
+	}
 }
 
 void Modbus_Protocal_Worker() {
@@ -147,7 +147,7 @@ void Modbus_Protocal_Worker() {
 	REG16(HEART_BEAT) = 22881;
 	REG16(REG_SERVO_LIMIT_SWITCH) = Pen_Status ? 2 : 1;
 	Pen_BaseSystem = REG16(REG_SERVO_CMD_DOWN) ? 1 : 0;
-	TargetR_BaseSystem = REG16(REG_TARGET_GOAL_R)   * 0.1f;
+	TargetR_BaseSystem = REG16(REG_TARGET_GOAL_R) * 0.1f;
 	TargetP_BaseSystem = REG16(REG_TARGET_GOAL_THETA) * 0.1f;
 
 	uint16_t base_status = REG16(REG_BASE_STATUS);
@@ -155,56 +155,74 @@ void Modbus_Protocal_Worker() {
 
 	static int currentSlot = 0;
 	switch (base_status) {
-	    case 1:  // Home
-	        State_BaseSystem = 3;
-	        // if either of the first two target registers is non-zero
-	        if (REG16(REG_TARGET_BASE_ADDR) || REG16(REG_TARGET_BASE_ADDR + 1)) {
-	            ResetAllTargets();
-	            currentSlot = 0;
-	        }
-	        break;
+	case 1:  // Home
+		State_BaseSystem = 3;
+		// if either of the first two target registers is non-zero
+		if (REG16(REG_TARGET_BASE_ADDR) || REG16(REG_TARGET_BASE_ADDR + 1)) {
+			ResetAllTargets();
+			currentSlot = 0;
+		}
+		break;
 
-	    case 2:  // Run Jog Mode
-	        State_BaseSystem = 1;
-	        break;
+	case 2:  // Run Jog Mode
+		State_BaseSystem = 1;
+		break;
 
-	    case 8:  // Go To Target
-	        State_BaseSystem = 2;
-	        // enqueue the next target
-	        SET_TARGET(currentSlot,
-	                   REG16(REG_TARGET_GOAL_R),
-	                   REG16(REG_TARGET_GOAL_THETA));
+	case 8:  // Go To Target
+		State_BaseSystem = 2;
+		// enqueue the next target
+		SET_TARGET(currentSlot, REG16(REG_TARGET_GOAL_R),
+				REG16(REG_TARGET_GOAL_THETA));
 
-	        // increment _and_ wrap+reset in one go
-	        if (++currentSlot >= 10) {
-	            currentSlot = 0;
-	            ResetAllTargets();
-	        }
-	        break;
+		// increment _and_ wrap+reset in one go
+		if (++currentSlot >= 10) {
+			currentSlot = 0;
+			ResetAllTargets();
+		}
+		break;
 
-	    default: // Run Point Mode
-	        State_BaseSystem = 0;
-	        break;
+	default: // Run Point Mode
+		State_BaseSystem = 0;
+		break;
 	}
-
 
 //		REG16(REG_SPEED_R) = 100;
 //		REG16(REG_ACCELERATION_R) = 100;
 //		REG16(REG_POSITION_R) = 100;
 //		REG16(REG_SPEED_THETA) = 100;
 //		REG16(REG_POSITION_THETA) = 100;
-	REG16(REG_SPEED_R) = (int16_t) Prismatic_QEIdata.Velocity_mm * 10.0f;
-	REG16(REG_ACCELERATION_R) = (int16_t) Prismatic_QEIdata.Acceleration_mm
-			* 10.0f;
-	REG16(REG_POSITION_R) = (int16_t) Prismatic_QEIdata.mmPosition * 10.0f;
-
-	REG16(REG_SPEED_THETA) = (int16_t) Revolute_QEIdata.AngularVelocity_rad
-			* (180.0f / M_PI) * 10.0f;
-	REG16(REG_ACCELERATION_THETA) =
-			(int16_t) Revolute_QEIdata.AngularAcceleration_rad * (180.0f / M_PI)
-					* 10.0f;
-	REG16(REG_POSITION_THETA) = (int16_t) Revolute_QEIdata.RadPosition
-			* (180.0f / M_PI) * 10.0f;
+//	float Velocity_mm, Acceleration_mm, mmPosition, AngularVelocity_rad,
+//			AngularAcceleration_rad, RadPosition;
+//	Get_QRIdata(&Velocity_mm, &Acceleration_mm, &mmPosition,
+//			&AngularVelocity_rad, &AngularAcceleration_rad, &RadPosition);
+//	REG16(REG_SPEED_R) = (int16_t) Velocity_mm * 10.0f;
+//	REG16(REG_ACCELERATION_R) = (int16_t) Acceleration_mm * 10.0f;
+//	REG16(REG_POSITION_R) = (int16_t) mmPosition * 10.0f;
+//
+//	REG16(REG_SPEED_THETA) = (int16_t) AngularVelocity_rad * (180.0f / M_PI)
+//			* 10.0f;
+//	REG16(REG_ACCELERATION_THETA) = (int16_t) AngularAcceleration_rad
+//			* (180.0f / M_PI) * 10.0f;
+//	REG16(REG_POSITION_THETA) = (int16_t) RadPosition * (180.0f / M_PI)
+//			* 10.0f;
+//	REG16(REG_SPEED_R) = (int16_t) Prismatic_QEIdata.Velocity_mm * 10.0f;
+//		REG16(REG_ACCELERATION_R) = (int16_t) Prismatic_QEIdata.Acceleration_mm
+//				* 10.0f;
+//		REG16(REG_POSITION_R) = (int16_t) Prismatic_QEIdata.mmPosition * 10.0f;
+//
+//		REG16(REG_SPEED_THETA) = (int16_t) Revolute_QEIdata.AngularVelocity_rad
+//				* (180.0f / M_PI) * 10.0f;
+//		REG16(REG_ACCELERATION_THETA) =
+//				(int16_t) Revolute_QEIdata.AngularAcceleration_rad * (180.0f / M_PI)
+//						* 10.0f;
+//		REG16(REG_POSITION_THETA) = (int16_t) Revolute_QEIdata.RadPosition
+//				* (180.0f / M_PI) * 10.0f;
+//	Prismatic_QEIdata.Velocity_mm
+//	Prismatic_QEIdata.Acceleration_mm
+//	Prismatic_QEIdata.mmPosition
+// Revolute_QEIdata.AngularVelocity_rad
+//Revolute_QEIdata.AngularAcceleration_rad
+//Revolute_QEIdata.RadPosition
 
 	//--Modbus
 	switch (hModbus->Mstatus) {
