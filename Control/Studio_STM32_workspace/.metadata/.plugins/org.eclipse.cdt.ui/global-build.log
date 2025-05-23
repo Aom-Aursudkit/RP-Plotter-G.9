@@ -331,3 +331,88 @@ Finished building: default.size.stdout
  
 Finished building: RP_Plotter.list
  
+14:55:00 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/ModBusRTU.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/ModBusRTU.d" -MT"Core/Src/ModBusRTU.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/ModBusRTU.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:293:9: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  293 |         DWT_Init();
+      |         ^~~~~~~~
+../Core/Src/main.c:312:9: warning: statement with no effect [-Wunused-value]
+  312 |         ResetAllTargets;
+      |         ^~~~~~~~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1513:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1513 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:293:9: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  293 |         DWT_Init();
+      |         ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\lasto\STM32CubeIDE\poter\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  49352	    524	   5696	  55572	   d914	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+14:55:33 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j8 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  49352	    524	   5696	  55572	   d914	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+14:56:23 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j8 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  49352	    524	   5696	  55572	   d914	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+14:56:46 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j8 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  49352	    524	   5696	  55572	   d914	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+14:57:13 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G474xx -c -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/ARM_CMSIS/CMSIS/Core/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/PrivateInclude/ -I../Middlewares/Third_Party/ARM_CMSIS/Include/ -I../Middlewares/Third_Party/ARM_CMSIS/Include -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BasicMathFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/BayesFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/CommonTables" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ComplexMathFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/ControllerFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/DistanceFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FilteringFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/InterpolationFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/MatrixFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/QuaternionMathFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/StatisticsFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SupportFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/SVMFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/TransformFunctions" -I"C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/WindowFunctions" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:293:9: warning: implicit declaration of function 'DWT_Init' [-Wimplicit-function-declaration]
+  293 |         DWT_Init();
+      |         ^~~~~~~~
+../Core/Src/main.c:312:9: warning: statement with no effect [-Wunused-value]
+  312 |         ResetAllTargets;
+      |         ^~~~~~~~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1513:6: warning: conflicting types for 'DWT_Init'; have 'void(void)'
+ 1513 | void DWT_Init(void) {
+      |      ^~~~~~~~
+../Core/Src/main.c:293:9: note: previous implicit declaration of 'DWT_Init' with type 'void(void)'
+  293 |         DWT_Init();
+      |         ^~~~~~~~
+arm-none-eabi-gcc -o "RP_Plotter.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\lasto\STM32CubeIDE\poter\RP-Plotter-G.9\Control\Studio_STM32_workspace\RP_Plotter\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RP_Plotter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: RP_Plotter.elf
+ 
+arm-none-eabi-size  RP_Plotter.elf 
+arm-none-eabi-objdump -h -S RP_Plotter.elf  > "RP_Plotter.list"
+   text	   data	    bss	    dec	    hex	filename
+  49352	    524	   5696	  55572	   d914	RP_Plotter.elf
+Finished building: default.size.stdout
+ 
+Finished building: RP_Plotter.list
+ 
+14:58:51 **** Incremental Build of configuration Debug for project RP_Plotter ****
+make -j8 all 
+arm-none-eabi-size  RP_Plotter.elf 
+   text	   data	    bss	    dec	    hex	filename
+  49352	    524	   5696	  55572	   d914	RP_Plotter.elf
+Finished building: default.size.stdout
+ 

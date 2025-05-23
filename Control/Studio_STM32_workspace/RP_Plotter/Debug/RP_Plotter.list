@@ -35,17 +35,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  15 .debug_rnglists 00000e7b  00000000  00000000  00029558  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  000271fa  00000000  00000000  0002a3d3  2**0
+ 16 .debug_macro  000271ff  00000000  00000000  0002a3d3  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00015fd6  00000000  00000000  000515cd  2**0
+ 17 .debug_line   00015fa4  00000000  00000000  000515d2  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000ffc03  00000000  00000000  000675a3  2**0
+ 18 .debug_str    000ffc03  00000000  00000000  00067576  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  001671a6  2**0
+ 19 .comment      00000043  00000000  00000000  00167179  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00005270  00000000  00000000  001671ec  2**2
+ 20 .debug_frame  00005270  00000000  00000000  001671bc  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000089  00000000  00000000  0016c45c  2**0
+ 21 .debug_line_str 00000089  00000000  00000000  0016c42c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1891,9 +1891,8 @@ void Modbus_Protocal_Worker() {
  8001438:	e000      	b.n	800143c <Modbus_Protocal_Worker+0x13c>
 		break;
  800143a:	bf00      	nop
-//		REG16(REG_POSITION_R) = 100;
-//		REG16(REG_SPEED_THETA) = 100;
-//		REG16(REG_POSITION_THETA) = 100;
+	}
+
 	float Velocity_mm, Acceleration_mm, mmPosition, AngularVelocity_rad,
 			AngularAcceleration_rad, RadPosition;
 	Get_QRIdata(&Velocity_mm, &Acceleration_mm, &mmPosition,
@@ -1908,7 +1907,6 @@ void Modbus_Protocal_Worker() {
  8001458:	4623      	mov	r3, r4
  800145a:	f002 ff73 	bl	8004344 <Get_QRIdata>
 			&AngularVelocity_rad, &AngularAcceleration_rad, &RadPosition);
-#define RAD_TO_DEG(x) ((x) * (180.0f / M_PI))
 
 // Position remap: [-π/2, 3π/2] → [0, 360]
 	float mappedDeg = RAD_TO_DEG(RadPosition + (M_PI / 2.0f));
@@ -2037,9 +2035,6 @@ void Modbus_Protocal_Worker() {
  80015a0:	b29a      	uxth	r2, r3
  80015a2:	4b11      	ldr	r3, [pc, #68]	@ (80015e8 <Modbus_Protocal_Worker+0x2e8>)
  80015a4:	849a      	strh	r2, [r3, #36]	@ 0x24
-// Revolute_QEIdata.AngularVelocity_rad
-//Revolute_QEIdata.AngularAcceleration_rad
-//Revolute_QEIdata.RadPosition
 
 	//--Modbus
 	switch (hModbus->Mstatus) {
@@ -2996,11 +2991,11 @@ int main(void) {
  8001ba0:	499b      	ldr	r1, [pc, #620]	@ (8001e10 <main+0x360>)
  8001ba2:	4898      	ldr	r0, [pc, #608]	@ (8001e04 <main+0x354>)
  8001ba4:	f7ff faea 	bl	800117c <Modbus_init>
-//		REG16(REG_ACCELERATION_R) = accel_theta;
-//		REG16(REG_POSITION_R) = pos_theta;
-//		REG16(REG_SPEED_THETA) = speed_r;
-//		REG16(REG_ACCELERATION_THETA) = accel_r;
-//		REG16(REG_POSITION_THETA) = pos_r;
+
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
+	while (1) {
+		//BaseSystem//////////
 		Modbus_Protocal_Worker();
  8001ba8:	f7ff fbaa 	bl	8001300 <Modbus_Protocal_Worker>
 		//////////////////////
@@ -8139,50 +8134,56 @@ void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
  800434c:	60b9      	str	r1, [r7, #8]
  800434e:	607a      	str	r2, [r7, #4]
  8004350:	603b      	str	r3, [r7, #0]
-    if (prism_vel_mm)   *prism_vel_mm   = Prismatic_QEIdata.Velocity_mm;
+	if (prism_vel_mm)
  8004352:	68fb      	ldr	r3, [r7, #12]
  8004354:	2b00      	cmp	r3, #0
  8004356:	d003      	beq.n	8004360 <Get_QRIdata+0x1c>
+		*prism_vel_mm = Prismatic_QEIdata.Velocity_mm;
  8004358:	4b16      	ldr	r3, [pc, #88]	@ (80043b4 <Get_QRIdata+0x70>)
  800435a:	6a1a      	ldr	r2, [r3, #32]
  800435c:	68fb      	ldr	r3, [r7, #12]
  800435e:	601a      	str	r2, [r3, #0]
-    if (prism_acc_mm)   *prism_acc_mm   = Prismatic_QEIdata.Acceleration_mm;
+	if (prism_acc_mm)
  8004360:	68bb      	ldr	r3, [r7, #8]
  8004362:	2b00      	cmp	r3, #0
  8004364:	d003      	beq.n	800436e <Get_QRIdata+0x2a>
+		*prism_acc_mm = Prismatic_QEIdata.Acceleration_mm;
  8004366:	4b13      	ldr	r3, [pc, #76]	@ (80043b4 <Get_QRIdata+0x70>)
  8004368:	6a5a      	ldr	r2, [r3, #36]	@ 0x24
  800436a:	68bb      	ldr	r3, [r7, #8]
  800436c:	601a      	str	r2, [r3, #0]
-    if (prism_mm_pos)   *prism_mm_pos   = Prismatic_QEIdata.mmPosition;
+	if (prism_mm_pos)
  800436e:	687b      	ldr	r3, [r7, #4]
  8004370:	2b00      	cmp	r3, #0
  8004372:	d003      	beq.n	800437c <Get_QRIdata+0x38>
+		*prism_mm_pos = Prismatic_QEIdata.mmPosition;
  8004374:	4b0f      	ldr	r3, [pc, #60]	@ (80043b4 <Get_QRIdata+0x70>)
  8004376:	6b1a      	ldr	r2, [r3, #48]	@ 0x30
  8004378:	687b      	ldr	r3, [r7, #4]
  800437a:	601a      	str	r2, [r3, #0]
-    if (rev_ang_vel_rad)*rev_ang_vel_rad= Revolute_QEIdata.AngularVelocity_rad;
+	if (rev_ang_vel_rad)
  800437c:	683b      	ldr	r3, [r7, #0]
  800437e:	2b00      	cmp	r3, #0
  8004380:	d003      	beq.n	800438a <Get_QRIdata+0x46>
+		*rev_ang_vel_rad = Revolute_QEIdata.AngularVelocity_rad;
  8004382:	4b0d      	ldr	r3, [pc, #52]	@ (80043b8 <Get_QRIdata+0x74>)
  8004384:	6a5a      	ldr	r2, [r3, #36]	@ 0x24
  8004386:	683b      	ldr	r3, [r7, #0]
  8004388:	601a      	str	r2, [r3, #0]
-    if (rev_ang_acc_rad)*rev_ang_acc_rad= Revolute_QEIdata.AngularAcceleration_rad;
+	if (rev_ang_acc_rad)
  800438a:	69bb      	ldr	r3, [r7, #24]
  800438c:	2b00      	cmp	r3, #0
  800438e:	d003      	beq.n	8004398 <Get_QRIdata+0x54>
+		*rev_ang_acc_rad = Revolute_QEIdata.AngularAcceleration_rad;
  8004390:	4b09      	ldr	r3, [pc, #36]	@ (80043b8 <Get_QRIdata+0x74>)
  8004392:	6a9a      	ldr	r2, [r3, #40]	@ 0x28
  8004394:	69bb      	ldr	r3, [r7, #24]
  8004396:	601a      	str	r2, [r3, #0]
-    if (rev_rad_pos)    *rev_rad_pos    = Revolute_QEIdata.RadPosition;
+	if (rev_rad_pos)
  8004398:	69fb      	ldr	r3, [r7, #28]
  800439a:	2b00      	cmp	r3, #0
  800439c:	d003      	beq.n	80043a6 <Get_QRIdata+0x62>
+		*rev_rad_pos = Revolute_QEIdata.RadPosition;
  800439e:	4b06      	ldr	r3, [pc, #24]	@ (80043b8 <Get_QRIdata+0x74>)
  80043a0:	6b9a      	ldr	r2, [r3, #56]	@ 0x38
  80043a2:	69fb      	ldr	r3, [r7, #28]

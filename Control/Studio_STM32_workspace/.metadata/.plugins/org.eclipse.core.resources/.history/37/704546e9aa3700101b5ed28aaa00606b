@@ -124,7 +124,6 @@ extern u16u8_t registerFrame[200];  // Frame data container
 
 void ResetAllTargets(void);
 
-#define RAD_TO_DEG(x) ((x) * (180.0f / M_PI))
 // ── Bulk Read Helper ─────────────────────────────────────────────────────────
 
 //static inline TargetSet readAllTargets(void) {
@@ -139,7 +138,8 @@ void ResetAllTargets(void);
 // ── Register Address Map ─────────────────────────────────────────────────────
 
 enum {
-	HEART_BEAT = 0x00, REG_BASE_STATUS = 0x01,  // R
+	HEART_BEAT = 0x00,
+	REG_BASE_STATUS = 0x01,  // R
 	REG_SERVO_LIMIT_SWITCH = 0x03,  // W
 	REG_SERVO_CMD_UP = 0x04,  // R
 	REG_SERVO_CMD_DOWN = 0x05,  // R
@@ -162,8 +162,12 @@ enum {
 #define REG8_LO(reg) (registerFrame[(reg)].U8[0])   // Low byte
 #define REG8_HI(reg) (registerFrame[(reg)].U81])   // High byte
 
-void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
-		float *rev_ang_vel_rad, float *rev_ang_acc_rad, float *rev_rad_pos);
+void Get_QRIdata(float *prism_vel_mm,
+                 float *prism_acc_mm,
+                 float *prism_mm_pos,
+                 float *rev_ang_vel_rad,
+                 float *rev_ang_acc_rad,
+                 float *rev_rad_pos);
 
 // Helper macro to clamp and round a float to uint16_t
 #define FLOAT_TO_intU16(value) ((int16_t)(value * 10.0f) + 0.5f)

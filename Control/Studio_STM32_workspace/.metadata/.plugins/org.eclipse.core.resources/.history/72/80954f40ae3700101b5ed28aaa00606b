@@ -189,12 +189,12 @@ uint8_t Pen_BaseSystem = 0;
 ModbusHandleTypedef hmodbus;
 u16u8_t registerFrame[200];
 
-//int16_t speed_theta = 0;
-//int16_t accel_theta = 0;
-//int16_t pos_theta = 0;
-//int16_t speed_r = 0;
-//int16_t accel_r = 0;
-//int16_t pos_r = 0;
+int16_t speed_theta = 0;
+int16_t accel_theta = 0;
+int16_t pos_theta = 0;
+int16_t speed_r = 0;
+int16_t accel_r = 0;
+int16_t pos_r = 0;
 //////////////////////
 /* USER CODE END PV */
 
