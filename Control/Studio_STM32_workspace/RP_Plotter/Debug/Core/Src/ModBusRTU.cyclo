@@ -5,8 +5,8 @@
 ../Core/Src/ModBusRTU.c:121:16:CRC16	2
 ../Core/Src/ModBusRTU.c:138:6:ResetAllTargets	4
 ../Core/Src/ModBusRTU.c:144:6:Modbus_Protocal_Worker	25
-../Core/Src/ModBusRTU.c:338:6:modbusWrite1Register	2
-../Core/Src/ModBusRTU.c:359:6:modbusRead1Register	6
-../Core/Src/ModBusRTU.c:393:6:ModbusErrorReply	1
-../Core/Src/ModBusRTU.c:399:6:Modbus_frame_response	3
-../Core/Src/ModBusRTU.c:415:6:Modbus_Emission	3
+../Core/Src/ModBusRTU.c:337:6:modbusWrite1Register	2
+../Core/Src/ModBusRTU.c:358:6:modbusRead1Register	6
+../Core/Src/ModBusRTU.c:392:6:ModbusErrorReply	1
+../Core/Src/ModBusRTU.c:398:6:Modbus_frame_response	3
+../Core/Src/ModBusRTU.c:414:6:Modbus_Emission	3
