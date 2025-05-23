@@ -189,12 +189,12 @@ uint8_t Pen_BaseSystem = 0;
 ModbusHandleTypedef hmodbus;
 u16u8_t registerFrame[200];
 
-int16_t speed_theta  = 0;
-int16_t accel_theta  = 0;
-int16_t pos_theta    = 0;
+int16_t speed_theta = 0;
+int16_t accel_theta = 0;
+int16_t pos_theta = 0;
 int16_t speed_r = 0;
 int16_t accel_r = 0;
-int16_t pos_r   = 0;
+int16_t pos_r = 0;
 //////////////////////
 /* USER CODE END PV */
 
@@ -318,13 +318,14 @@ int main(void) {
 	while (1) {
 		//BaseSystem//////////
 
-
-		speed_theta  = RAD_TO_DEG10(Revolute_QEIdata.AngularVelocity_rad);
-		accel_theta  = RAD_TO_DEG10(Revolute_QEIdata.AngularAcceleration_rad);
-		pos_theta    = RAD_TO_DEG10(Revolute_QEIdata.RadPosition);
-		speed_r = FLOAT_TO_intU16(Prismatic_QEIdata.Velocity_mm);
-		accel_r = FLOAT_TO_intU16(Prismatic_QEIdata.Acceleration_mm);
-		pos_r   = FLOAT_TO_intU16(Prismatic_QEIdata.mmPosition);
+//		int16_t speed_theta = RAD_TO_DEG10(
+//				Revolute_QEIdata.AngularVelocity_rad);
+//		int16_t accel_theta = RAD_TO_DEG10(
+//				Revolute_QEIdata.AngularAcceleration_rad);
+//		int16_t pos_theta = RAD_TO_DEG10(Revolute_QEIdata.RadPosition);
+//		int16_t speed_r = FLOAT_TO_intU16(Prismatic_QEIdata.Velocity_mm);
+//		int16_t accel_r = FLOAT_TO_intU16(Prismatic_QEIdata.Acceleration_mm);
+//		int16_t pos_r = FLOAT_TO_intU16(Prismatic_QEIdata.mmPosition);
 
 		// Prismatic (Linear)
 //		REG16(REG_SPEED_R) = FLOAT_TO_intU16(Prismatic_QEIdata.Velocity_mm);
@@ -339,12 +340,12 @@ int main(void) {
 //		REG16(REG_POSITION_THETA) = RAD_TO_DEG10(
 //				Revolute_QEIdata.RadPosition);
 
-//		REG16(REG_SPEED_R) = 100;
-//		REG16(REG_ACCELERATION_R) = 100;
-//		REG16(REG_POSITION_R) = 100;
-//		REG16(REG_SPEED_THETA) = 100;
-//		REG16(REG_ACCELERATION_THETA) = 100;
-//		REG16(REG_POSITION_THETA) = 100;
+//		REG16(REG_SPEED_R) = speed_theta;
+//		REG16(REG_ACCELERATION_R) = accel_theta;
+//		REG16(REG_POSITION_R) = pos_theta;
+//		REG16(REG_SPEED_THETA) = speed_r;
+//		REG16(REG_ACCELERATION_THETA) = accel_r;
+//		REG16(REG_POSITION_THETA) = pos_r;
 		Modbus_Protocal_Worker();
 		//////////////////////
 
@@ -1783,15 +1784,15 @@ void Reset_P() {
 //	Prismatic_QEIdata.mmPosition = 0;
 }
 
-//void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
-//		float *rev_ang_vel_rad, float *rev_ang_acc_rad, float *rev_rad_pos) {
-//    if (prism_vel_mm)   *prism_vel_mm   = Prismatic_QEIdata.Velocity_mm;
-//    if (prism_acc_mm)   *prism_acc_mm   = Prismatic_QEIdata.Acceleration_mm;
-//    if (prism_mm_pos)   *prism_mm_pos   = Prismatic_QEIdata.mmPosition;
-//    if (rev_ang_vel_rad)*rev_ang_vel_rad= Revolute_QEIdata.AngularVelocity_rad;
-//    if (rev_ang_acc_rad)*rev_ang_acc_rad= Revolute_QEIdata.AngularAcceleration_rad;
-//    if (rev_rad_pos)    *rev_rad_pos    = Revolute_QEIdata.RadPosition;
-//}
+void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
+		float *rev_ang_vel_rad, float *rev_ang_acc_rad, float *rev_rad_pos) {
+    if (prism_vel_mm)   *prism_vel_mm   = Prismatic_QEIdata.Velocity_mm;
+    if (prism_acc_mm)   *prism_acc_mm   = Prismatic_QEIdata.Acceleration_mm;
+    if (prism_mm_pos)   *prism_mm_pos   = Prismatic_QEIdata.mmPosition;
+    if (rev_ang_vel_rad)*rev_ang_vel_rad= Revolute_QEIdata.AngularVelocity_rad;
+    if (rev_ang_acc_rad)*rev_ang_acc_rad= Revolute_QEIdata.AngularAcceleration_rad;
+    if (rev_rad_pos)    *rev_rad_pos    = Revolute_QEIdata.RadPosition;
+}
 /* USER CODE END 4 */
 
 /**

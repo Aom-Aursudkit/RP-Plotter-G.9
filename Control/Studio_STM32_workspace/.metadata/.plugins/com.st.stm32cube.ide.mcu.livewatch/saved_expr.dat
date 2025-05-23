@@ -22,3 +22,9 @@ pid_r
 pid_p
 loop_counter
 Pen_Status
+accel_theta
+accel_theta
+pos_theta
+speed_r
+accel_r
+pos_r

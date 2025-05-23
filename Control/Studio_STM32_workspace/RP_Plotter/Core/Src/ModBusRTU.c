@@ -191,13 +191,25 @@ void Modbus_Protocal_Worker() {
 //		REG16(REG_POSITION_R) = 100;
 //		REG16(REG_SPEED_THETA) = 100;
 //		REG16(REG_POSITION_THETA) = 100;
-//	float Velocity_mm, Acceleration_mm, mmPosition, AngularVelocity_rad,
-//			AngularAcceleration_rad, RadPosition;
-//	Get_QRIdata(&Velocity_mm, &Acceleration_mm, &mmPosition,
-//			&AngularVelocity_rad, &AngularAcceleration_rad, &RadPosition);
-//	REG16(REG_SPEED_R) = (int16_t) Velocity_mm * 10.0f;
-//	REG16(REG_ACCELERATION_R) = (int16_t) Acceleration_mm * 10.0f;
-//	REG16(REG_POSITION_R) = (int16_t) mmPosition * 10.0f;
+	float Velocity_mm, Acceleration_mm, mmPosition, AngularVelocity_rad,
+			AngularAcceleration_rad, RadPosition;
+	Get_QRIdata(&Velocity_mm, &Acceleration_mm, &mmPosition,
+			&AngularVelocity_rad, &AngularAcceleration_rad, &RadPosition);
+#define RAD_TO_DEG(x) ((x) * (180.0f / M_PI))
+
+// Position remap: [-π/2, 3π/2] → [0, 360]
+float mappedDeg = RAD_TO_DEG(RadPosition + (M_PI / 2.0f));
+REG16(REG_POSITION_THETA) = (int16_t)(mappedDeg * 10.0f);
+
+// Speed and acceleration: normal conversion
+REG16(REG_SPEED_THETA) = (int16_t)(RAD_TO_DEG(AngularVelocity_rad) * 10.0f);
+REG16(REG_ACCELERATION_THETA) = (int16_t)(RAD_TO_DEG(AngularAcceleration_rad) * 10.0f);
+
+
+
+	REG16(REG_SPEED_R) = (int16_t) Velocity_mm * 10.0f;
+	REG16(REG_ACCELERATION_R) = (int16_t) Acceleration_mm * 10.0f;
+	REG16(REG_POSITION_R) = (int16_t) mmPosition * 10.0f;
 //
 //	REG16(REG_SPEED_THETA) = (int16_t) AngularVelocity_rad * (180.0f / M_PI)
 //			* 10.0f;

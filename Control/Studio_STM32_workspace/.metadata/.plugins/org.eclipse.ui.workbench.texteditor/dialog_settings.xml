@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<item key="hasShownOverlayPopupBefore" value="true"/>
+	<item key="replaceBarOpen" value="true"/>
+	<list key="replacehistory">
+		<item value="int"/>
+	</list>
+	<list key="searchhistory">
+		<item value="int16_t"/>
+		<item value="Revolute_QEIdata."/>
+		<item value="Prismatic_QEIdata."/>
+	</list>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item key="selection" value="EXTI"/>
 		<item key="wrap" value="true"/>
