@@ -1902,7 +1902,7 @@ void Modbus_Protocal_Worker() {
  800143a:	f7ff fb43 	bl	8000ac4 <__aeabi_d2f>
  800143e:	4603      	mov	r3, r0
  8001440:	623b      	str	r3, [r7, #32]
-	REG16(REG_POSITION_R) = (int16_t) (mappedDeg * 10.0f);
+	REG16(REG_POSITION_THETA) = (int16_t) (mappedDeg * 10.0f);
  8001442:	edd7 7a08 	vldr	s15, [r7, #32]
  8001446:	eeb2 7a04 	vmov.f32	s14, #36	@ 0x41200000  10.0
  800144a:	ee67 7a87 	vmul.f32	s15, s15, s14
@@ -1911,10 +1911,10 @@ void Modbus_Protocal_Worker() {
  8001456:	b21b      	sxth	r3, r3
  8001458:	b29a      	uxth	r2, r3
  800145a:	4b4b      	ldr	r3, [pc, #300]	@ (8001588 <Modbus_Protocal_Worker+0x2d8>)
- 800145c:	845a      	strh	r2, [r3, #34]	@ 0x22
+ 800145c:	849a      	strh	r2, [r3, #36]	@ 0x24
 
 // Speed and acceleration: normal conversion
-	REG16(REG_SPEED_R) = (int16_t)(fabsf(RAD_TO_DEG(AngularVelocity_rad)) * 10.0f);
+	REG16(REG_SPEED_THETA) = (int16_t)(fabsf(RAD_TO_DEG(AngularVelocity_rad)) * 10.0f);
  800145e:	693b      	ldr	r3, [r7, #16]
  8001460:	4618      	mov	r0, r3
  8001462:	f7ff f83d 	bl	80004e0 <__aeabi_f2d>
@@ -1935,8 +1935,8 @@ void Modbus_Protocal_Worker() {
  8001494:	b21b      	sxth	r3, r3
  8001496:	b29a      	uxth	r2, r3
  8001498:	4b3b      	ldr	r3, [pc, #236]	@ (8001588 <Modbus_Protocal_Worker+0x2d8>)
- 800149a:	84da      	strh	r2, [r3, #38]	@ 0x26
-	REG16(REG_ACCELERATION_R) = (int16_t)(fabsf(RAD_TO_DEG(AngularAcceleration_rad)) * 10.0f);
+ 800149a:	851a      	strh	r2, [r3, #40]	@ 0x28
+	REG16(REG_ACCELERATION_THETA) = (int16_t)(fabsf(RAD_TO_DEG(AngularAcceleration_rad)) * 10.0f);
  800149c:	68fb      	ldr	r3, [r7, #12]
  800149e:	4618      	mov	r0, r3
  80014a0:	f7ff f81e 	bl	80004e0 <__aeabi_f2d>
@@ -1957,9 +1957,9 @@ void Modbus_Protocal_Worker() {
  80014d2:	b21b      	sxth	r3, r3
  80014d4:	b29a      	uxth	r2, r3
  80014d6:	4b2c      	ldr	r3, [pc, #176]	@ (8001588 <Modbus_Protocal_Worker+0x2d8>)
- 80014d8:	855a      	strh	r2, [r3, #42]	@ 0x2a
+ 80014d8:	859a      	strh	r2, [r3, #44]	@ 0x2c
 
-	REG16(REG_SPEED_THETA) = (int16_t)(fabsf(Velocity_mm) * 10.0f);
+	REG16(REG_SPEED_R) = (int16_t)(fabsf(Velocity_mm) * 10.0f);
  80014da:	edd7 7a07 	vldr	s15, [r7, #28]
  80014de:	eef0 7ae7 	vabs.f32	s15, s15
  80014e2:	eeb2 7a04 	vmov.f32	s14, #36	@ 0x41200000  10.0
@@ -1969,8 +1969,8 @@ void Modbus_Protocal_Worker() {
  80014f2:	b21b      	sxth	r3, r3
  80014f4:	b29a      	uxth	r2, r3
  80014f6:	4b24      	ldr	r3, [pc, #144]	@ (8001588 <Modbus_Protocal_Worker+0x2d8>)
- 80014f8:	851a      	strh	r2, [r3, #40]	@ 0x28
-	REG16(REG_ACCELERATION_THETA) = (int16_t)(fabsf(Acceleration_mm) * 10.0f);
+ 80014f8:	84da      	strh	r2, [r3, #38]	@ 0x26
+	REG16(REG_ACCELERATION_R) = (int16_t)(fabsf(Acceleration_mm) * 10.0f);
  80014fa:	edd7 7a06 	vldr	s15, [r7, #24]
  80014fe:	eef0 7ae7 	vabs.f32	s15, s15
  8001502:	eeb2 7a04 	vmov.f32	s14, #36	@ 0x41200000  10.0
@@ -1980,8 +1980,8 @@ void Modbus_Protocal_Worker() {
  8001512:	b21b      	sxth	r3, r3
  8001514:	b29a      	uxth	r2, r3
  8001516:	4b1c      	ldr	r3, [pc, #112]	@ (8001588 <Modbus_Protocal_Worker+0x2d8>)
- 8001518:	859a      	strh	r2, [r3, #44]	@ 0x2c
-	REG16(REG_POSITION_THETA) = (int16_t) mmPosition * 10.0f;
+ 8001518:	855a      	strh	r2, [r3, #42]	@ 0x2a
+	REG16(REG_POSITION_R) = (int16_t) mmPosition * 10.0f;
  800151a:	edd7 7a05 	vldr	s15, [r7, #20]
  800151e:	eefd 7ae7 	vcvt.s32.f32	s15, s15
  8001522:	ee17 3a90 	vmov	r3, s15
@@ -1994,7 +1994,7 @@ void Modbus_Protocal_Worker() {
  800153c:	ee17 3a90 	vmov	r3, s15
  8001540:	b29a      	uxth	r2, r3
  8001542:	4b11      	ldr	r3, [pc, #68]	@ (8001588 <Modbus_Protocal_Worker+0x2d8>)
- 8001544:	849a      	strh	r2, [r3, #36]	@ 0x24
+ 8001544:	845a      	strh	r2, [r3, #34]	@ 0x22
 
 	//--Modbus
 	switch (hModbus->Mstatus) {

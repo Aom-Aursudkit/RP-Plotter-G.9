@@ -193,15 +193,15 @@ void Modbus_Protocal_Worker() {
 
 // Position remap: [-π/2, 3π/2] → [0, 360]
 	float mappedDeg = RAD_TO_DEG(RadPosition + (M_PI / 2.0f));
-	REG16(REG_POSITION_THETA) = (int16_t) (mappedDeg * 10.0f);
+	REG16(REG_POSITION_R) = (int16_t) (mappedDeg * 10.0f);
 
 // Speed and acceleration: normal conversion
-	REG16(REG_SPEED_THETA) = (int16_t)(fabsf(RAD_TO_DEG(AngularVelocity_rad)) * 10.0f);
-	REG16(REG_ACCELERATION_THETA) = (int16_t)(fabsf(RAD_TO_DEG(AngularAcceleration_rad)) * 10.0f);
+	REG16(REG_SPEED_R) = (int16_t)(fabsf(RAD_TO_DEG(AngularVelocity_rad)) * 10.0f);
+	REG16(REG_ACCELERATION_R) = (int16_t)(fabsf(RAD_TO_DEG(AngularAcceleration_rad)) * 10.0f);
 
-	REG16(REG_SPEED_R) = (int16_t)(fabsf(Velocity_mm) * 10.0f);
-	REG16(REG_ACCELERATION_R) = (int16_t)(fabsf(Acceleration_mm) * 10.0f);
-	REG16(REG_POSITION_R) = (int16_t) mmPosition * 10.0f;
+	REG16(REG_SPEED_THETA) = (int16_t)(fabsf(Velocity_mm) * 10.0f);
+	REG16(REG_ACCELERATION_THETA) = (int16_t)(fabsf(Acceleration_mm) * 10.0f);
+	REG16(REG_POSITION_THETA) = (int16_t) mmPosition * 10.0f;
 
 	//--Modbus
 	switch (hModbus->Mstatus) {
