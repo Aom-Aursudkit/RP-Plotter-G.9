@@ -1,0 +1,12 @@
+../Core/Src/ModBusRTU.c:24:6:modbus_1t5_Timeout	1
+../Core/Src/ModBusRTU.c:32:6:modbus_3t5_Timeout	1
+../Core/Src/ModBusRTU.c:38:6:modbus_ErrorTimeout	2
+../Core/Src/ModBusRTU.c:45:6:Modbus_init	2
+../Core/Src/ModBusRTU.c:121:16:CRC16	2
+../Core/Src/ModBusRTU.c:138:6:ResetAllTargets	4
+../Core/Src/ModBusRTU.c:144:6:Modbus_Protocal_Worker	25
+../Core/Src/ModBusRTU.c:305:6:modbusWrite1Register	2
+../Core/Src/ModBusRTU.c:326:6:modbusRead1Register	6
+../Core/Src/ModBusRTU.c:360:6:ModbusErrorReply	1
+../Core/Src/ModBusRTU.c:366:6:Modbus_frame_response	3
+../Core/Src/ModBusRTU.c:382:6:Modbus_Emission	3

@@ -2,7 +2,7 @@
 <Configuration status="info">
     <ThresholdFilter level="INFO"/>
     <Appenders>
-        <RollingFile name="DEBUGFILE" fileName="C:/College 2.2/Studio/Studio_STM32_workspace/.metadata/.ide.log" filePattern="C:/College 2.2/Studio/Studio_STM32_workspace/.metadata/.ide.log-%d{yyyy-MM-dd}.log">
+        <RollingFile name="DEBUGFILE" fileName="C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/.metadata/.ide.log" filePattern="C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/.metadata/.ide.log-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} [%p] %c{1}:%L - %m%n" />
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true" />
