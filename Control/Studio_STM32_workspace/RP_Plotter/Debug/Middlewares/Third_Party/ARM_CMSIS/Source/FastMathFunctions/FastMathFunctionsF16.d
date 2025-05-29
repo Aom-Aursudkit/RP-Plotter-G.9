@@ -1,6 +1,6 @@
 Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctionsF16.o: \
  ../Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctionsF16.c \
- C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_vexp_f16.c \
+ C:/College\ 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_vexp_f16.c \
  ../Middlewares/Third_Party/ARM_CMSIS/Include/dsp/fast_math_functions_f16.h \
  ../Middlewares/Third_Party/ARM_CMSIS/Include/arm_math_types_f16.h \
  ../Middlewares/Third_Party/ARM_CMSIS/Include/arm_math_types.h \
@@ -12,11 +12,11 @@ Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctionsF16.
  ../Middlewares/Third_Party/ARM_CMSIS/Include/dsp/utils.h \
  ../Middlewares/Third_Party/ARM_CMSIS/Include/dsp/fast_math_functions.h \
  ../Middlewares/Third_Party/ARM_CMSIS/Include/dsp/basic_math_functions.h \
- C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_vlog_f16.c \
+ C:/College\ 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_vlog_f16.c \
  ../Middlewares/Third_Party/ARM_CMSIS/Include/dsp/support_functions_f16.h \
- C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_vinverse_f16.c \
- C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_atan2_f16.c
-C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_vexp_f16.c:
+ C:/College\ 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_vinverse_f16.c \
+ C:/College\ 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_atan2_f16.c
+C:/College\ 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_vexp_f16.c:
 ../Middlewares/Third_Party/ARM_CMSIS/Include/dsp/fast_math_functions_f16.h:
 ../Middlewares/Third_Party/ARM_CMSIS/Include/arm_math_types_f16.h:
 ../Middlewares/Third_Party/ARM_CMSIS/Include/arm_math_types.h:
@@ -28,7 +28,7 @@ C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/
 ../Middlewares/Third_Party/ARM_CMSIS/Include/dsp/utils.h:
 ../Middlewares/Third_Party/ARM_CMSIS/Include/dsp/fast_math_functions.h:
 ../Middlewares/Third_Party/ARM_CMSIS/Include/dsp/basic_math_functions.h:
-C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_vlog_f16.c:
+C:/College\ 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_vlog_f16.c:
 ../Middlewares/Third_Party/ARM_CMSIS/Include/dsp/support_functions_f16.h:
-C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_vinverse_f16.c:
-C:/Users/lasto/STM32CubeIDE/poter/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_atan2_f16.c:
+C:/College\ 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_vinverse_f16.c:
+C:/College\ 2.2/Studio/Studio_repository/RP-Plotter-G.9/Control/Studio_STM32_workspace/RP_Plotter/Source/FastMathFunctions/arm_atan2_f16.c:
