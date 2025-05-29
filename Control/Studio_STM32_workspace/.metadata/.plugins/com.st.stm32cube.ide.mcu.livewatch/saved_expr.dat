@@ -5,3 +5,8 @@ Z_index_R
 R_Pos_Error
 P_Pos_Error
 loop_counter
+R_PWM
+P_PWM
+Mode
+z_temp
+TargetR

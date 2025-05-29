@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="hasShownOverlayPopupBefore" value="true"/>
+	<item key="replaceBarOpen" value="false"/>
+	<list key="searchhistory">
+		<item value="Acceleration_mm"/>
+		<item value="Velocity_mm"/>
+		<item value="Revolute_QEIdata.Position"/>
+		<item value="RadPosition"/>
+		<item value="AngularAcceleration_rad"/>
+		<item value="AngularVelocity_rad"/>
+		<item value="QEIAngularAcceleration"/>
+		<item value="QEIAngularVelocity"/>
+		<item value="Revolute_QEIdata"/>
+		<item value="-1"/>
+		<item value="P_Speed"/>
+		<item value="R_Speed"/>
+		<item value="current_position"/>
+		<item value="M_PI"/>
+	</list>
+	<list key="replacehistory">
+		<item value="Acceleration"/>
+		<item value="Velocity"/>
+		<item value="Position"/>
+		<item value="QEIAcceleration"/>
+		<item value="QEIVelocity"/>
+		<item value="P_PWM"/>
+		<item value="R_PWM"/>
+	</list>
+</section>
