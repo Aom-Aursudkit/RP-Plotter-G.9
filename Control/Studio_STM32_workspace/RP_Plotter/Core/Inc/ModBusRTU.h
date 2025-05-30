@@ -170,6 +170,7 @@ void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
 
 // Helper macro to convert radians to degrees * 10, safely
 #define RAD_TO_DEG10(value) ((int16_t)((value) * (1800.0f / M_PI) + 0.5f))
+#define DEG_TO_RED01(value) ((float)((value) * (M_PI / 1800.0f)))
 // External variables
 
 extern uint8_t Pen_Status;
