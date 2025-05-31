@@ -162,6 +162,22 @@ PID_State pid_r = { 0 };  // for Revolute
 PID_State pid_p = { 0 };  // for Prismatic
 PID_State pid_r_v = { 0 };  // for Revolute
 PID_State pid_p_v = { 0 };  // for Prismatic
+
+float R_kP_vel = 100.00f;
+float R_kI_vel = 150.00f;
+float R_kD_vel = 0.00f;
+
+float R_kP_pos = 16.00f;
+float R_kI_pos = 32.00f;
+float R_kD_pos = 8.00f;
+
+float P_kP_vel = 0.2f;
+float P_kI_vel = 1.5f;
+float P_kD_vel = 0.00f;
+
+float P_kP_pos = 0.333f;
+float P_kI_pos = 1.20f;
+float P_kD_pos = 0.15f;
 //////////////////////
 
 //Mode3///////////////
@@ -633,9 +649,9 @@ int main(void) {
 			int64_t currentTimeState1 = micros();
 			if (currentTimeState1 > timestampState1) {
 				timestampState1 = currentTimeState1 + 10000;		//us
-				R_PWM = PID_Update(R_Velo_Error, 100.00f, 150.00f, 0.00f, 0.01f,
+				R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel, R_kD_vel, 0.01f,
 						-100.0f, 100.0f, &pid_r_v);
-				P_PWM = PID_Update(P_Velo_Error, 0.2f, 1.5f, 0.00f, 0.01f,
+				P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel, P_kD_vel, 0.01f,
 						-100.0f, 100.0f, &pid_p_v);
 			}
 
@@ -695,11 +711,13 @@ int main(void) {
 					Trapezoidal_Update(&revolute, 0.01);
 					TargetRVel = revolute.current_velocity;
 					R_Velo_Error = (TargetRVel - Revolute_QEIdata.Velocity_f);
-					R_PWM = PID_Update(R_Velo_Error, 71.42f, 0.10f, 0.00f,
-							0.01f, -100.0f, 100.0f, &pid_r_v);
+//					R_PWM = PID_Update(R_Velo_Error, 71.42f, 0.10f, 0.00f,
+//							0.01f, -100.0f, 100.0f, &pid_r_v);
+					R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel,
+							R_kD_vel, 0.01f, -100.0f, 100.0f, &pid_r_v);
 				} else {
-					R_PWM = PID_Update(R_Pos_Error, 16.00f, 32.00f, 8.00f,
-							0.01f, -100.0f, 100.0f, &pid_r);
+					R_PWM = PID_Update(R_Pos_Error, R_kP_pos, R_kI_pos, R_kD_pos, 0.01f, -100.0f,
+							100.0f, &pid_r);
 				}
 
 				if (prismatic.finished == 0) {
@@ -707,11 +725,13 @@ int main(void) {
 					Trapezoidal_Update(&prismatic, 0.01);
 					TargetPVel = prismatic.current_velocity;
 					P_Velo_Error = (TargetPVel - Prismatic_QEIdata.Velocity);
-					P_PWM = PID_Update(P_Velo_Error, 0.2f, 1.5f, 0.00f, 0.01f,
-							-100.0f, 100.0f, &pid_p_v);
+//					P_PWM = PID_Update(P_Velo_Error, 0.2f, 1.5f, 0.00f, 0.01f,
+//							-100.0f, 100.0f, &pid_p_v);
+					P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel,
+							P_kD_vel, 0.01f,-100.0f, 100.0f, &pid_p_v);
 				} else {
-					P_PWM = PID_Update(P_Pos_Error, 0.333f, 1.20f, 0.15f, 0.01f,
-							-100.0f, 100.0f, &pid_p);
+					P_PWM = PID_Update(P_Pos_Error, P_kP_pos, P_kI_pos, P_kD_pos, 0.01f, -100.0f,
+							100.0f, &pid_p);
 				}
 			}
 
@@ -918,11 +938,13 @@ int main(void) {
 					Trapezoidal_Update(&revolute, 0.01);
 					TargetRVel = revolute.current_velocity;
 					R_Velo_Error = (TargetRVel - Revolute_QEIdata.Velocity_f);
-					R_PWM = PID_Update(R_Velo_Error, 71.42f, 0.10f, 0.00f,
-							0.01f, -100.0f, 100.0f, &pid_r_v);
+//					R_PWM = PID_Update(R_Velo_Error, 71.42f, 0.10f, 0.00f,
+//							0.01f, -100.0f, 100.0f, &pid_r_v);
+					R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel,
+							R_kD_vel, 0.01f, -100.0f, 100.0f, &pid_r_v);
 				} else {
-					R_PWM = PID_Update(R_Pos_Error, 16.00f, 32.00f, 8.00f,
-							0.01f, -100.0f, 100.0f, &pid_r);
+					R_PWM = PID_Update(R_Pos_Error, R_kP_pos, R_kI_pos, R_kD_pos, 0.01f, -100.0f,
+							100.0f, &pid_r);
 				}
 
 				if (prismatic.finished == 0) {
@@ -930,11 +952,13 @@ int main(void) {
 					Trapezoidal_Update(&prismatic, 0.01);
 					TargetPVel = prismatic.current_velocity;
 					P_Velo_Error = (TargetPVel - Prismatic_QEIdata.Velocity);
-					P_PWM = PID_Update(P_Velo_Error, 0.2f, 1.5f, 0.00f, 0.01f,
-							-100.0f, 100.0f, &pid_p_v);
+//					P_PWM = PID_Update(P_Velo_Error, 0.2f, 1.5f, 0.00f, 0.01f,
+//							-100.0f, 100.0f, &pid_p_v);
+					P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel,
+							P_kD_vel, 0.01f, -100.0f, 100.0f, &pid_p_v);
 				} else {
-					P_PWM = PID_Update(P_Pos_Error, 0.333f, 1.20f, 0.15f, 0.01f,
-							-100.0f, 100.0f, &pid_p);
+					P_PWM = PID_Update(P_Pos_Error, P_kP_pos, P_kI_pos, P_kD_pos, 0.01f, -100.0f,
+							100.0f, &pid_p);
 				}
 			}
 
@@ -1006,10 +1030,10 @@ int main(void) {
 				int64_t currentTimeState8 = micros();
 				if (currentTimeState8 > timestampState8) {
 					timestampState8 = currentTimeState8 + 10000;		//us
-					R_PWM = (PID_Update(R_Pos_Error, 16.00f, 5.00f, 8.00f,
-							0.01f, -100.0f, 100.0f, &pid_r));
-					P_PWM = PID_Update(P_Pos_Error, 0.333f, 1.20f, 0.15f, 0.01f,
-							-100.0f, 100.0f, &pid_p);
+					R_PWM = PID_Update(R_Pos_Error, R_kP_pos, R_kI_pos, R_kD_pos, 0.01f, -100.0f,
+							100.0f, &pid_r);
+					P_PWM = PID_Update(P_Pos_Error, P_kP_pos, P_kI_pos, P_kD_pos, 0.01f, -100.0f,
+							100.0f, &pid_p);
 				}
 
 				Set_Motor(0, R_PWM);
