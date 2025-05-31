@@ -681,11 +681,11 @@ int main(void) {
 //			arm_pid_init_f32(&PID, 1);
 //			P_PWM = arm_pid_f32(&PID, P_Pos_Error);
 
-			//Call every 0.001 s
+			//Call every 0.01 s
 			static uint64_t timestampState2 = 0;
 			int64_t currentTimeState2 = micros();
 			if (currentTimeState2 > timestampState2) {
-				timestampState2 = currentTimeState2 + 1000;		//us
+				timestampState2 = currentTimeState2 + 10000;		//us
 
 //				R_PWM = PID_Update(R_Pos_Error, 16.00f, 5.00f, 8.00f, 0.01f, -100.0f, 100.0f, &pid_r);
 //				P_PWM = PID_Update(P_Pos_Error, 0.333f, 1.20f, 0.15f, 0.01f, -100.0f, 100.0f, &pid_p);
@@ -693,8 +693,8 @@ int main(void) {
 				if (revolute.finished == 0) {
 					revolute.current_position = Revolute_QEIdata.RadPosition;
 					Trapezoidal_Update(&revolute, 0.01);
-					TargetRVel = revolute.current_velocity;
-					R_Velo_Error = (TargetRVel - Revolute_QEIdata.Velocity_f);
+					R_Velo_Error = (Revolute_QEIdata.Velocity_f
+							- revolute.current_velocity) * -1;
 					R_PWM = PID_Update(R_Velo_Error, 71.42f, 0.10f, 0.00f,
 							0.01f, -100.0f, 100.0f, &pid_r_v);
 				} else {
@@ -705,8 +705,8 @@ int main(void) {
 				if (prismatic.finished == 0) {
 					prismatic.current_position = Prismatic_QEIdata.mmPosition;
 					Trapezoidal_Update(&prismatic, 0.01);
-					TargetPVel = prismatic.current_velocity;
-					P_Velo_Error = (TargetPVel - Prismatic_QEIdata.Velocity);
+					P_Velo_Error = (Prismatic_QEIdata.Velocity
+							- prismatic.current_velocity) * -1;
 					P_PWM = PID_Update(P_Velo_Error, 0.2f, 1.5f, 0.00f, 0.01f,
 							-100.0f, 100.0f, &pid_p_v);
 				} else {
@@ -904,11 +904,11 @@ int main(void) {
 			P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
 			prismatic.target_position = TargetP;
 
-			//Call every 0.001 s
+			//Call every 0.01 s
 			static uint64_t timestampState2 = 0;
 			int64_t currentTimeState2 = micros();
 			if (currentTimeState2 > timestampState2) {
-				timestampState2 = currentTimeState2 + 1000;		//us
+				timestampState2 = currentTimeState2 + 10000;		//us
 
 //				R_PWM = PID_Update(R_Pos_Error, 16.00f, 5.00f, 8.00f, 0.01f, -100.0f, 100.0f, &pid_r);
 //				P_PWM = PID_Update(P_Pos_Error, 0.333f, 1.20f, 0.15f, 0.01f, -100.0f, 100.0f, &pid_p);
@@ -916,8 +916,8 @@ int main(void) {
 				if (revolute.finished == 0) {
 					revolute.current_position = Revolute_QEIdata.RadPosition;
 					Trapezoidal_Update(&revolute, 0.01);
-					TargetRVel = revolute.current_velocity;
-					R_Velo_Error = (TargetRVel - Revolute_QEIdata.Velocity_f);
+					R_Velo_Error = (Revolute_QEIdata.Velocity_f
+							- revolute.current_velocity) * -1;
 					R_PWM = PID_Update(R_Velo_Error, 71.42f, 0.10f, 0.00f,
 							0.01f, -100.0f, 100.0f, &pid_r_v);
 				} else {
@@ -928,8 +928,8 @@ int main(void) {
 				if (prismatic.finished == 0) {
 					prismatic.current_position = Prismatic_QEIdata.mmPosition;
 					Trapezoidal_Update(&prismatic, 0.01);
-					TargetPVel = prismatic.current_velocity;
-					P_Velo_Error = (TargetPVel - Prismatic_QEIdata.Velocity);
+					P_Velo_Error = (Prismatic_QEIdata.Velocity
+							- prismatic.current_velocity) * -1;
 					P_PWM = PID_Update(P_Velo_Error, 0.2f, 1.5f, 0.00f, 0.01f,
 							-100.0f, 100.0f, &pid_p_v);
 				} else {
