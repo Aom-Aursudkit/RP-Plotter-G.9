@@ -148,43 +148,7 @@ void Modbus_Protocal_Worker() {
 	REG16(REG_SERVO_LIMIT_SWITCH) = Pen_Status ? 2 : 1;
 	Pen_BaseSystem = REG16(REG_SERVO_CMD_DOWN) ? 1 : 0;
 	TargetR_BaseSystem = REG16(REG_TARGET_GOAL_R) * 0.1f;
-	TargetP_BaseSystem = REG16(REG_TARGET_GOAL_THETA) * 0.1f;
-
-	uint16_t base_status = REG16(REG_BASE_STATUS);
-	REG16(REG_MOTION_STATUS) = base_status;
-
-	static int currentSlot = 0;
-	switch (base_status) {
-	case 1:  // Home
-		State_BaseSystem = 3;
-		// if either of the first two target registers is non-zero
-		if (REG16(REG_TARGET_BASE_ADDR) || REG16(REG_TARGET_BASE_ADDR + 1)) {
-			ResetAllTargets();
-			currentSlot = 0;
-		}
-		break;
-
-	case 2:  // Run Jog Mode
-		State_BaseSystem = 1;
-		break;
-
-	case 8:  // Go To Target
-		State_BaseSystem = 2;
-		// enqueue the next target
-		SET_TARGET(currentSlot, REG16(REG_TARGET_GOAL_R),
-				REG16(REG_TARGET_GOAL_THETA));
-
-		// increment _and_ wrap+reset in one go
-		if (++currentSlot >= 10) {
-			currentSlot = 0;
-			ResetAllTargets();
-		}
-		break;
-
-	default: // Run Point Mode
-		State_BaseSystem = 0;
-		break;
-	}
+	TargetR_BaseSystem = DEG_TO_RED01(REG16(REG_TARGET_GOAL_R)) - (M_PI / 2.0f);
 
 	float Velocity_mm, Acceleration_mm, mmPosition, AngularVelocity_rad,
 			AngularAcceleration_rad, RadPosition;
@@ -196,11 +160,13 @@ void Modbus_Protocal_Worker() {
 	REG16(REG_POSITION_THETA) = (int16_t) (mappedDeg * 10.0f);
 
 // Speed and acceleration: normal conversion
-	REG16(REG_SPEED_THETA) = (int16_t)(fabsf(RAD_TO_DEG(AngularVelocity_rad)) * 10.0f);
-	REG16(REG_ACCELERATION_THETA) = (int16_t)(fabsf(RAD_TO_DEG(AngularAcceleration_rad)) * 10.0f);
+	REG16(REG_SPEED_THETA) = (int16_t) (fabsf(RAD_TO_DEG(AngularVelocity_rad))
+			* 10.0f);
+	REG16(REG_ACCELERATION_THETA) = (int16_t) (fabsf(
+			RAD_TO_DEG(AngularAcceleration_rad)) * 10.0f);
 
-	REG16(REG_SPEED_R) = (int16_t)(fabsf(Velocity_mm) * 10.0f);
-	REG16(REG_ACCELERATION_R) = (int16_t)(fabsf(Acceleration_mm) * 10.0f);
+	REG16(REG_SPEED_R) = (int16_t) (fabsf(Velocity_mm) * 10.0f);
+	REG16(REG_ACCELERATION_R) = (int16_t) (fabsf(Acceleration_mm) * 10.0f);
 	REG16(REG_POSITION_R) = (int16_t) mmPosition * 10.0f;
 
 	//--Modbus
