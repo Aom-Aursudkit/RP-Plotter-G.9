@@ -991,12 +991,11 @@ int main(void) {
 //					* sinf(Revolute_QEIdata.RadPosition);
 
 				// Compute Jacobian
-				float J[2][2] = { { -Prismatic_QEIdata.mmPosition
-						* sinf(Revolute_QEIdata.RadPosition), cosf(
-						Revolute_QEIdata.RadPosition) }, {
-						Prismatic_QEIdata.mmPosition
-								* cosf(Revolute_QEIdata.RadPosition), sinf(
-								Revolute_QEIdata.RadPosition) } };
+				float J[2][2] = {
+					{ -Prismatic_QEIdata.mmPosition * sinf(-Revolute_QEIdata.RadPosition), cosf(-Revolute_QEIdata.RadPosition) },
+					{  Prismatic_QEIdata.mmPosition * cosf(-Revolute_QEIdata.RadPosition), sinf(-Revolute_QEIdata.RadPosition) }
+				};
+
 
 				// Invert Jacobian
 				float det = J[0][0] * J[1][1] - J[0][1] * J[1][0];
@@ -1004,29 +1003,31 @@ int main(void) {
 					// Near singularity, stop movement
 					TargetRVel = 0;
 					TargetPVel = 0;
-					return;
+					Mode = 0;
 				}
 
-				float invJ[2][2] = { { J[1][1] / det, -J[0][1] / det }, {
-						-J[1][0] / det, J[0][0] / det } };
+				else {
+					float invJ[2][2] = { { J[1][1] / det, -J[0][1] / det }, {
+							-J[1][0] / det, J[0][0] / det } };
 
-				// Compute direction to target
-				float dx = TargetX - End_x;
-				float dy = TargetY - End_y;
-				float dist = sqrtf(dx * dx + dy * dy);
+					// Compute direction to target
+					float dx = TargetX - End_x;
+					float dy = TargetY - End_y;
+					float dist = sqrtf(dx * dx + dy * dy);
 
-				float vx_local = 0;
-				float vy_local = 0;
+					float vx_local = 0;
+					float vy_local = 0;
 
-				if (dist > 1.0f) {
-					float speed = 5.0f; // mm/s
-					vx_local = speed * dx / dist;
-					vy_local = speed * dy / dist;
+					if (dist > 1.0f) {
+						float speed = 20.0f; // mm/s
+						vx_local = speed * dx / dist;
+						vy_local = speed * dy / dist;
+					}
+
+					// Compute joint velocities from Cartesian velocity
+					TargetRVel = invJ[0][0] * vx_local + invJ[0][1] * vy_local; // rad/s
+					TargetPVel = invJ[1][0] * vx_local + invJ[1][1] * vy_local; // mm/s
 				}
-
-				// Compute joint velocities from Cartesian velocity
-				TargetRVel = invJ[0][0] * vx_local + invJ[0][1] * vy_local; // rad/s
-				TargetPVel = invJ[1][0] * vx_local + invJ[1][1] * vy_local; // mm/s
 
 				R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel, R_kD_vel,
 						0.01f, -100.0f, 100.0f, &pid_r_v);
