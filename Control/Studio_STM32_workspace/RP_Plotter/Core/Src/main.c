@@ -245,6 +245,7 @@ void Set_Motor(int motor_num, float speed);
 void Set_Servo(int Pen_Pos);
 void Reset_R();
 void Reset_P();
+void Workspace_limit();
 
 //BaseSystem//////////
 void processTargets(void);
@@ -645,10 +646,11 @@ int main(void) {
 //			arm_pid_init_f32(&PID, 1);
 //			P_PWM = arm_pid_f32(&PID, P_Velo_Error);
 
+			//Call every 0.001 s
 			static uint64_t timestampState1 = 0;
 			int64_t currentTimeState1 = micros();
 			if (currentTimeState1 > timestampState1) {
-				timestampState1 = currentTimeState1 + 10000;		//us
+				timestampState1 = currentTimeState1 + 1000;		//us
 				R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel, R_kD_vel, 0.01f,
 						-100.0f, 100.0f, &pid_r_v);
 				P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel, P_kD_vel, 0.01f,
@@ -658,18 +660,7 @@ int main(void) {
 //			R_PWM = Receiver[0];
 //			P_PWM = Receiver[1];
 
-			if (Revolute_QEIdata.RadPosition < -1.91986 && R_PWM > 0) {
-				R_PWM = 0;
-			}
-			if (Revolute_QEIdata.RadPosition > 5.06145 && R_PWM < 0) {
-				R_PWM = 0;
-			}
-			if (Prismatic_QEIdata.mmPosition > 305 && P_PWM > 0) {
-				P_PWM = 0;
-			}
-			if (Prismatic_QEIdata.mmPosition < -1 && P_PWM < 0) {
-				P_PWM = 0;
-			}
+			Workspace_limit();
 
 			Set_Motor(0, R_PWM);
 			Set_Motor(1, P_PWM);
@@ -734,6 +725,8 @@ int main(void) {
 							100.0f, &pid_p);
 				}
 			}
+
+			Workspace_limit();
 
 			Set_Motor(0, R_PWM);
 			Set_Motor(1, P_PWM);
@@ -962,6 +955,8 @@ int main(void) {
 				}
 			}
 
+			Workspace_limit();
+
 			Set_Motor(0, R_PWM);
 			Set_Motor(1, P_PWM);
 			if (fabsf(R_Pos_Error) < R_ERR_TOL_RAD
@@ -985,6 +980,75 @@ int main(void) {
 
 		//////////////////////////////////////////////////////////////
 		if (Mode == 5) {
+			//Call every 0.001 s
+			static uint64_t timestampState5 = 0;
+			int64_t currentTimeState5 = micros();
+			if (currentTimeState5 > timestampState5) {
+				timestampState5 = currentTimeState5 + 1000;		//us
+//			End_x = Prismatic_QEIdata.mmPosition
+//					* cosf(Revolute_QEIdata.RadPosition);
+//			End_y = Prismatic_QEIdata.mmPosition
+//					* sinf(Revolute_QEIdata.RadPosition);
+
+				// Compute Jacobian
+				float J[2][2] = { { -Prismatic_QEIdata.mmPosition
+						* sinf(Revolute_QEIdata.RadPosition), cosf(
+						Revolute_QEIdata.RadPosition) }, {
+						Prismatic_QEIdata.mmPosition
+								* cosf(Revolute_QEIdata.RadPosition), sinf(
+								Revolute_QEIdata.RadPosition) } };
+
+				// Invert Jacobian
+				float det = J[0][0] * J[1][1] - J[0][1] * J[1][0];
+				if (fabsf(det) < 1e-6f) {
+					// Near singularity, stop movement
+					TargetRVel = 0;
+					TargetPVel = 0;
+					return;
+				}
+
+				float invJ[2][2] = { { J[1][1] / det, -J[0][1] / det }, {
+						-J[1][0] / det, J[0][0] / det } };
+
+				// Compute direction to target
+				float dx = TargetX - End_x;
+				float dy = TargetY - End_y;
+				float dist = sqrtf(dx * dx + dy * dy);
+
+				float vx_local = 0;
+				float vy_local = 0;
+
+				if (dist > 1.0f) {
+					float speed = 5.0f; // mm/s
+					vx_local = speed * dx / dist;
+					vy_local = speed * dy / dist;
+				}
+
+				// Compute joint velocities from Cartesian velocity
+				TargetRVel = invJ[0][0] * vx_local + invJ[0][1] * vy_local; // rad/s
+				TargetPVel = invJ[1][0] * vx_local + invJ[1][1] * vy_local; // mm/s
+
+				R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel, R_kD_vel,
+						0.01f, -100.0f, 100.0f, &pid_r_v);
+				P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel, P_kD_vel,
+						0.01f, -100.0f, 100.0f, &pid_p_v);
+			}
+
+			Workspace_limit();
+
+			Set_Motor(0, R_PWM);
+			Set_Motor(1, P_PWM);
+		}
+		//////////////////////////////////////////////////////////////
+
+		//////////////////////////////////////////////////////////////
+		if (Mode == 6) {
+
+		}
+		//////////////////////////////////////////////////////////////
+
+		//////////////////////////////////////////////////////////////
+		if (Mode == 7) {
 			Set_Motor(0, 5);
 			if (Z_index_R > 0) {
 				Set_Motor(0, 0);
@@ -994,18 +1058,6 @@ int main(void) {
 			} else {
 				Set_Motor(0, 25);
 			}
-		}
-		//////////////////////////////////////////////////////////////
-
-		//////////////////////////////////////////////////////////////
-		if (Mode == 6) {
-			Set_Servo(0);
-		}
-		//////////////////////////////////////////////////////////////
-
-		//////////////////////////////////////////////////////////////
-		if (Mode == 7) {
-			Set_Servo(1);
 		}
 		//////////////////////////////////////////////////////////////
 
@@ -1035,6 +1087,8 @@ int main(void) {
 					P_PWM = PID_Update(P_Pos_Error, P_kP_pos, P_kI_pos, P_kD_pos, 0.01f, -100.0f,
 							100.0f, &pid_p);
 				}
+
+				Workspace_limit();
 
 				Set_Motor(0, R_PWM);
 				Set_Motor(1, P_PWM);
@@ -1996,6 +2050,21 @@ void Reset_R() {
 void Reset_P() {
 	Prismatic_QEIdata.AbsolutePosition = -2.00 / (10.0f / 8192.0f);
 //	Prismatic_QEIdata.mmPosition = 0;
+}
+
+void Workspace_limit(){
+	if (Revolute_QEIdata.RadPosition < -1.91986 && R_PWM > 0) {
+		R_PWM = 0;
+	}
+	if (Revolute_QEIdata.RadPosition > 5.06145 && R_PWM < 0) {
+		R_PWM = 0;
+	}
+	if (Prismatic_QEIdata.mmPosition > 305 && P_PWM > 0) {
+		P_PWM = 0;
+	}
+	if (Prismatic_QEIdata.mmPosition < -1 && P_PWM < 0) {
+		P_PWM = 0;
+	}
 }
 
 void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
