@@ -141,6 +141,11 @@ void ResetAllTargets(void) {
 	}
 }
 
+void SET_TARGET( slot, dist, ang) {
+	TARGET_DISTANCE(slot) = (int16_t) ((dist) * 10.0f);
+	TARGET_ANGLE(slot) = (int16_t) ((ang) * 10.0f);
+}
+
 void Modbus_Protocal_Worker() {
 //	//-- value
 
@@ -167,7 +172,7 @@ void Modbus_Protocal_Worker() {
 
 	REG16(REG_SPEED_R) = (int16_t) (fabsf(Velocity_mm) * 10.0f);
 	REG16(REG_ACCELERATION_R) = (int16_t) (fabsf(Acceleration_mm) * 10.0f);
-	REG16(REG_POSITION_R) = (int16_t) mmPosition * 10.0f;
+	REG16(REG_POSITION_R) = (int16_t) (mmPosition * 10.0f);
 
 	//--Modbus
 	switch (hModbus->Mstatus) {

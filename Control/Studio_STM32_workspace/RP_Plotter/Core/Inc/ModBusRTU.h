@@ -116,11 +116,7 @@ extern u16u8_t registerFrame[200];  // Frame data container
                                                + SLOT_OFFSET(slot) + 1  ].U16 )
 
 // Set distance and angle for a specific slot
-#define SET_TARGET(slot, dist, ang)   \
-    do {                              \
-        TARGET_DISTANCE(slot) = (dist); \
-        TARGET_ANGLE(slot)    = (ang);  \
-    } while(0)
+void SET_TARGET(slot, dist, ang);
 
 void ResetAllTargets(void);
 
