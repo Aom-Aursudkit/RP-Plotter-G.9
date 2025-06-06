@@ -159,8 +159,6 @@ enum {
 // ── Convenience Access Macros ────────────────────────────────────────────────
 
 #define REG16(reg)   (registerFrame[(reg)].U16)     // 16-bit unsigned
-#define REG8_LO(reg) (registerFrame[(reg)].U8[0])   // Low byte
-#define REG8_HI(reg) (registerFrame[(reg)].U81])   // High byte
 
 void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
 		float *rev_ang_vel_rad, float *rev_ang_acc_rad, float *rev_rad_pos);

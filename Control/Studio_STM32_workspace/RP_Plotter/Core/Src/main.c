@@ -301,8 +301,16 @@ void Reset_R();
 void Reset_P();
 void Workspace_limit();
 
+// Cascade//////////
+int CascadeControl_Step(void);
+void TrapezoidStep(void);
+void PIDStep(void);
+int ToleranceCheck(void);
+//////////////////////
+
 // BaseSystem//////////
 void processTargets(void);
+void ResetAllTargets(void);
 //////////////////////
 /* USER CODE END PFP */
 
@@ -522,7 +530,6 @@ int main(void)
 		//////////////////////// <<GOTO>> ////////////////////////////
 		if ((Mode == 2 && (base_status == 2 || Test_no_BaseSystem == 1)) || base_status == 8)
 		{
-			//////////////////////////////////////////////////////////////
 			REG16(REG_MOTION_STATUS) = 8;
 
 			if (TenPointMode)
@@ -534,108 +541,31 @@ int main(void)
 				TargetR = testArray[(counter * 2) + 1];
 				TargetP = testArray[counter * 2];
 			}
-			//////////////////////////////////////////////////////////////
 
-			R_Pos_Error = (TargetR - Revolute_QEIdata.RadPosition);
-			revolute.target_position = TargetR;
-
-			//			PID.Kp = 50;
-			//			PID.Ki = 10;
-			//			PID.Kd = 0.1;
-			//			arm_pid_init_f32(&PID, 1);
-			//			R_PWM = arm_pid_f32(&PID, R_Pos_Error);
-			//
-			P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
-			prismatic.target_position = TargetP;
-
-			//			PID.Kp = 0.333333;
-			//			PID.Ki = 0.05;
-			//			PID.Kd = 0.25;
-			//			arm_pid_init_f32(&PID, 1);
-			//			P_PWM = arm_pid_f32(&PID, P_Pos_Error);
-
-			// Call every 0.001 s
-			static uint64_t timestampState2 = 0;
-			int64_t currentTimeState2 = micros();
-			if (currentTimeState2 > timestampState2)
+			if (CascadeControl_Step())
 			{
-				timestampState2 = currentTimeState2 + 1000; // us
-
-				//				R_PWM = PID_Update(R_Pos_Error, 16.00f, 5.00f, 8.00f, 0.01f, -100.0f, 100.0f, &pid_r);
-				//				P_PWM = PID_Update(P_Pos_Error, 0.333f, 1.20f, 0.15f, 0.01f, -100.0f, 100.0f, &pid_p);
-
-				if (revolute.finished == 0)
+				Set_Servo(1);
+				if (TenPointMode)
 				{
-					revolute.current_position = Revolute_QEIdata.RadPosition;
-					Trapezoidal_Update(&revolute, 0.01);
-					TargetRVel = revolute.current_velocity;
-					R_Velo_Error = (TargetRVel - Revolute_QEIdata.Velocity_f);
-					//					R_PWM = PID_Update(R_Velo_Error, 71.42f, 0.10f, 0.00f,
-					//							0.01f, -100.0f, 100.0f, &pid_r_v);
-					R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel,
-									   R_kD_vel, 0.01f, -100.0f, 100.0f, &pid_r_v);
-				}
-				else
-				{
-					R_PWM = PID_Update(R_Pos_Error, R_kP_pos, R_kI_pos,
-									   R_kD_pos, 0.01f, -100.0f, 100.0f, &pid_r);
-				}
-
-				if (prismatic.finished == 0)
-				{
-					prismatic.current_position = Prismatic_QEIdata.mmPosition;
-					Trapezoidal_Update(&prismatic, 0.01);
-					TargetPVel = prismatic.current_velocity;
-					P_Velo_Error = (TargetPVel - Prismatic_QEIdata.Velocity);
-					//					P_PWM = PID_Update(P_Velo_Error, 0.2f, 1.5f, 0.00f, 0.01f,
-					//							-100.0f, 100.0f, &pid_p_v);
-					P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel,
-									   P_kD_vel, 0.01f, -100.0f, 100.0f, &pid_p_v);
-				}
-				else
-				{
-					P_PWM = PID_Update(P_Pos_Error, P_kP_pos, P_kI_pos,
-									   P_kD_pos, 0.01f, -100.0f, 100.0f, &pid_p);
-				}
-			}
-
-			Workspace_limit();
-
-			Set_Motor(0, R_PWM);
-			Set_Motor(1, P_PWM);
-			if (fabsf(R_Pos_Error) < R_ERR_TOL_RAD && fabsf(P_Pos_Error) < P_ERR_TOL_MM)
-			{
-				/* within window —— start or continue timer */
-				if (lock_timer_us == 0)
-					lock_timer_us = micros(); /* start timing */
-
-				else if ((micros() - lock_timer_us) >= HOLD_TIME_US)
-				{
-					Set_Servo(1);
-					if (TenPointMode)
+					if (counter == 9)
 					{
-						if (counter == 9)
-						{
-							TenPointMode = 0;
-							counter = 0;
-							Mode = 1;
-						}
-						else
-						{
-							counter++;
-						}
+						TenPointMode = 0;
+						counter = 0;
+						Mode = 1;
 					}
-					//////////////////////////////////////////////////////////////
-					if (base_status == 8)
+					else
 					{
-						REG16(REG_MOTION_STATUS) = 0;
+						counter++;
 					}
-					//////////////////////////////////////////////////////////////
+				}
+				if (base_status == 8)
+				{
+					REG16(REG_MOTION_STATUS) = 0;
 				}
 			}
 			else
 			{
-				lock_timer_us = 0;
+				Set_Servo(0);
 			}
 		}
 		//////////////////////////////////////////////////////////////
@@ -961,96 +891,13 @@ int main(void)
 				// TargetP = sqrtf(TargetX * TargetX + TargetY * TargetY);
 
 				TargetR = TargetR_Deg * M_PI / 180;
-				R_Pos_Error = (TargetR - Revolute_QEIdata.RadPosition);
-				P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
-				R_Pos_Error_Deg = R_Pos_Error * 180 / M_PI;
-
-				// Call every 0.001 s
-				static uint64_t timestampState2 = 0;
-				static int loop_counter = 0;
-				static float P_Target_Velocity = 0;
-				static float R_Target_Velocity = 0;
-				int64_t currentTimeState2 = micros();
-				if (currentTimeState2 > timestampState2)
+				if (CascadeControl_Step)
 				{
-					timestampState2 = currentTimeState2 + 1000; // us
-					loop_counter++;
-
-					float r_target_diff = fabsf(TargetR - last_TargetR);
-					float p_target_diff = fabsf(TargetP - last_TargetP);
-
-					if (r_target_diff > 0.001f)
-					{
-						float R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
-						Trapezoidal_Init(&revolute, R_Pos_Error, 1.40f, 9.0f);
-						last_TargetR = TargetR;
-					}
-
-					if (p_target_diff > 0.01f)
-					{
-						float P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
-						Trapezoidal_Init(&prismatic, P_Pos_Error, 600.0f, 3000.0f);
-						last_TargetP = TargetP;
-					}
-
-					// Update trajectory every 1ms
-					Trapezoidal_Update(&revolute, 0.001);
-					TargetRPos = revolute.current_position;
-					TargetRVel = revolute.current_velocity;
-					TargetRAcc = revolute.current_acceleration;
-
-					Trapezoidal_Update(&prismatic, 0.001);
-					TargetPPos = prismatic.current_position;
-					TargetPVel = prismatic.current_velocity;
-					TargetPAcc = prismatic.current_acceleration;
-
-					// Outer position PID every 10ms
-					if (loop_counter >= 10)
-					{
-						loop_counter = 0;
-						float R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
-						float P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
-
-						float R_Corrective_Vel = PID_Update(R_Pos_Error, R_kP_pos, R_kI_pos,
-															R_kD_pos, 0.01f, -100.0f, 100.0f, &pid_r);
-						float P_Corrective_Vel = PID_Update(P_Pos_Error, P_kP_pos, P_kI_pos,
-															P_kD_pos, 0.01f, -100.0f, 100.0f, &pid_p);
-
-						R_Target_Velocity = TargetRVel + R_Corrective_Vel;
-						P_Target_Velocity = TargetPVel + P_Corrective_Vel;
-					}
-
-					// Inner velocity PID every 1ms
-					R_Velo_Error = R_Target_Velocity - Revolute_QEIdata.Velocity_f;
-					R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel, R_kD_vel,
-									   0.001f, -100.0f, 100.0f, &pid_r_v);
-
-					P_Velo_Error = P_Target_Velocity - Prismatic_QEIdata.Velocity_f;
-					P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel, P_kD_vel,
-									   0.001f, -100.0f, 100.0f, &pid_p_v);
-
-					Workspace_limit();
-					Set_Motor(0, R_PWM);
-					Set_Motor(1, P_PWM);
-
-					if (fabsf(TargetR - Revolute_QEIdata.RadPosition) < R_ERR_TOL_RAD &&
-						fabsf(TargetP - Prismatic_QEIdata.mmPosition) < P_ERR_TOL_MM)
-					{
-						if (lock_timer_us == 0)
-							lock_timer_us = micros();
-						else if ((micros() - lock_timer_us) >= HOLD_TIME_US)
-						{
-							Set_Servo(1);
-							Set_Motor(0, 0);
-							Set_Motor(1, 0);
-							revolute.finished = 0;
-							prismatic.finished = 0;
-						}
-					}
-					else
-					{
-						lock_timer_us = 0;
-					}
+					Set_Servo(1);
+					Set_Motor(0, 0);
+					Set_Motor(1, 0);
+					revolute.finished = 0;
+					prismatic.finished = 0;
 				}
 			}
 			//////////////////////////////////////////////////////////////
@@ -2250,6 +2097,264 @@ float Trapezoidal_CalcVmaxFromTime(float distance, float amax, float total_time)
 	return (distance - 0.5f * amax * t_half * t_half) / t_half;
 }
 
+void TrapezoidStep(void)
+{
+	static float last_TargetR = 0.0f;
+	static float last_TargetP = 0.0f;
+
+	// 2a) Detect setpoint jump (revolute, in radians)
+	float r_diff = fabsf(TargetR - last_TargetR);
+	if (r_diff > 0.001f)
+	{
+		// Re‐init revolute trapezoid: distance_to_go = R_Pos_Error (rad)
+		Trapezoidal_Init(&revolute, R_Pos_Error, /*maxVel*/ 1.40f, /*maxAcc*/ 9.0f);
+		last_TargetR = TargetR;
+	}
+
+	// 2b) Detect setpoint jump (prismatic, in mm)
+	float p_diff = fabsf(TargetP - last_TargetP);
+	if (p_diff > 0.01f)
+	{
+		// Re‐init prismatic trapezoid: distance_to_go = P_Pos_Error (mm)
+		Trapezoidal_Init(&prismatic, P_Pos_Error, /*maxVel*/ 600.0f, /*maxAcc*/ 3000.0f);
+		last_TargetP = TargetP;
+	}
+
+	// 2c) Advance both trapezoids by 1 ms → update feedforward pos/vel/acc
+	Trapezoidal_Update(&revolute, 0.001f);
+	TargetRPos = revolute.current_position;
+	TargetRVel = revolute.current_velocity;
+	TargetRAcc = revolute.current_acceleration;
+
+	Trapezoidal_Update(&prismatic, 0.001f);
+	TargetPPos = prismatic.current_position;
+	TargetPVel = prismatic.current_velocity;
+	TargetPAcc = prismatic.current_acceleration;
+}
+
+void PIDStep(void)
+{
+	static int loop_counter1 = 0;
+	static float R_Target_Velocity = 0.0f;
+	static float P_Target_Velocity = 0.0f;
+
+	loop_counter1++;
+	// 3a) Outer‐loop (position) PID every 10 ms
+	if (loop_counter1 >= 10)
+	{
+		loop_counter1 = 0;
+
+		// Recompute “true” pos‐errors
+		float R_Pos_now = TargetR - Revolute_QEIdata.RadPosition;
+		float P_Pos_now = TargetP - Prismatic_QEIdata.mmPosition;
+
+		// Position‐PID → corrective velocity for revolute
+		float R_corr_vel = PID_Update(
+			R_Pos_now,
+			R_kP_pos, R_kI_pos, R_kD_pos,
+			0.010f, // dt = 10 ms
+			-100.0f, +100.0f,
+			&pid_r);
+
+		// Position‐PID → corrective velocity for prismatic
+		float P_corr_vel = PID_Update(
+			P_Pos_now,
+			P_kP_pos, P_kI_pos, P_kD_pos,
+			0.010f,
+			-100.0f, +100.0f,
+			&pid_p);
+
+		// Combine with feedforward velocities
+		R_Target_Velocity = TargetRVel + R_corr_vel;
+		P_Target_Velocity = TargetPVel + P_corr_vel;
+	}
+
+	// 3b) Inner‐loop (velocity) PID _every_ 1 ms:
+	R_Velo_Error = R_Target_Velocity - Revolute_QEIdata.Velocity_f;
+	R_PWM = PID_Update(
+		R_Velo_Error,
+		R_kP_vel, R_kI_vel, R_kD_vel,
+		0.001f, // dt = 1 ms
+		-100.0f, +100.0f,
+		&pid_r_v);
+
+	P_Velo_Error = P_Target_Velocity - Prismatic_QEIdata.Velocity_f;
+	P_PWM = PID_Update(
+		P_Velo_Error,
+		P_kP_vel, P_kI_vel, P_kD_vel,
+		0.001f,
+		-100.0f, +100.0f,
+		&pid_p_v);
+}
+
+int ToleranceCheck(void)
+{
+	static uint64_t lock_timer_us = 0;
+
+	if ((fabsf(TargetR - Revolute_QEIdata.RadPosition) < R_ERR_TOL_RAD) && (fabsf(TargetP - Prismatic_QEIdata.mmPosition) < P_ERR_TOL_MM))
+	{
+		if (lock_timer_us == 0)
+		{
+			lock_timer_us = micros();
+		}
+		else if ((micros() - lock_timer_us) >= HOLD_TIME_US)
+		{
+			// We have stayed inside tolerance for long enough → “lock & hold”
+			return 1;
+		}
+	}
+	else
+	{
+		lock_timer_us = 0;
+	}
+
+	return 0;
+}
+
+int CascadeControl_Step(void)
+{
+	static uint64_t timestampState2 = 0;
+
+	// 1a) Convert desired‐angle (deg) → (rad) and compute current pos‐errors
+	// float TargetR = TargetR_Deg * (M_PI / 180.0f);
+	R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
+	P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
+	R_Pos_Error_Deg = R_Pos_Error * (180.0f / M_PI);
+
+	// 1b) 1 ms timer check
+	uint64_t nowtimestamp = micros();
+	if (nowtimestamp <= timestampState2)
+	{
+		// Not yet 1 ms since last run → bail out
+		return 0;
+	}
+	// Advance to next 1 ms tick
+	timestampState2 = nowtimestamp + 1000;
+
+	// 2) Trapezoid logic: init if needed + update (1 ms)
+	TrapezoidStep();
+
+	// 3) PID logic: 10 ms outer, 1 ms inner
+	PIDStep();
+
+	// 4) Apply workspace limits (joint‐limits, etc.) and send the PWM commands
+	Workspace_limit();
+	Set_Motor(0, R_PWM);
+	Set_Motor(1, P_PWM);
+
+	// 5) Tolerance‐check + “lock & hold” (servo + zero motors) if arrived
+	return ToleranceCheck();
+}
+
+// void CascadeControl_Step(void)
+// {
+// 	static uint64_t timestampState2 = 0;
+// 	static int loop_counter = 0;
+// 	static float last_TargetR = 0.0f;
+// 	static float last_TargetP = 0.0f;
+// 	static float R_Target_Velocity = 0.0f;
+// 	static float P_Target_Velocity = 0.0f;
+// 	static uint64_t lock_timer_us = 0;
+
+// 	// 1) Convert desired angle to radians, compute pos‐error
+// 	TargetR = TargetR_Deg * M_PI / 180.0f;
+// 	R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
+// 	P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
+// 	R_Pos_Error_Deg = R_Pos_Error * 180 / M_PI;
+
+// 	uint64_t currentTimeState2 = micros();
+// 	if (currentTimeState2 <= timestampState2)
+// 	{
+// 		return; // not yet time for the next 1 ms tick
+// 	}
+// 	timestampState2 = currentTimeState2 + 1000; // schedule next tick in 1 ms
+// 	loop_counter++;
+
+// 	// 2) Re‐init trapezoid if setpoint jumped
+// 	float r_target_diff = fabsf(TargetR - last_TargetR);
+// 	float p_target_diff = fabsf(TargetP - last_TargetP);
+// 	if (r_target_diff > 0.001f)
+// 	{
+// 		Trapezoidal_Init(&revolute, R_Pos_Error, 1.40f, 9.0f);
+// 		last_TargetR = TargetR;
+// 	}
+// 	if (p_target_diff > 0.01f)
+// 	{
+// 		Trapezoidal_Init(&prismatic, P_Pos_Error, 600.0f, 3000.0f);
+// 		last_TargetP = TargetP;
+// 	}
+
+// 	// 3) Update trapezoids, get feedforward pos/vel
+// 	Trapezoidal_Update(&revolute, 0.001f);
+// 	TargetRPos = revolute.current_position;
+// 	TargetRVel = revolute.current_velocity;
+// 	TargetRAcc = revolute.current_acceleration;
+// 	Trapezoidal_Update(&prismatic, 0.001f);
+// 	TargetPPos = prismatic.current_position;
+// 	TargetPVel = prismatic.current_velocity;
+// 	TargetPAcc = prismatic.current_acceleration;
+
+// 	// 4) Outer‐loop position PID every 10 ms
+// 	if (loop_counter >= 10)
+// 	{
+// 		loop_counter = 0;
+// 		float R_Pos_Error_now = TargetR - Revolute_QEIdata.RadPosition;
+// 		float P_Pos_Error_now = TargetP - Prismatic_QEIdata.mmPosition;
+
+// 		float R_Corrective_Vel = PID_Update(
+// 			R_Pos_Error_now,
+// 			R_kP_pos, R_kI_pos, R_kD_pos,
+// 			0.010f, -100.0f, +100.0f,
+// 			&pid_r);
+// 		float P_Corrective_Vel = PID_Update(
+// 			P_Pos_Error_now,
+// 			P_kP_pos, P_kI_pos, P_kD_pos,
+// 			0.010f, -100.0f, +100.0f,
+// 			&pid_p);
+// 		R_Target_Velocity = TargetRVel + R_Corrective_Vel;
+// 		P_Target_Velocity = TargetPVel + P_Corrective_Vel;
+// 	}
+
+// 	// 5) Inner‐loop velocity PID every 1 ms
+// 	R_Velo_Error = R_Target_Velocity - Revolute_QEIdata.Velocity_f;
+// 	R_PWM = PID_Update(
+// 		R_Velo_Error,
+// 		R_kP_vel, R_kI_vel, R_kD_vel,
+// 		0.001f, -100.0f, +100.0f,
+// 		&pid_r_v);
+// 	P_Velo_Error = P_Target_Velocity - Prismatic_QEIdata.Velocity_f;
+// 	P_PWM = PID_Update(
+// 		P_Velo_Error,
+// 		P_kP_vel, P_kI_vel, P_kD_vel,
+// 		0.001f, -100.0f, +100.0f,
+// 		&pid_p_v);
+
+// 	// 6) Apply workspace limits & issue motor commands
+// 	Workspace_limit();
+// 	Set_Motor(0, R_PWM);
+// 	Set_Motor(1, P_PWM);
+
+// 	// 7) “Lock & hold” if within tolerance for HOLD_TIME_US
+// 	if (fabsf(TargetR - Revolute_QEIdata.RadPosition) < R_ERR_TOL_RAD && fabsf(TargetP - Prismatic_QEIdata.mmPosition) < P_ERR_TOL_MM)
+// 	{
+// 		if (lock_timer_us == 0)
+// 		{
+// 			lock_timer_us = micros();
+// 		}
+// 		else if ((micros() - lock_timer_us) >= HOLD_TIME_US)
+// 		{
+// 			Set_Servo(1);
+// 			Set_Motor(0, 0);
+// 			Set_Motor(1, 0);
+// 			revolute.finished = 0;
+// 			prismatic.finished = 0;
+// 		}
+// 	}
+// 	else
+// 	{
+// 		lock_timer_us = 0;
+// 	}
+// }
 /* USER CODE END 4 */
 
 /**
