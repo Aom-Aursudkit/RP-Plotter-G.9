@@ -4,9 +4,10 @@
 ../Core/Src/ModBusRTU.c:45:6:Modbus_init	16	static
 ../Core/Src/ModBusRTU.c:121:16:CRC16	24	static
 ../Core/Src/ModBusRTU.c:138:6:ResetAllTargets	16	static
-../Core/Src/ModBusRTU.c:144:6:Modbus_Protocal_Worker	56	static
-../Core/Src/ModBusRTU.c:271:6:modbusWrite1Register	16	static
-../Core/Src/ModBusRTU.c:292:6:modbusRead1Register	24	static
-../Core/Src/ModBusRTU.c:326:6:ModbusErrorReply	16	static
-../Core/Src/ModBusRTU.c:332:6:Modbus_frame_response	8	static
-../Core/Src/ModBusRTU.c:348:6:Modbus_Emission	16	static
+../Core/Src/ModBusRTU.c:144:6:SET_TARGET	24	static
+../Core/Src/ModBusRTU.c:149:6:Modbus_Protocal_Worker	56	static
+../Core/Src/ModBusRTU.c:276:6:modbusWrite1Register	16	static
+../Core/Src/ModBusRTU.c:297:6:modbusRead1Register	24	static
+../Core/Src/ModBusRTU.c:331:6:ModbusErrorReply	16	static
+../Core/Src/ModBusRTU.c:337:6:Modbus_frame_response	8	static
+../Core/Src/ModBusRTU.c:353:6:Modbus_Emission	16	static

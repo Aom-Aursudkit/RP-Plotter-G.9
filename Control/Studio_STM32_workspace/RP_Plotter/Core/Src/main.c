@@ -26,11 +26,11 @@
 #include "string.h"
 #include <math.h>
 
-//BaseSystem//////////
+// BaseSystem//////////
 #include "ModBusRTU.h"
 //////////////////////
 
-//Trapezoidal/////////
+// Trapezoidal/////////
 #include "Trapezoidal.h"
 //////////////////////
 
@@ -43,9 +43,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define R_ERR_TOL_RAD   0.034f//0.00174533f/* ±0.1 degree */
-#define P_ERR_TOL_MM    0.20f//0.10f      /* ±0.1 mm */
-#define HOLD_TIME_US    1000000UL  /* 1s  in microseconds */
+#define R_ERR_TOL_RAD 0.034f   // 0.00174533f/* ±0.1 degree */
+#define P_ERR_TOL_MM 0.20f	   // 0.10f      /* ±0.1 mm */
+#define HOLD_TIME_US 1000000UL /* 1s  in microseconds */
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -70,7 +70,7 @@ DMA_HandleTypeDef hdma_usart2_tx;
 /* USER CODE BEGIN PV */
 uint64_t _micros = 0;
 
-//MotorParam//////////
+// MotorParam//////////
 float P_Motor_R = 3.43;
 float P_Motor_L = 0.00124;
 float P_Motor_B = 0.000222663543417634;
@@ -85,7 +85,7 @@ float R_Motor_Ke = 0.19423665004696;
 float R_Motor_Km = 0.09600489295806550;
 //////////////////////
 
-//RevoluteFeedforward/
+// RevoluteFeedforward/
 float TargetR_Deg = 0;
 float R_Pos_Error_Deg = 0;
 float g = 9.81;
@@ -100,15 +100,15 @@ float R_pwm_ff = 0;
 float R_Kff = 0.5f;
 //////////////////////
 
-//Receiver////////////
+// Receiver////////////
 float Receiver[5];
 int32_t Receiver_Period[5];
-//uint16_t ADC_RawRead[300]={0};
-volatile uint32_t rise_time[3] = { 0 };     // For PC0, PC2, PC3
+// uint16_t ADC_RawRead[300]={0};
+volatile uint32_t rise_time[3] = { 0 }; // For PC0, PC2, PC3
 volatile uint32_t pulse_width_us[3] = { 0 };
 //////////////////////
 
-//Encoder/////////////
+// Encoder/////////////
 uint32_t revolute_raw;
 uint32_t prismatic_raw;
 
@@ -150,7 +150,7 @@ uint8_t Z_index_R;
 uint8_t z_temp;
 //////////////////////
 
-//Control/////////////
+// Control/////////////
 float vx;
 float vy;
 float End_x;
@@ -175,7 +175,7 @@ float R_PWM;
 float P_PWM;
 //////////////////////
 
-//Mode & Status///////
+// Mode & Status///////
 uint8_t Mode;
 uint8_t EmergencyState;
 uint8_t IsPress;
@@ -186,7 +186,7 @@ uint8_t R_Limit;
 uint64_t lock_timer_us = 0;
 //////////////////////
 
-//PID/////////////////
+// PID/////////////////
 arm_pid_instance_f32 PID = { 0 };
 
 typedef struct {
@@ -194,18 +194,18 @@ typedef struct {
 	float prevError;
 } PID_State;
 
-PID_State pid_r = { 0 };  // for Revolute
-PID_State pid_p = { 0 };  // for Prismatic
-PID_State pid_r_v = { 0 };  // for Revolute
-PID_State pid_p_v = { 0 };  // for Prismatic
+PID_State pid_r = { 0 };	 // for Revolute
+PID_State pid_p = { 0 };	 // for Prismatic
+PID_State pid_r_v = { 0 }; // for Revolute
+PID_State pid_p_v = { 0 }; // for Prismatic
 
-float R_kP_vel = 90.0f;
-float R_kI_vel = 4.00f;
-float R_kD_vel = 0.00f;
+float R_kP_vel = 50.0f;
+float R_kI_vel = 5.00f;
+float R_kD_vel = 0.20f;
 
-float R_kP_pos = 5.00f;
-float R_kI_pos = 4.00f;
-float R_kD_pos = 1.00f;
+float R_kP_pos = 15.10f;
+float R_kI_pos = 6.20f;
+float R_kD_pos = 2.50f;
 
 float P_kP_vel = 1.324f;
 float P_kI_vel = 0.02f;
@@ -216,7 +216,7 @@ float P_kI_pos = 0.094f;
 float P_kD_pos = 0.0067f;
 //////////////////////
 
-//Mode3///////////////
+// Mode3///////////////
 typedef enum {
 	CALIB_IDLE,
 	CALIB_WAIT_REMOTE,
@@ -238,11 +238,15 @@ uint8_t Cal_Side = 0;
 uint64_t servo_timer;
 //////////////////////
 
-//Mode8///////////////
+// Mode8///////////////
 int loop_counter;
 //////////////////////
 
-//BaseSystem//////////
+// BaseSystem//////////
+uint8_t counter = 0;
+uint8_t TenPointMode = 0;
+
+uint8_t Test_no_BaseSystem = 0;
 float TargetR_BaseSystem = 0;
 float TargetP_BaseSystem = 0;
 uint8_t State_BaseSystem = 0;
@@ -253,12 +257,22 @@ uint8_t Last_State_BaseSystem = 0;
 uint8_t Last_Pen_BaseSystem = 0;
 ModbusHandleTypedef hmodbus;
 u16u8_t registerFrame[200];
-float RD_Velo_Error;
+uint16_t base_status;
+float testArray[20] = { 0 };
+uint8_t testArraydone = 0;
+// float RD_Velo_Error;
 //////////////////////
 
-//Trapezoidal/////////
+// Trapezoidal/////////
 static float last_TargetR = 0.0f;
 static float last_TargetP = 0.0f;
+//////////////////////
+
+//////////////////////
+uint64_t pen_delay_timer = 0;
+uint8_t CheckTolerance = 0;
+VELO_PROFILE revolute;
+VELO_PROFILE prismatic;
 //////////////////////
 /* USER CODE END PV */
 
@@ -276,6 +290,7 @@ static void MX_TIM2_Init(void);
 static void MX_TIM16_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
+void DWT_Init(void);
 float map(float x, float in_min, float in_max, float out_min, float out_max);
 uint64_t micros();
 float PID_Update(float error, float kP, float kI, float kD, float dt,
@@ -288,8 +303,16 @@ void Reset_R();
 void Reset_P();
 void Workspace_limit();
 
-//BaseSystem//////////
+// Cascade//////////
+int CascadeControl_Step(void);
+void TrapezoidStep(void);
+void PIDStep(void);
+int ToleranceCheck(void);
+//////////////////////
+
+// BaseSystem//////////
 void processTargets(void);
+void ResetAllTargets(void);
 //////////////////////
 /* USER CODE END PFP */
 
@@ -305,7 +328,6 @@ void processTargets(void);
 int main(void) {
 
 	/* USER CODE BEGIN 1 */
-
 	/* USER CODE END 1 */
 
 	/* MCU Configuration--------------------------------------------------------*/
@@ -353,8 +375,8 @@ int main(void) {
 	HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start(&htim15);
 	HAL_TIM_PWM_Start(&htim15, TIM_CHANNEL_1);
-//  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
-//  HAL_ADC_Start_DMA(&hadc1, ADC_RawRead, 300);
+	//  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+	//  HAL_ADC_Start_DMA(&hadc1, ADC_RawRead, 300);
 	DWT_Init();
 
 	PID.Kp = 0.1;
@@ -368,164 +390,92 @@ int main(void) {
 
 	Set_Servo(0);
 
-	//BaseSystem//////////
+	// BaseSystem//////////
 	hmodbus.huart = &huart2;
 	hmodbus.htim = &htim16;
 	hmodbus.slaveAddress = 0x15;
 	hmodbus.RegisterSize = 200;
 	Modbus_init(&hmodbus, registerFrame);
 	ResetAllTargets;
+	REG16(REG_MOTION_STATUS) = 0;
+	Set_Motor(0, 0);
+	Set_Motor(1, 0);
 	//////////////////////
 
-	//////////////////////
-	VELO_PROFILE revolute;
-	VELO_PROFILE prismatic;
-	//////////////////////
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1) {
-//		//BaseSystem//////////
-//
-//		uint16_t base_status = REG16(REG_BASE_STATUS);
-//		uint16_t Last_base_status = 999;
-//		if ((base_status != Last_base_status) || (base_status == 1)) {
-//			Last_base_status = base_status;
-//			switch (base_status) {
-//			case 1:  // Home
-//				Mode = 3;
-//				break;
-//
-//			case 2:  // Run Jog Mode
-//				Mode = 1;
-//				break;
-//
-//			case 8:  // Go To Target
-//				Mode = 2;
-//				break;
-//
-//			default: // idea
-//				Mode = 0;
-//				break;
-//			}
-//		}
-//		switch (Mode) {
-//		case 3:  // Home
-//			REG16(REG_MOTION_STATUS) = 1;
-//			break;
-//
-//		case 1:  // Run Jog Mode
-//			REG16(REG_MOTION_STATUS) = 2;
-//			break;
-//
-//		case 2:  // Go To Target
-//			REG16(REG_MOTION_STATUS) = 8;
-//			break;
-//
-//		case 0:  // idea
-//			REG16(REG_MOTION_STATUS) = 0;
-//			break;
-//
-//		default:
-//			break;
-//		}
-//
-//		if (TargetR_BaseSystem != Last_TargetR_BaseSystem) {
-//			Set_Servo(TargetR_BaseSystem);
-//			Last_TargetR_BaseSystem = TargetR_BaseSystem;
-//		}
-//		if (TargetP_BaseSystem != Last_Pen_BaseSystem) {
-//			Set_Servo(TargetP_BaseSystem);
-//			Last_Pen_BaseSystem = TargetP_BaseSystem;
-//		}
-//		if (Pen_BaseSystem != Last_Pen_BaseSystem) {
-//			Set_Servo(Pen_BaseSystem);
-//			Last_Pen_BaseSystem = Pen_BaseSystem;
-//		}
-////		RD_Velo_Error = R_Velo_Error * (M_PI / 180.0f);
-//		Modbus_Protocal_Worker();
-//		//////////////////////
+		//////////////////////// <<BaseSystem>> /////////////////////////
+		if (Test_no_BaseSystem == 0
+				&& HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 1) {
+			Test_no_BaseSystem = 1;
+		}
+
+		base_status = REG16(REG_BASE_STATUS);
+		if (EmergencyState == 0) {
+			switch (base_status) {
+			case 1: // Home
+				REG16(REG_MOTION_STATUS) = 1;
+				break;
+
+			case 2: // Run Jog Mode
+				REG16(REG_MOTION_STATUS) = 2;
+				break;
+
+			case 4: // Run Point Mode
+				REG16(REG_MOTION_STATUS) = 4;
+				break;
+
+			default:
+				break;
+			}
+
+			if (TargetR_BaseSystem != Last_TargetR_BaseSystem) {
+				TargetR = TargetR_BaseSystem;
+				Last_TargetR_BaseSystem = TargetR_BaseSystem;
+			}
+			if (TargetP_BaseSystem != Last_Pen_BaseSystem) {
+				TargetP = TargetP_BaseSystem;
+				Last_Pen_BaseSystem = TargetP_BaseSystem;
+			}
+			if (Pen_BaseSystem != Last_Pen_BaseSystem) {
+				Set_Servo(Pen_BaseSystem);
+				Last_Pen_BaseSystem = Pen_BaseSystem;
+			}
+		}
+		//		RD_Velo_Error = R_Velo_Error * (M_PI / 180.0f);
+		Modbus_Protocal_Worker();
+		//////////////////////////////////////////////////////////////
 
 		//////////////////////// <<ENCODER>> /////////////////////////
 		revolute_raw = __HAL_TIM_GET_COUNTER(&htim4);
 		prismatic_raw = __HAL_TIM_GET_COUNTER(&htim3);
-		//Call every 0.001 s
+		// Call every 0.001 s
 		static uint64_t timestamp = 0;
 		int64_t currentTime = micros();
 		if (currentTime > timestamp) {
-			timestamp = currentTime + 1000;  //us
+			timestamp = currentTime + 1000; // us
 			Revolute_PosVel_Update();
 			Prismatic_PosVel_Update();
 		}
-		//Call every 0.01 s
+		// Call every 0.01 s
 		static uint64_t timestamp1 = 0;
 		int64_t currentTime1 = micros();
 		if (currentTime1 > timestamp1) {
-			timestamp1 = currentTime1 + 10000;  //us
-
+			timestamp1 = currentTime1 + 10000; // us
 		}
-		//Call every 0.1 s
+		// Call every 0.1 s
 		static uint64_t timestamp2 = 0;
 		int64_t currentTime2 = micros();
 		if (currentTime2 > timestamp2) {
-			timestamp2 = currentTime2 + 100000;  //us
-
+			timestamp2 = currentTime2 + 100000; // us
 		}
 		End_x = Prismatic_QEIdata.mmPosition
 				* cosf(Revolute_QEIdata.RadPosition * -1);
 		End_y = Prismatic_QEIdata.mmPosition
 				* sinf(Revolute_QEIdata.RadPosition);
-		//////////////////////////////////////////////////////////////
-
-		//////////////////////// <<RECEIVER>> ////////////////////////
-		Receiver_Period[0] = __HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_1);
-		Receiver_Period[1] = __HAL_TIM_GET_COMPARE(&htim1, TIM_CHANNEL_2);
-		float RX_temp = map(
-		__HAL_TIM_GET_COMPARE(&htim2,TIM_CHANNEL_2) - 1500.00, -500.00, 500.00,
-				-100.00, 100.00);
-		float RY_temp = map(
-		__HAL_TIM_GET_COMPARE(&htim1,TIM_CHANNEL_1) - 18530.00, -500.00, 500.00,
-				-100.00, 100.00);
-
-		if (RX_temp >= -4 && RX_temp <= 4)
-			Receiver[0] = 0.00;
-		else if (RX_temp > 100)
-			Receiver[0] = 100.00;
-		else if (RX_temp < -100)
-			Receiver[0] = -100.00;
-		else
-			Receiver[0] = RX_temp;
-		if (RY_temp >= -4 && RY_temp <= 4)
-			Receiver[1] = 0.00;
-		else if (RY_temp > 100)
-			Receiver[1] = 100.00;
-		else if (RY_temp < -100)
-			Receiver[1] = -100.00;
-		else
-			Receiver[1] = RY_temp;
-
-		if (pulse_width_us[0] > 4000.00)
-			pulse_width_us[0] = pulse_width_us[0] - 4900.00;
-		if (pulse_width_us[1] > 4000.00)
-			pulse_width_us[1] = pulse_width_us[1] - 4900.00;
-		if (pulse_width_us[2] > 4000.00)
-			pulse_width_us[2] = pulse_width_us[2] - 4900.00;
-
-		Receiver[2] = map((float) pulse_width_us[0] - 1500.00, -500.00, 500.00,
-				-100.00, 100.00);
-		Receiver[3] = map((float) pulse_width_us[1] - 1500.00, -500.00, 500.00,
-				-100.00, 100.00);
-		Receiver[4] = map((float) pulse_width_us[2] - 1500.00, -500.00, 500.00,
-				-100.00, 100.00);
-
-//		if(Receiver[2] > 1500.00) Receiver[2] = Receiver[2] - 3400.00;
-//		if(Receiver[3] > 1500.00) Receiver[3] = Receiver[3] - 3400.00;
-//		if(Receiver[4] > 1500.00) Receiver[4] = Receiver[4] - 3400.00;
-
-		//Adjust as needed
-		vx = map((float) Receiver[0], -100.00, 100.00, -300.00, 300.00);
-		vy = map((float) Receiver[1], -100.00, 100.00, -300.00, 300.00);
 		//////////////////////////////////////////////////////////////
 
 		//////////////////////// <<MODE>> ///////////////////////////
@@ -552,241 +502,52 @@ int main(void) {
 			z_temp = 0;
 		}
 
+		//////////////////////////////////////////////////////////////
 		if (EmergencyState == 1) {
-			Mode = 0;
-		} else if (Receiver[2] < -30 && Receiver[4] < -30) {
-			Mode = 0;
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
-		} else if (Receiver[3] > 0 && IsPress == 0) {
-			IsPress = 1;
-			calibState = CALIB_IDLE;
-			if (Receiver[2] > -30 && Receiver[2] < 30 && Receiver[4] < -30) {
-				if (Mode != 1) {
-					Mode = 1;
-				} else {
-					TargetX = End_x;
-					TargetY = End_y;
-					TargetR = Revolute_QEIdata.RadPosition;
-					TargetP = Prismatic_QEIdata.mmPosition;
-				}
-			} else if (Receiver[2] > 30 && Receiver[4] < -30) {
-				revolute.finished = 0;
-				prismatic.finished = 0;
-				Mode = 2;
-			} else if (Receiver[2] < -30 && Receiver[4] > -30
-					&& Receiver[4] < 30) {
-				Mode = 3;
-			} else if (Receiver[2] > -30 && Receiver[2] < 30
-					&& Receiver[4] > -30 && Receiver[4] < 30) {
-				revolute.finished = 0;
-				prismatic.finished = 0;
-				Mode = 4;
-			} else if (Receiver[2] > 30 && Receiver[4] > -30
-					&& Receiver[4] < 30) {
-				Mode = 5;
-			} else if (Receiver[2] < -30 && Receiver[4] > 30) {
-				Mode = 6;
-			} else if (Receiver[2] > -30 && Receiver[2] < 30
-					&& Receiver[4] > 30) {
-				Mode = 7;
-			} else if (Receiver[2] > 30 && Receiver[4] > 30) {
-				loop_counter = 0;
-				TargetR = 4.18879;
-				TargetP = 50;
-				Mode = 8;
-			}
-		} else {
-			IsPress = 0;
-		}
-
-//		if (Receiver[3] > 0) {
-//			calibState = CALIB_IDLE;
-//			if (Receiver[2] < -30 && Receiver[4] < -30) {
-//				State = 0;
-//			}
-//			else if (Receiver[2] > -30 && Receiver[2] < 30 && Receiver[4] < -30){
-//				State = 1;
-//			}
-//			else if (Receiver[2] > 30 && Receiver[4] < -30){
-//				State = 2;
-//			}
-//			else if (Receiver[2] < -30 && Receiver[4] > -30 && Receiver[4] < 30) {
-//				State = 3;
-//			}
-//			else if (Receiver[2] > -30 && Receiver[2] < 30 && Receiver[4] > -30 && Receiver[4] < 30) {
-//				State = 4;
-//			}
-//			else if (Receiver[2] > 30 && Receiver[4] > -30 && Receiver[4] < 30) {
-//				State = 5;
-//			}
-//			else if (Receiver[2] < -30 && Receiver[4] > 30) {
-//				State = 6;
-//			}
-//			else if (Receiver[2] > -30 && Receiver[2] < 30 && Receiver[4] > 30) {
-//				State = 7;
-//			}
-//			else if (Receiver[2] > 30 && Receiver[4] > 30) {
-//				State = 8;
-//			}
-//		}
-		//////////////////////////////////////////////////////////////
-
-		//////////////////////// <<SERVO>> ///////////////////////////
-//		if (micros() - servo_timer > 200000 && Pen_Status_in == 0) {
-//			__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 500);
-//		}
-		//////////////////////////////////////////////////////////////
-
-		//////////////////////// <<STOP>> ////////////////////////////
-		if (Mode == 0) {
-			Set_Motor(0, 0);
-			Set_Motor(1, 0);
-			Set_Servo(0);
-		}
-		//////////////////////////////////////////////////////////////
-
-		//////////////////////// <<MANUAL>> //////////////////////////
-		if (Mode == 1) {
-			//////////////////////// <<CONTROL>> /////////////////////////
-//		inv_L = (Prismatic_QEIdata.mmPosition > 1.0f) ? (1.0f / Prismatic_QEIdata.mmPosition) : 0.0f;
-//		TargetRVel 	= (-sinf(Revolute_QEIdata.RadPosition) * vx + cosf(Revolute_QEIdata.RadPosition) * vy) / inv_L;
-//		TargetPVel  =  cosf(Revolute_QEIdata.RadPosition) * vx + sinf(Revolute_QEIdata.RadPosition) * vy;
-			TargetRVel =
-					(map((float) Receiver[0], -100.00, 100.00, -1.00, 1.00));
-			TargetPVel = map((float) Receiver[1], -100.00, 100.00, -500.00,
-					500.00);
-			//////////////////////////////////////////////////////////////
-
-			//////////////////////// <<MOTOR>> ///////////////////////////
-			R_Velo_Error = (TargetRVel - Revolute_QEIdata.Velocity_f);
-			P_Velo_Error = TargetPVel - Prismatic_QEIdata.Velocity;
-
-//		PID.Kp = 0.1;
-//		PID.Ki = 0.00001;
-//		PID.Kd = 0.0;
-//		arm_pid_init_f32(&PID, 1);
-//		R_PWM = arm_pid_f32(&PID, TargetRVel - Revolute_QEIdata.Velocity);
-//
-//		PID.Kp = 0.2;
-//		PID.Ki = 0.00001;
-//		PID.Kd = 0.0;
-//		arm_pid_init_f32(&PID, 1);
-//		P_PWM = arm_pid_f32(&PID, TargetPVel - Prismatic_QEIdata.Velocity);
-
-//			PID.Kp = 100;
-//			PID.Ki = 0.1;
-//			PID.Kd = 0.0;
-//			arm_pid_init_f32(&PID, 1);
-//			R_PWM = arm_pid_f32(&PID, R_Velo_Error);
-//
-//			PID.Kp = 0.2;
-//			PID.Ki = 0.005;
-//			PID.Kd = 0.0;
-//			arm_pid_init_f32(&PID, 1);
-//			P_PWM = arm_pid_f32(&PID, P_Velo_Error);
-
-			//Call every 0.001 s
-			static uint64_t timestampState1 = 0;
-			int64_t currentTimeState1 = micros();
-			if (currentTimeState1 > timestampState1) {
-				timestampState1 = currentTimeState1 + 1000;		//us
-				R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel, R_kD_vel,
-						0.01f, -100.0f, 100.0f, &pid_r_v);
-				P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel, P_kD_vel,
-						0.01f, -100.0f, 100.0f, &pid_p_v);
-			}
-
-//			R_PWM = Receiver[0];
-//			P_PWM = Receiver[1];
-
-			Workspace_limit();
-
-			Set_Motor(0, R_PWM);
-			Set_Motor(1, P_PWM);
-			//////////////////////////////////////////////////////////////
+			REG16(REG_MOTION_STATUS) = 0;
 		}
 		//////////////////////////////////////////////////////////////
 
 		//////////////////////// <<GOTO>> ////////////////////////////
-		if (Mode == 2) {
-			R_Pos_Error = (TargetR - Revolute_QEIdata.RadPosition);
-			revolute.target_position = TargetR;
+		if ((Mode == 2 && (base_status == 2 || Test_no_BaseSystem == 1))
+				|| base_status == 8) {
+			REG16(REG_MOTION_STATUS) = 8;
 
-//			PID.Kp = 50;
-//			PID.Ki = 10;
-//			PID.Kd = 0.1;
-//			arm_pid_init_f32(&PID, 1);
-//			R_PWM = arm_pid_f32(&PID, R_Pos_Error);
-//
-			P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
-			prismatic.target_position = TargetP;
-
-//			PID.Kp = 0.333333;
-//			PID.Ki = 0.05;
-//			PID.Kd = 0.25;
-//			arm_pid_init_f32(&PID, 1);
-//			P_PWM = arm_pid_f32(&PID, P_Pos_Error);
-
-			//Call every 0.001 s
-			static uint64_t timestampState2 = 0;
-			int64_t currentTimeState2 = micros();
-			if (currentTimeState2 > timestampState2) {
-				timestampState2 = currentTimeState2 + 1000;		//us
-
-//				R_PWM = PID_Update(R_Pos_Error, 16.00f, 5.00f, 8.00f, 0.01f, -100.0f, 100.0f, &pid_r);
-//				P_PWM = PID_Update(P_Pos_Error, 0.333f, 1.20f, 0.15f, 0.01f, -100.0f, 100.0f, &pid_p);
-
-				if (revolute.finished == 0) {
-					revolute.current_position = Revolute_QEIdata.RadPosition;
-					Trapezoidal_Update(&revolute, 0.01);
-					TargetRVel = revolute.current_velocity;
-					R_Velo_Error = (TargetRVel - Revolute_QEIdata.Velocity_f);
-//					R_PWM = PID_Update(R_Velo_Error, 71.42f, 0.10f, 0.00f,
-//							0.01f, -100.0f, 100.0f, &pid_r_v);
-					R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel,
-							R_kD_vel, 0.01f, -100.0f, 100.0f, &pid_r_v);
-				} else {
-					R_PWM = PID_Update(R_Pos_Error, R_kP_pos, R_kI_pos,
-							R_kD_pos, 0.01f, -100.0f, 100.0f, &pid_r);
-				}
-
-				if (prismatic.finished == 0) {
-					prismatic.current_position = Prismatic_QEIdata.mmPosition;
-					Trapezoidal_Update(&prismatic, 0.01);
-					TargetPVel = prismatic.current_velocity;
-					P_Velo_Error = (TargetPVel - Prismatic_QEIdata.Velocity);
-//					P_PWM = PID_Update(P_Velo_Error, 0.2f, 1.5f, 0.00f, 0.01f,
-//							-100.0f, 100.0f, &pid_p_v);
-					P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel,
-							P_kD_vel, 0.01f, -100.0f, 100.0f, &pid_p_v);
-				} else {
-					P_PWM = PID_Update(P_Pos_Error, P_kP_pos, P_kI_pos,
-							P_kD_pos, 0.01f, -100.0f, 100.0f, &pid_p);
-				}
+			if (TenPointMode) {
+				//				float R, P;
+				//				ReadOneSlot(counter, &R, &P);
+				//				TargetR = R;
+				//				TargetP = P;
+				TargetR = testArray[(counter * 2) + 1];
+				TargetP = testArray[counter * 2];
 			}
 
-			Workspace_limit();
-
-			Set_Motor(0, R_PWM);
-			Set_Motor(1, P_PWM);
-			if (fabsf(R_Pos_Error) < R_ERR_TOL_RAD
-					&& fabsf(P_Pos_Error) < P_ERR_TOL_MM) {
-				/* within window —— start or continue timer */
-				if (lock_timer_us == 0)
-					lock_timer_us = micros(); /* start timing */
-
-				else if ((micros() - lock_timer_us) >= HOLD_TIME_US) {
-					Set_Servo(1);
-					Mode = 1;
+			if (CascadeControl_Step()) {
+				Set_Servo(1);
+				if (micros() - pen_delay_timer >= 500000) {
+					Set_Servo(0);
+					if (TenPointMode) {
+						if (counter == 9) {
+							TenPointMode = 0;
+							counter = 0;
+							Mode = 1;
+						} else {
+							counter++;
+						}
+					}
+					if (base_status == 8) {
+						REG16(REG_MOTION_STATUS) = 0;
+					}
 				}
 			} else {
-				lock_timer_us = 0;
+				pen_delay_timer = micros();
 			}
 		}
 		//////////////////////////////////////////////////////////////
 
 		//////////////////////// <<CALIBRATING>> /////////////////////
-		if (Mode == 3) {
+		if ((Mode == 3 && (base_status == 2 || Test_no_BaseSystem == 1))
+				|| base_status == 1) {
 			switch (calibState) {
 			case CALIB_IDLE:
 				Set_Motor(0, 0);
@@ -924,7 +685,7 @@ int main(void) {
 				else
 					Set_Motor(0, 25);
 
-//				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1 || R_Limit > 0) {
+				//				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1 || R_Limit > 0) {
 				if (Z_index_R > 0) {
 					Set_Motor(0, 0);
 					Reset_R();
@@ -938,209 +699,345 @@ int main(void) {
 				Mode = 0;
 				P_Limit = 0;
 				R_Limit = 0;
-				REG16(REG_MOTION_STATUS) = 0;
 				calibState = CALIB_IDLE;
+				//////////////////////////////////////////////////////////////
+				if (base_status == 1) {
+					REG16(REG_MOTION_STATUS) = 0;
+				}
+				//////////////////////////////////////////////////////////////
 				break;
 			}
 		}
 		//////////////////////////////////////////////////////////////
 
-		//////////////////////////////////////////////////////////////
-		if (Mode == 4) {
-			//TargetR = (atan2f(TargetX * -1, TargetY) + M_PI_2);
-			//TargetP = sqrtf(TargetX * TargetX + TargetY * TargetY);
+		////////////////////////// <<BASESYSTEM>> ////////////////////////
+		if (base_status == 2 || Test_no_BaseSystem == 1) {
 
-			TargetR = TargetR_Deg * M_PI / 180;
-			R_Pos_Error = (TargetR - Revolute_QEIdata.RadPosition);
-			P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
-			R_Pos_Error_Deg = R_Pos_Error * 180 / M_PI;
+			//////////////////////// <<RECEIVER>> ////////////////////////
+			Receiver_Period[0] = __HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_1);
+			Receiver_Period[1] = __HAL_TIM_GET_COMPARE(&htim1, TIM_CHANNEL_2);
+			float RX_temp = map(
+			__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_2) - 1500.00, -500.00,
+					500.00, -100.00, 100.00);
+			float RY_temp = map(
+			__HAL_TIM_GET_COMPARE(&htim1, TIM_CHANNEL_1) - 18530.00, -500.00,
+					500.00, -100.00, 100.00);
 
-			//Call every 0.001 s
-			static uint64_t timestampState2 = 0;
-			static int loop_counter = 0;
-			static float P_Target_Velocity = 0;
-			static float R_Target_Velocity = 0;
-			int64_t currentTimeState2 = micros();
-			if (currentTimeState2 > timestampState2) {
-				timestampState2 = currentTimeState2 + 1000; //us
-				loop_counter++;
+			if (RX_temp >= -4 && RX_temp <= 4)
+				Receiver[0] = 0.00;
+			else if (RX_temp > 100)
+				Receiver[0] = 100.00;
+			else if (RX_temp < -100)
+				Receiver[0] = -100.00;
+			else
+				Receiver[0] = RX_temp;
+			if (RY_temp >= -4 && RY_temp <= 4)
+				Receiver[1] = 0.00;
+			else if (RY_temp > 100)
+				Receiver[1] = 100.00;
+			else if (RY_temp < -100)
+				Receiver[1] = -100.00;
+			else
+				Receiver[1] = RY_temp;
 
-				float r_target_diff = fabsf(TargetR - last_TargetR);
-				float p_target_diff = fabsf(TargetP - last_TargetP);
+			if (pulse_width_us[0] > 4000.00)
+				pulse_width_us[0] = pulse_width_us[0] - 4900.00;
+			if (pulse_width_us[1] > 4000.00)
+				pulse_width_us[1] = pulse_width_us[1] - 4900.00;
+			if (pulse_width_us[2] > 4000.00)
+				pulse_width_us[2] = pulse_width_us[2] - 4900.00;
 
-				if (r_target_diff > 0.001f) {
-					float R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
-					Trapezoidal_Init(&revolute, R_Pos_Error, 1.40f, 9.0f);
-					last_TargetR = TargetR;
-				}
+			Receiver[2] = map((float) pulse_width_us[0] - 1500.00, -500.00,
+					500.00, -100.00, 100.00);
+			Receiver[3] = map((float) pulse_width_us[1] - 1500.00, -500.00,
+					500.00, -100.00, 100.00);
+			Receiver[4] = map((float) pulse_width_us[2] - 1500.00, -500.00,
+					500.00, -100.00, 100.00);
 
-				if (p_target_diff > 0.01f) {
-					float P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
-					Trapezoidal_Init(&prismatic, P_Pos_Error, 600.0f, 3000.0f);
-					last_TargetP = TargetP;
-				}
+			//		if(Receiver[2] > 1500.00) Receiver[2] = Receiver[2] - 3400.00;
+			//		if(Receiver[3] > 1500.00) Receiver[3] = Receiver[3] - 3400.00;
+			//		if(Receiver[4] > 1500.00) Receiver[4] = Receiver[4] - 3400.00;
 
-				// Update trajectory every 1ms
-				Trapezoidal_Update(&revolute, 0.001);
-				TargetRPos = revolute.current_position;
-				TargetRVel = revolute.current_velocity;
-				TargetRAcc = revolute.current_acceleration;
+			// Adjust as needed
+			vx = map((float) Receiver[0], -100.00, 100.00, -300.00, 300.00);
+			vy = map((float) Receiver[1], -100.00, 100.00, -300.00, 300.00);
+			//////////////////////////////////////////////////////////////
 
-				Trapezoidal_Update(&prismatic, 0.001);
-				TargetPPos = prismatic.current_position;
-				TargetPVel = prismatic.current_velocity;
-				TargetPAcc = prismatic.current_acceleration;
+			//////////////////////// <<MODE>> ///////////////////////////
 
-				// Outer position PID every 10ms
-				if (loop_counter >= 10) {
-					loop_counter = 0;
-					float R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
-					float P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
-
-					float R_Corrective_Vel = PID_Update(R_Pos_Error, R_kP_pos, R_kI_pos,
-							R_kD_pos, 0.01f, -100.0f, 100.0f, &pid_r);
-					float P_Corrective_Vel = PID_Update(P_Pos_Error, P_kP_pos, P_kI_pos,
-							P_kD_pos, 0.01f, -100.0f, 100.0f, &pid_p);
-
-					R_Target_Velocity = TargetRVel + R_Corrective_Vel;
-					P_Target_Velocity = TargetPVel + P_Corrective_Vel;
-				}
-
-				// Inner velocity PID every 1ms
-				R_Velo_Error = R_Target_Velocity - Revolute_QEIdata.Velocity_f;
-				R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel, R_kD_vel,
-						0.001f, -100.0f, 100.0f, &pid_r_v);
-
-				P_Velo_Error = P_Target_Velocity - Prismatic_QEIdata.Velocity_f;
-				P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel, P_kD_vel,
-						0.001f, -100.0f, 100.0f, &pid_p_v);
-
-				Workspace_limit();
-				Set_Motor(0, R_PWM);
-				Set_Motor(1, P_PWM);
-
-				if (fabsf(TargetR - Revolute_QEIdata.RadPosition) < R_ERR_TOL_RAD &&
-					fabsf(TargetP - Prismatic_QEIdata.mmPosition) < P_ERR_TOL_MM) {
-					if (lock_timer_us == 0)
-						lock_timer_us = micros();
-					else if ((micros() - lock_timer_us) >= HOLD_TIME_US) {
-						Set_Servo(1);
-						Set_Motor(0, 0);
-						Set_Motor(1, 0);
-						revolute.finished = 0;
-						prismatic.finished = 0;
-					}
-				} else {
-					lock_timer_us = 0;
-				}
-			}
-		}
-		//////////////////////////////////////////////////////////////
-
-		//////////////////////////////////////////////////////////////
-		if (Mode == 5) {
-
-			Workspace_limit();
-			Set_Motor(0, R_PWM);
-			Set_Motor(1, P_PWM);
-		}
-		//////////////////////////////////////////////////////////////
-
-		//////////////////////////////////////////////////////////////
-		if (Mode == 6) {
-
-		}
-		//////////////////////////////////////////////////////////////
-
-		//////////////////////////////////////////////////////////////
-		if (Mode == 7) {
-			Set_Motor(0, 5);
-			if (Z_index_R > 0) {
-				Set_Motor(0, 0);
-				Reset_R();
-				TargetR = Revolute_QEIdata.RadPosition;
+			if (EmergencyState == 1) {
 				Mode = 0;
+			} else if (Receiver[2] < -30 && Receiver[4] < -30) {
+				Mode = 0;
+				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
+			} else if (Receiver[3] > 0 && IsPress == 0) {
+				IsPress = 1;
+				calibState = CALIB_IDLE;
+				if (Receiver[2] > -30 && Receiver[2] < 30
+						&& Receiver[4] < -30) {
+					if (Mode != 1) {
+						Mode = 1;
+					} else {
+						TargetX = End_x;
+						TargetY = End_y;
+						TargetR = Revolute_QEIdata.RadPosition;
+						TargetP = Prismatic_QEIdata.mmPosition;
+					}
+				} else if (Receiver[2] > 30 && Receiver[4] < -30) {
+					revolute.finished = 0;
+					prismatic.finished = 0;
+					Mode = 2;
+				} else if (Receiver[2] < -30 && Receiver[4] > -30
+						&& Receiver[4] < 30) {
+					Mode = 3;
+				} else if (Receiver[2] > -30 && Receiver[2] < 30
+						&& Receiver[4] > -30 && Receiver[4] < 30) {
+					revolute.finished = 0;
+					prismatic.finished = 0;
+					Mode = 4;
+				} else if (Receiver[2] > 30 && Receiver[4] > -30
+						&& Receiver[4] < 30) {
+					Mode = 5;
+				} else if (Receiver[2] < -30 && Receiver[4] > 30) {
+					Mode = 6;
+				} else if (Receiver[2] > -30 && Receiver[2] < 30
+						&& Receiver[4] > 30) {
+					Mode = 7;
+				} else if (Receiver[2] > 30 && Receiver[4] > 30) {
+					loop_counter = 0;
+					TargetR = 4.18879;
+					TargetP = 50;
+					Mode = 8;
+				}
 			} else {
-				Set_Motor(0, 25);
+				IsPress = 0;
 			}
-		}
-		//////////////////////////////////////////////////////////////
+			//////////////////////////////////////////////////////////////
 
-		//////////////////////////////////////////////////////////////
-		if (Mode == 8) {
-			static uint64_t pen_delay_timer;
-			if (loop_counter == 1 && micros() - pen_delay_timer < 300000) {
+			//////////////////////// <<STOP>> ////////////////////////////
+			if (Mode == 0) {
 				Set_Motor(0, 0);
 				Set_Motor(1, 0);
-				Set_Servo(1);
-			} else if (loop_counter == 1
-					&& micros() - pen_delay_timer < 500000) {
 				Set_Servo(0);
-			} else if (loop_counter < 100) {
-				static uint16_t loop_temp = 0;
-				Set_Servo(0);
+			}
+			//////////////////////////////////////////////////////////////
 
-				R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
-				P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
+			//////////////////////// <<MANUAL>> //////////////////////////
+			if (Mode == 1) {
+				//////////////////////// <<CONTROL>> /////////////////////////
+				//		inv_L = (Prismatic_QEIdata.mmPosition > 1.0f) ? (1.0f / Prismatic_QEIdata.mmPosition) : 0.0f;
+				//		TargetRVel 	= (-sinf(Revolute_QEIdata.RadPosition) * vx + cosf(Revolute_QEIdata.RadPosition) * vy) / inv_L;
+				//		TargetPVel  =  cosf(Revolute_QEIdata.RadPosition) * vx + sinf(Revolute_QEIdata.RadPosition) * vy;
+				TargetRVel = (map((float) Receiver[0], -100.00, 100.00, -1.00,
+						1.00));
+				TargetPVel = map((float) Receiver[1], -100.00, 100.00, -500.00,
+						500.00);
+				//////////////////////////////////////////////////////////////
 
-				static uint64_t timestampState8 = 0;
-				int64_t currentTimeState8 = micros();
-				if (currentTimeState8 > timestampState8) {
-					timestampState8 = currentTimeState8 + 10000;		//us
-					R_PWM = PID_Update(R_Pos_Error, R_kP_pos, R_kI_pos,
-							R_kD_pos, 0.01f, -100.0f, 100.0f, &pid_r);
-					P_PWM = PID_Update(P_Pos_Error, P_kP_pos, P_kI_pos,
-							P_kD_pos, 0.01f, -100.0f, 100.0f, &pid_p);
+				//////////////////////// <<MOTOR>> ///////////////////////////
+				R_Velo_Error = (TargetRVel - Revolute_QEIdata.Velocity_f);
+				P_Velo_Error = TargetPVel - Prismatic_QEIdata.Velocity;
+
+				//Call every 0.001 s
+				static uint64_t timestampState1 = 0;
+				int64_t currentTimeState1 = micros();
+				if (currentTimeState1 > timestampState1) {
+					timestampState1 = currentTimeState1 + 1000;		//us
+					R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel,
+							R_kD_vel, 0.01f, -100.0f, 100.0f, &pid_r_v);
+					P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel,
+							P_kD_vel, 0.01f, -100.0f, 100.0f, &pid_p_v);
 				}
+
+				//			R_PWM = Receiver[0];
+				//			P_PWM = Receiver[1];
 
 				Workspace_limit();
 
 				Set_Motor(0, R_PWM);
 				Set_Motor(1, P_PWM);
-				if (fabsf(R_Pos_Error) < R_ERR_TOL_RAD
-						&& fabsf(P_Pos_Error) < P_ERR_TOL_MM) {
-					/* within window —— start or continue timer */
-					if (lock_timer_us == 0)
-						lock_timer_us = micros(); /* start timing */
+				//////////////////////////////////////////////////////////////
+			}
+			//////////////////////////////////////////////////////////////
 
-					else if ((micros() - lock_timer_us) >= HOLD_TIME_US) {
-						if (loop_temp == 0) {
-							pid_r.integ = 0;
-							pid_r.prevError = 0;
-							pid_p.integ = 0;
-							pid_p.prevError = 0;
-							TargetR = -1.0472;
-							TargetP = 250;
-							loop_temp = 1;
+			//////////////////////////////////////////////////////////////
+			if (Mode == 4) {
+				// TargetR = (atan2f(TargetX * -1, TargetY) + M_PI_2);
+				// TargetP = sqrtf(TargetX * TargetX + TargetY * TargetY);
+
+				TargetR = TargetR_Deg * M_PI / 180;
+				if (CascadeControl_Step()) {
+					Set_Servo(1);
+					Set_Motor(0, 0);
+					Set_Motor(1, 0);
+					revolute.finished = 0;
+					prismatic.finished = 0;
+				}
+			}
+			//////////////////////////////////////////////////////////////
+
+			//////////////////////////////////////////////////////////////
+			if (Mode == 5) {
+
+				Workspace_limit();
+				Set_Motor(0, R_PWM);
+				Set_Motor(1, P_PWM);
+			}
+			//////////////////////////////////////////////////////////////
+
+			//////////////////////////////////////////////////////////////
+			static uint64_t lastPressTime = 0; // Holds the last time a press was handled
+			uint64_t currentTime = micros();   // Current time in microseconds
+			if (Mode == 6) {
+				if (currentTime - lastPressTime >= 2000000) {
+					if (IsPress) {
+						lastPressTime = currentTime;
+						if (TenPointMode == 1) {
+							Mode = 2;
+						}
+						testArray[counter * 2] = Prismatic_QEIdata.mmPosition;
+						testArray[(counter * 2) + 1] =
+								Revolute_QEIdata.RadPosition;
+						SET_TARGET(counter,
+								(int16_t) Prismatic_QEIdata.mmPosition,
+								(int16_t) Revolute_QEIdata.RadPosition);
+
+						if (counter == 9) {
+							counter = 0;
+							testArraydone = 1;
+							TenPointMode = 1;
 						} else {
-							pid_r.integ = 0;
-							pid_r.prevError = 0;
-							pid_p.integ = 0;
-							pid_p.prevError = 0;
-							TargetR = 4.18879;
-							TargetP = 50;
-							loop_temp = 0;
-							loop_counter++;
-							if (loop_counter == 1) {
-								pen_delay_timer = micros();
-							}
-							if (loop_counter == 100) {
-								pen_delay_timer = micros();
-							}
+							counter++;
 						}
 					}
 				} else {
-					lock_timer_us = 0;
+					Mode = 1;
 				}
-			} else {
-				if (micros() - pen_delay_timer < 500000) {
-					Set_Motor(0, 0);
-					Set_Motor(1, 0);
-					Set_Servo(1);
+			}
+			//////////////////////////////////////////////////////////////
+
+			//////////////////////////////////////////////////////////////
+			static uint64_t lastPressTime1 = 0; // Holds the last time a press was handled
+			if (Mode == 7) {
+				if (testArraydone && IsPress
+						&& currentTime - lastPressTime1 >= 2000000) {
+					lastPressTime1 = currentTime;
+					TenPointMode = 1;
 				} else {
-					Set_Servo(0);
-					Mode = 0;
+					Mode = 2;
 				}
+
+//				Set_Motor(0, 5);
+//				if (Z_index_R > 0) {
+//					Set_Motor(0, 0);
+//					Reset_R();
+//					TargetR = Revolute_QEIdata.RadPosition;
+//					Mode = 0;
+//				} else {
+//					Set_Motor(0, 25);
+//				}
+			}
+			//////////////////////////////////////////////////////////////
+
+			//////////////////////////////////////////////////////////////
+			if (Mode == 8) {
+				static uint8_t goCenter = 1;
+				if (goCenter) {
+					TargetR = M_PI_2;
+					TargetP = 0;
+				} else {
+					TargetR = M_PI_4;
+					TargetP = 150;
+				}
+
+				if (CascadeControl_Step()) {
+					Set_Servo(1);
+					if (micros() - pen_delay_timer >= 500000) {
+						Set_Servo(0);
+						if (goCenter) {
+							goCenter = 0;
+						} else {
+							goCenter = 1;
+						}
+					}
+				} else {
+					pen_delay_timer = micros();
+				}
+
+				// static uint64_t pen_delay_timer;
+				// if (loop_counter == 1 && micros() - pen_delay_timer < 300000) {
+				// 	Set_Motor(0, 0);
+				// 	Set_Motor(1, 0);
+				// 	Set_Servo(1);
+				// } else if (loop_counter == 1
+				// 		&& micros() - pen_delay_timer < 500000) {
+				// 	Set_Servo(0);
+				// } else if (loop_counter < 100) {
+				// 	static uint16_t loop_temp = 0;
+				// 	Set_Servo(0);
+
+				// 	R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
+				// 	P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
+
+				// 	static uint64_t timestampState8 = 0;
+				// 	int64_t currentTimeState8 = micros();
+				// 	if (currentTimeState8 > timestampState8) {
+				// 		timestampState8 = currentTimeState8 + 10000; // us
+				// 		R_PWM = PID_Update(R_Pos_Error, R_kP_pos, R_kI_pos,
+				// 				R_kD_pos, 0.01f, -100.0f, 100.0f, &pid_r);
+				// 		P_PWM = PID_Update(P_Pos_Error, P_kP_pos, P_kI_pos,
+				// 				P_kD_pos, 0.01f, -100.0f, 100.0f, &pid_p);
+				// 	}
+
+				// 	Workspace_limit();
+
+				// 	Set_Motor(0, R_PWM);
+				// 	Set_Motor(1, P_PWM);
+				// 	if (fabsf(R_Pos_Error) < R_ERR_TOL_RAD
+				// 			&& fabsf(P_Pos_Error) < P_ERR_TOL_MM) {
+				// 		/* within window —— start or continue timer */
+				// 		if (lock_timer_us == 0)
+				// 			lock_timer_us = micros(); /* start timing */
+
+				// 		else if ((micros() - lock_timer_us) >= HOLD_TIME_US) {
+				// 			if (loop_temp == 0) {
+				// 				pid_r.integ = 0;
+				// 				pid_r.prevError = 0;
+				// 				pid_p.integ = 0;
+				// 				pid_p.prevError = 0;
+				// 				TargetR = -1.0472;
+				// 				TargetP = 250;
+				// 				loop_temp = 1;
+				// 			} else {
+				// 				pid_r.integ = 0;
+				// 				pid_r.prevError = 0;
+				// 				pid_p.integ = 0;
+				// 				pid_p.prevError = 0;
+				// 				TargetR = 4.18879;
+				// 				TargetP = 50;
+				// 				loop_temp = 0;
+				// 				loop_counter++;
+				// 				if (loop_counter == 1) {
+				// 					pen_delay_timer = micros();
+				// 				}
+				// 				if (loop_counter == 100) {
+				// 					pen_delay_timer = micros();
+				// 				}
+				// 			}
+				// 		}
+				// 	} else {
+				// 		lock_timer_us = 0;
+				// 	}
+				// } else {
+				// 	if (micros() - pen_delay_timer < 500000) {
+				// 		Set_Motor(0, 0);
+				// 		Set_Motor(1, 0);
+				// 		Set_Servo(1);
+				// 	} else {
+				// 		Set_Servo(0);
+				// 		Mode = 0;
+				// 	}
+				// }
 			}
 		}
 		//////////////////////////////////////////////////////////////
@@ -1652,7 +1549,7 @@ static void MX_USART2_UART_Init(void) {
 
 	/* USER CODE END USART2_Init 1 */
 	huart2.Instance = USART2;
-	huart2.Init.BaudRate = 19200;
+	huart2.Init.BaudRate = 115200;
 	huart2.Init.WordLength = UART_WORDLENGTH_9B;
 	huart2.Init.StopBits = UART_STOPBITS_1;
 	huart2.Init.Parity = UART_PARITY_EVEN;
@@ -1723,6 +1620,12 @@ static void MX_GPIO_Init(void) {
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_12,
 			GPIO_PIN_RESET);
+
+	/*Configure GPIO pin : PC13 */
+	GPIO_InitStruct.Pin = GPIO_PIN_13;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	/*Configure GPIO pins : PC0 PC2 PC3 */
 	GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_2 | GPIO_PIN_3;
@@ -1845,7 +1748,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	uint32_t idx;
 
 	if (GPIO_Pin == GPIO_PIN_0)
-		idx = 0;      // PC0
+		idx = 0; // PC0
 	else if (GPIO_Pin == GPIO_PIN_2)
 		idx = 1; // PC2
 	else if (GPIO_Pin == GPIO_PIN_3)
@@ -1866,7 +1769,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	}
 }
 
-//MicroSecondTimer Implement
+// MicroSecondTimer Implement
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim5) {
 		_micros += UINT32_MAX;
@@ -1909,113 +1812,113 @@ float PID_Update(float error, float kP, float kI, float kD, float dt,
 }
 
 void Revolute_PosVel_Update() {
-// Collect data
+	// Collect data
 	Revolute_QEIdata.TimeStamp[NEW] = micros();
 	Revolute_QEIdata.Position[NEW] = __HAL_TIM_GET_COUNTER(&htim4);
 
-// Position within one turn
+	// Position within one turn
 	Revolute_QEIdata.QEIPostion_1turn = Revolute_QEIdata.Position[NEW] % 16384;
 
-// Calculate position difference
+	// Calculate position difference
 	int32_t diffPosition_r = Revolute_QEIdata.Position[NEW]
 			- Revolute_QEIdata.Position[OLD];
 
-// Handle wrap-around
+	// Handle wrap-around
 	if (diffPosition_r > (65536 / 2))
 		diffPosition_r -= 65536;
 	else if (diffPosition_r < -(65536 / 2))
 		diffPosition_r += 65536;
 
-// Time difference in seconds
+	// Time difference in seconds
 	float diffTime_r = (Revolute_QEIdata.TimeStamp[NEW]
 			- Revolute_QEIdata.TimeStamp[OLD]) * 0.000001f;
 	if (diffTime_r == 0)
 		return;
 
-// Raw angular velocity in counts/sec
+	// Raw angular velocity in counts/sec
 	float Vel_counts_r = (float) diffPosition_r / diffTime_r;
 
-// Raw angular acceleration in counts/sec²
+	// Raw angular acceleration in counts/sec²
 	Revolute_QEIdata.QEIAcceleration = (Vel_counts_r
 			- Revolute_QEIdata.QEIVelocity) / diffTime_r;
 
-// Store raw velocity
+	// Store raw velocity
 	Revolute_QEIdata.QEIVelocity = Vel_counts_r;
 
-// Angular velocity in rad/s
+	// Angular velocity in rad/s
 	Revolute_QEIdata.Velocity = Vel_counts_r * (2.0f * M_PI / 16384.0f);
 	float R_alpha = 0.4f;
 	Revolute_QEIdata.Velocity_f = R_alpha * Revolute_QEIdata.Velocity
 			+ (1 - R_alpha) * Revolute_QEIdata.Velocity_f;
 
-// Angular acceleration in rad/s²
+	// Angular acceleration in rad/s²
 	Revolute_QEIdata.Acceleration = Revolute_QEIdata.QEIAcceleration
 			* (2.0f * M_PI / 16384.0f);
 
-// Absolute position update
+	// Absolute position update
 	Revolute_QEIdata.AbsolutePosition += diffPosition_r;
 
-// Rad position
+	// Rad position
 	Revolute_QEIdata.RadPosition = Revolute_QEIdata.AbsolutePosition
 			* (2.0f * M_PI / 16384.0f);
 
-// Deg position
+	// Deg position
 	Revolute_QEIdata.DegPosition = Revolute_QEIdata.RadPosition * 180 / M_PI;
 
-// Store previous values
+	// Store previous values
 	Revolute_QEIdata.Position[OLD] = Revolute_QEIdata.Position[NEW];
 	Revolute_QEIdata.TimeStamp[OLD] = Revolute_QEIdata.TimeStamp[NEW];
 }
 
 void Prismatic_PosVel_Update() {
-// Collect data
+	// Collect data
 	Prismatic_QEIdata.TimeStamp[NEW] = micros();
 	Prismatic_QEIdata.Position[NEW] = __HAL_TIM_GET_COUNTER(&htim3);
 
-// Calculate position difference
+	// Calculate position difference
 	int32_t diffPosition_p = Prismatic_QEIdata.Position[NEW]
 			- Prismatic_QEIdata.Position[OLD];
 
-// Handle wrap-around
+	// Handle wrap-around
 	if (diffPosition_p > (65536 / 2))
 		diffPosition_p -= 65536;
 	else if (diffPosition_p < -(65536 / 2))
 		diffPosition_p += 65536;
 
-// Time difference in seconds
+	// Time difference in seconds
 	float diffTime_p = (Prismatic_QEIdata.TimeStamp[NEW]
 			- Prismatic_QEIdata.TimeStamp[OLD]) * 0.000001f;
 	if (diffTime_p == 0)
 		return;
 
-// Raw angular velocity in counts/sec
+	// Raw angular velocity in counts/sec
 	float Vel_counts_p = (float) diffPosition_p / diffTime_p;
 
-// Raw angular acceleration in counts/sec²
+	// Raw angular acceleration in counts/sec²
 	Prismatic_QEIdata.QEIAcceleration = (Vel_counts_p
 			- Prismatic_QEIdata.QEIVelocity) / diffTime_p;
 
-// Store raw velocity
+	// Store raw velocity
 	Prismatic_QEIdata.QEIVelocity = Vel_counts_p;
 
-// Velocity in mm/s
+	// Velocity in mm/s
 	Prismatic_QEIdata.Velocity = Vel_counts_p * (10.0f / 8192.0f);
 	float P_alpha = 0.4f;
 	Prismatic_QEIdata.Velocity_f = P_alpha * Prismatic_QEIdata.Velocity
-				+ (1 - P_alpha) * Prismatic_QEIdata.Velocity_f;
+			+ (1 - P_alpha) * Prismatic_QEIdata.Velocity_f;
 
-// Acceleration in mm/s²
+	// Acceleration in mm/s²
 	Prismatic_QEIdata.Acceleration = Prismatic_QEIdata.QEIAcceleration
 			* (10.0f / 8192.0f);
 
-// Absolute position update
+	// Absolute position update
 	Prismatic_QEIdata.AbsolutePosition += diffPosition_p;
 
-// mm position
+	// mm position
 	Prismatic_QEIdata.mmPosition = Prismatic_QEIdata.AbsolutePosition
 			* (10.0f / 8192.0f);
 
-// Store previous values
+	// Store previous values
 	Prismatic_QEIdata.Position[OLD] = Prismatic_QEIdata.Position[NEW];
 	Prismatic_QEIdata.TimeStamp[OLD] = Prismatic_QEIdata.TimeStamp[NEW];
 }
@@ -2056,11 +1959,11 @@ void Set_Servo(int Pen_Pos) {
 
 void Reset_R() {
 	Revolute_QEIdata.AbsolutePosition = M_PI_2 / (2.0f * M_PI / 16384.0f);
-//	Revolute_QEIdata.RadPosition = M_PI_2;
+	//	Revolute_QEIdata.RadPosition = M_PI_2;
 }
 void Reset_P() {
 	Prismatic_QEIdata.AbsolutePosition = -2.00 / (10.0f / 8192.0f);
-//	Prismatic_QEIdata.mmPosition = 0;
+	//	Prismatic_QEIdata.mmPosition = 0;
 }
 
 void Workspace_limit() {
@@ -2095,28 +1998,262 @@ void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
 }
 
 float Trapezoidal_CalcTotalTime(float distance, float vmax, float amax) {
-    float t_acc = vmax / amax;
-    float d_acc = 0.5f * amax * t_acc * t_acc;
-    if (2 * d_acc > distance) {
-        t_acc = sqrtf(distance / amax);
-        return 2 * t_acc;
-    }
-    float d_const = distance - 2 * d_acc;
-    float t_const = d_const / vmax;
-    return 2 * t_acc + t_const;
+	float t_acc = vmax / amax;
+	float d_acc = 0.5f * amax * t_acc * t_acc;
+	if (2 * d_acc > distance) {
+		t_acc = sqrtf(distance / amax);
+		return 2 * t_acc;
+	}
+	float d_const = distance - 2 * d_acc;
+	float t_const = d_const / vmax;
+	return 2 * t_acc + t_const;
 }
 
 float Trapezoidal_CalcVmaxFromTime(float distance, float amax, float total_time) {
-    float t_half = total_time / 2.0f;
-    float d_half = distance / 2.0f;
+	float t_half = total_time / 2.0f;
+	float d_half = distance / 2.0f;
 
-    float v_peak = amax * t_half;
-    if (0.5f * v_peak * t_half >= d_half) {
-        return sqrtf(distance * amax);
-    }
-    return (distance - 0.5f * amax * t_half * t_half) / t_half;
+	float v_peak = amax * t_half;
+	if (0.5f * v_peak * t_half >= d_half) {
+		return sqrtf(distance * amax);
+	}
+	return (distance - 0.5f * amax * t_half * t_half) / t_half;
 }
 
+void TrapezoidStep(void) {
+//	static float last_TargetR = 0.0f;
+//	static float last_TargetP = 0.0f;
+
+	// 2a) Detect setpoint jump (revolute, in radians)
+	float r_diff = fabsf(TargetR - last_TargetR);
+	if (r_diff > 0.001f) {
+		// Re‐init revolute trapezoid: distance_to_go = R_Pos_Error (rad)
+		Trapezoidal_Init(&revolute, R_Pos_Error, /*maxVel*/1.40f, /*maxAcc*/
+		9.0f);
+		last_TargetR = TargetR;
+	}
+
+	// 2b) Detect setpoint jump (prismatic, in mm)
+	float p_diff = fabsf(TargetP - last_TargetP);
+	if (p_diff > 0.01f) {
+		// Re‐init prismatic trapezoid: distance_to_go = P_Pos_Error (mm)
+		Trapezoidal_Init(&prismatic, P_Pos_Error, /*maxVel*/600.0f, /*maxAcc*/
+		3000.0f);
+		last_TargetP = TargetP;
+	}
+
+	// 2c) Advance both trapezoids by 1 ms → update feedforward pos/vel/acc
+	Trapezoidal_Update(&revolute, 0.001f);
+	TargetRPos = revolute.current_position;
+	TargetRVel = revolute.current_velocity;
+	TargetRAcc = revolute.current_acceleration;
+
+	Trapezoidal_Update(&prismatic, 0.001f);
+	TargetPPos = prismatic.current_position;
+	TargetPVel = prismatic.current_velocity;
+	TargetPAcc = prismatic.current_acceleration;
+}
+
+void PIDStep(void) {
+	static int loop_counter1 = 0;
+	static float R_Target_Velocity = 0.0f;
+	static float P_Target_Velocity = 0.0f;
+
+	loop_counter1++;
+	// 3a) Outer‐loop (position) PID every 10 ms
+	if (loop_counter1 >= 10) {
+		loop_counter1 = 0;
+
+		// Recompute “true” pos‐errors
+		float R_Pos_now = TargetR - Revolute_QEIdata.RadPosition;
+		float P_Pos_now = TargetP - Prismatic_QEIdata.mmPosition;
+
+		// Position‐PID → corrective velocity for revolute
+		float R_corr_vel = PID_Update(R_Pos_now, R_kP_pos, R_kI_pos, R_kD_pos,
+				0.010f, // dt = 10 ms
+				-100.0f, +100.0f, &pid_r);
+
+		// Position‐PID → corrective velocity for prismatic
+		float P_corr_vel = PID_Update(P_Pos_now, P_kP_pos, P_kI_pos, P_kD_pos,
+				0.010f, -100.0f, +100.0f, &pid_p);
+
+		// Combine with feedforward velocities
+		R_Target_Velocity = TargetRVel + R_corr_vel;
+		P_Target_Velocity = TargetPVel + P_corr_vel;
+	}
+
+	// 3b) Inner‐loop (velocity) PID _every_ 1 ms:
+	R_Velo_Error = R_Target_Velocity - Revolute_QEIdata.Velocity_f;
+	R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel, R_kD_vel, 0.001f, // dt = 1 ms
+			-100.0f, +100.0f, &pid_r_v);
+
+	P_Velo_Error = P_Target_Velocity - Prismatic_QEIdata.Velocity_f;
+	P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel, P_kD_vel, 0.001f,
+			-100.0f, +100.0f, &pid_p_v);
+}
+
+int ToleranceCheck(void) {
+	static uint64_t lock_timer_us = 0;
+
+	if ((fabsf(TargetR - Revolute_QEIdata.RadPosition) < R_ERR_TOL_RAD)
+			&& (fabsf(TargetP - Prismatic_QEIdata.mmPosition) < P_ERR_TOL_MM)) {
+		if (lock_timer_us == 0) {
+			lock_timer_us = micros();
+		} else if ((micros() - lock_timer_us) >= HOLD_TIME_US) {
+			// We have stayed inside tolerance for long enough → “lock & hold”
+			return 1;
+		}
+	} else {
+		lock_timer_us = 0;
+	}
+
+	return 0;
+}
+
+int CascadeControl_Step(void) {
+	static uint64_t timestampState2 = 0;
+
+	// 1a) Convert desired‐angle (deg) → (rad) and compute current pos‐errors
+	// float TargetR = TargetR_Deg * (M_PI / 180.0f);
+	R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
+	P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
+	R_Pos_Error_Deg = R_Pos_Error * (180.0f / M_PI);
+
+	// 1b) 1 ms timer check
+	uint64_t nowtimestamp = micros();
+	if (nowtimestamp <= timestampState2) {
+		// Not yet 1 ms since last run → bail out
+		return 0;
+	}
+	// Advance to next 1 ms tick
+	timestampState2 = nowtimestamp + 1000;
+
+	// 2) Trapezoid logic: init if needed + update (1 ms)
+	TrapezoidStep();
+
+	// 3) PID logic: 10 ms outer, 1 ms inner
+	PIDStep();
+
+	// 4) Apply workspace limits (joint‐limits, etc.) and send the PWM commands
+	Workspace_limit();
+	Set_Motor(0, R_PWM);
+	Set_Motor(1, P_PWM);
+
+	// 5) Tolerance‐check + “lock & hold” (servo + zero motors) if arrived
+	CheckTolerance = ToleranceCheck();
+	return CheckTolerance;
+//	return ToleranceCheck();
+}
+
+// void CascadeControl_Step(void)
+// {
+// 	static uint64_t timestampState2 = 0;
+// 	static int loop_counter = 0;
+// 	static float last_TargetR = 0.0f;
+// 	static float last_TargetP = 0.0f;
+// 	static float R_Target_Velocity = 0.0f;
+// 	static float P_Target_Velocity = 0.0f;
+// 	static uint64_t lock_timer_us = 0;
+
+// 	// 1) Convert desired angle to radians, compute pos‐error
+// 	TargetR = TargetR_Deg * M_PI / 180.0f;
+// 	R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
+// 	P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
+// 	R_Pos_Error_Deg = R_Pos_Error * 180 / M_PI;
+
+// 	uint64_t currentTimeState2 = micros();
+// 	if (currentTimeState2 <= timestampState2)
+// 	{
+// 		return; // not yet time for the next 1 ms tick
+// 	}
+// 	timestampState2 = currentTimeState2 + 1000; // schedule next tick in 1 ms
+// 	loop_counter++;
+
+// 	// 2) Re‐init trapezoid if setpoint jumped
+// 	float r_target_diff = fabsf(TargetR - last_TargetR);
+// 	float p_target_diff = fabsf(TargetP - last_TargetP);
+// 	if (r_target_diff > 0.001f)
+// 	{
+// 		Trapezoidal_Init(&revolute, R_Pos_Error, 1.40f, 9.0f);
+// 		last_TargetR = TargetR;
+// 	}
+// 	if (p_target_diff > 0.01f)
+// 	{
+// 		Trapezoidal_Init(&prismatic, P_Pos_Error, 600.0f, 3000.0f);
+// 		last_TargetP = TargetP;
+// 	}
+
+// 	// 3) Update trapezoids, get feedforward pos/vel
+// 	Trapezoidal_Update(&revolute, 0.001f);
+// 	TargetRPos = revolute.current_position;
+// 	TargetRVel = revolute.current_velocity;
+// 	TargetRAcc = revolute.current_acceleration;
+// 	Trapezoidal_Update(&prismatic, 0.001f);
+// 	TargetPPos = prismatic.current_position;
+// 	TargetPVel = prismatic.current_velocity;
+// 	TargetPAcc = prismatic.current_acceleration;
+
+// 	// 4) Outer‐loop position PID every 10 ms
+// 	if (loop_counter >= 10)
+// 	{
+// 		loop_counter = 0;
+// 		float R_Pos_Error_now = TargetR - Revolute_QEIdata.RadPosition;
+// 		float P_Pos_Error_now = TargetP - Prismatic_QEIdata.mmPosition;
+
+// 		float R_Corrective_Vel = PID_Update(
+// 			R_Pos_Error_now,
+// 			R_kP_pos, R_kI_pos, R_kD_pos,
+// 			0.010f, -100.0f, +100.0f,
+// 			&pid_r);
+// 		float P_Corrective_Vel = PID_Update(
+// 			P_Pos_Error_now,
+// 			P_kP_pos, P_kI_pos, P_kD_pos,
+// 			0.010f, -100.0f, +100.0f,
+// 			&pid_p);
+// 		R_Target_Velocity = TargetRVel + R_Corrective_Vel;
+// 		P_Target_Velocity = TargetPVel + P_Corrective_Vel;
+// 	}
+
+// 	// 5) Inner‐loop velocity PID every 1 ms
+// 	R_Velo_Error = R_Target_Velocity - Revolute_QEIdata.Velocity_f;
+// 	R_PWM = PID_Update(
+// 		R_Velo_Error,
+// 		R_kP_vel, R_kI_vel, R_kD_vel,
+// 		0.001f, -100.0f, +100.0f,
+// 		&pid_r_v);
+// 	P_Velo_Error = P_Target_Velocity - Prismatic_QEIdata.Velocity_f;
+// 	P_PWM = PID_Update(
+// 		P_Velo_Error,
+// 		P_kP_vel, P_kI_vel, P_kD_vel,
+// 		0.001f, -100.0f, +100.0f,
+// 		&pid_p_v);
+
+// 	// 6) Apply workspace limits & issue motor commands
+// 	Workspace_limit();
+// 	Set_Motor(0, R_PWM);
+// 	Set_Motor(1, P_PWM);
+
+// 	// 7) “Lock & hold” if within tolerance for HOLD_TIME_US
+// 	if (fabsf(TargetR - Revolute_QEIdata.RadPosition) < R_ERR_TOL_RAD && fabsf(TargetP - Prismatic_QEIdata.mmPosition) < P_ERR_TOL_MM)
+// 	{
+// 		if (lock_timer_us == 0)
+// 		{
+// 			lock_timer_us = micros();
+// 		}
+// 		else if ((micros() - lock_timer_us) >= HOLD_TIME_US)
+// 		{
+// 			Set_Servo(1);
+// 			Set_Motor(0, 0);
+// 			Set_Motor(1, 0);
+// 			revolute.finished = 0;
+// 			prismatic.finished = 0;
+// 		}
+// 	}
+// 	else
+// 	{
+// 		lock_timer_us = 0;
+// 	}
+// }
 /* USER CODE END 4 */
 
 /**
@@ -2143,8 +2280,8 @@ void Error_Handler(void) {
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+	/* User can add his own implementation to report the file name and line number,
+	   ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

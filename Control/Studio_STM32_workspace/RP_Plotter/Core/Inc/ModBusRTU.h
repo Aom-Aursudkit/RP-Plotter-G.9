@@ -116,11 +116,7 @@ extern u16u8_t registerFrame[200];  // Frame data container
                                                + SLOT_OFFSET(slot) + 1  ].U16 )
 
 // Set distance and angle for a specific slot
-#define SET_TARGET(slot, dist, ang)   \
-    do {                              \
-        TARGET_DISTANCE(slot) = (dist); \
-        TARGET_ANGLE(slot)    = (ang);  \
-    } while(0)
+void SET_TARGET(slot, dist, ang);
 
 void ResetAllTargets(void);
 
@@ -159,8 +155,6 @@ enum {
 // ── Convenience Access Macros ────────────────────────────────────────────────
 
 #define REG16(reg)   (registerFrame[(reg)].U16)     // 16-bit unsigned
-#define REG8_LO(reg) (registerFrame[(reg)].U8[0])   // Low byte
-#define REG8_HI(reg) (registerFrame[(reg)].U81])   // High byte
 
 void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
 		float *rev_ang_vel_rad, float *rev_ang_acc_rad, float *rev_rad_pos);

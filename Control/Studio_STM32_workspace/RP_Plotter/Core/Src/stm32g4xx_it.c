@@ -378,7 +378,6 @@ void TIM5_IRQHandler(void)
   /* USER CODE END TIM5_IRQn 1 */
 }
 
-
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
