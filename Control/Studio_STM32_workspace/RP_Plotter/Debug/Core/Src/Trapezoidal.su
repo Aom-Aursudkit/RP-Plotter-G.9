@@ -1,2 +1,2 @@
 ../Core/Src/Trapezoidal.c:11:6:Trapezoidal_Init	32	static
-../Core/Src/Trapezoidal.c:35:6:Trapezoidal_Update	24	static
+../Core/Src/Trapezoidal.c:47:6:Trapezoidal_Update	88	static

@@ -1,0 +1,2 @@
+../Core/Src/trapezoid_traj.c:11:6:Trapezoid_Init	32	static
+../Core/Src/trapezoid_traj.c:32:7:Trapezoid_Update	40	static
