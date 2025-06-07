@@ -141,7 +141,7 @@ void ResetAllTargets(void) {
 	}
 }
 
-void SET_TARGET( slot, dist, ang) {
+void SET_TARGET(int8_t slot, float dist, float ang) {
 	TARGET_DISTANCE(slot) = (int16_t) ((dist) * 10.0f);
 	TARGET_ANGLE(slot) = (int16_t) ((ang) * 10.0f);
 }

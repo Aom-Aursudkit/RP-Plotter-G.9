@@ -116,7 +116,7 @@ extern u16u8_t registerFrame[200];  // Frame data container
                                                + SLOT_OFFSET(slot) + 1  ].U16 )
 
 // Set distance and angle for a specific slot
-void SET_TARGET(slot, dist, ang);
+void SET_TARGET(int8_t slot, float dist, float ang);
 
 void ResetAllTargets(void);
 
