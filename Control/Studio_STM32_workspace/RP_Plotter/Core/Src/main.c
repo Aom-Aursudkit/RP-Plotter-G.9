@@ -1048,7 +1048,7 @@ int main(void) {
 							TenPointArray[(counter * 2) + 1] =
 									Revolute_QEIdata.RadPosition;
 							SET_TARGET(counter, Prismatic_QEIdata.mmPosition,
-									Revolute_QEIdata.RadPosition);
+									RAD_TO_DEG(Revolute_QEIdata.RadPosition));
 							PenIsNotDelay = PenDelay();
 
 							counter++;
