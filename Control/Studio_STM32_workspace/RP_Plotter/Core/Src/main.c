@@ -250,6 +250,18 @@ uint8_t counter8 = 0;
 bool goCenter8 = true;
 //////////////////////
 
+// Mode8///////////////
+typedef enum {
+	STATE_DRAW, // currently stepping through path
+	STATE_LIFT, // we just lifted the pen
+	STATE_WAIT_AFTER_LIFT,
+	STATE_PRESS, // we just pressed the pen down
+	STATE_WAIT_AFTER_PRESS
+} DrawState;
+
+DrawState draw_state = STATE_DRAW;
+//////////////////////
+
 // BaseSystem//////////
 uint8_t counter = 0;
 bool TenPointMode = false;
@@ -850,11 +862,11 @@ int main(void) {
 				R_Velo_Error = (TargetRVel - Revolute_QEIdata.Velocity_f);
 				P_Velo_Error = TargetPVel - Prismatic_QEIdata.Velocity;
 
-				//Call every 0.001 s
+				// Call every 0.001 s
 				static uint64_t timestampState1 = 0;
 				int64_t currentTimeState1 = micros();
 				if (currentTimeState1 > timestampState1) {
-					timestampState1 = currentTimeState1 + 1000;		//us
+					timestampState1 = currentTimeState1 + 1000; // us
 					R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel,
 							R_kD_vel, 0.01f, -100.0f, 100.0f, &pid_r_v);
 					P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel,
@@ -875,7 +887,7 @@ int main(void) {
 			//////////////////////////////////////////////////////////////
 			if (Mode == 4) {
 				InverseKinematics(TargetX, TargetY, &TargetR, &TargetP);
-				//TargetR = TargetR_Deg * M_PI / 180;
+				// TargetR = TargetR_Deg * M_PI / 180;
 				if (CascadeControl_Step()) {
 					Set_Servo(1);
 					Set_Motor(0, 0);
@@ -888,8 +900,10 @@ int main(void) {
 			if (Mode == 5) {
 				static uint64_t timestampState5 = 0;
 				int64_t currentTimeState5 = micros();
+				static bool pen_down_requested = false;
+				static uint32_t pen_down_request_ts = 0;
 				if (currentTimeState5 > timestampState5) {
-					timestampState5 = currentTimeState5 + 1000; //us
+					timestampState5 = currentTimeState5 + 1000; // us
 
 					P_kP_vel = 1.05845642f;
 					P_kI_vel = 0.0496f;
@@ -907,26 +921,68 @@ int main(void) {
 							&& reachedR && reachedP;
 
 					if (all_reached) {
-					    // Advance to next point in current path
-					    current_index++;
+						// Advance to next point in current path
+						current_index++;
 
-					    // Check if current path is done
-					    if (current_index >= path_lengths[current_path_index]) {
-					        Set_Servo(0);  // 🖊️ Lift pen
+						// Check if current path is done
 
-					        // Advance to next path
-					        current_path_index = (current_path_index + 1) % 14;
-					        current_index = 0;
+						static uint64_t starttimestamp5 = 0;
+						uint64_t timestamp5 = HAL_GetTick();
+						switch (draw_state) {
+						case STATE_DRAW:
+							// normal draw stepping
+							if (current_index
+									>= path_lengths[current_path_index]) {
+								Set_Servo(0);
+								draw_state = STATE_WAIT_AFTER_LIFT;
+								starttimestamp5 = timestamp5;
+							}
+							break;
 
-					        Set_Servo(1);  // 🖊️ Press pen immediately after switching path
-					    }
+						case STATE_WAIT_AFTER_LIFT:
+							if ((timestamp5 - starttimestamp5) >= 500) {
+								// advance to next path
+								current_path_index = (current_path_index + 1)
+										% 14;
+								current_index = 0;
 
-					    return;  // ⛔ Skip motion update while everything has already been reached
+								// press pen down
+								Set_Servo(1);
+								starttimestamp5 = timestamp5;
+								draw_state = STATE_WAIT_AFTER_PRESS;
+							}
+							break;
+
+						case STATE_WAIT_AFTER_PRESS:
+							// wait 500 ms after press before starting to draw
+							if ((timestamp5 - starttimestamp5) >= 500) {
+								draw_state = STATE_DRAW;
+								pen_down_requested = false;
+							}
+							break;
+
+						default:
+							// should never get here
+							draw_state = STATE_DRAW;
+							break;
+						}
+						return; // ⛔ Skip motion update while everything has already been reached
 					}
 
 					Point target_point =
 							paths[current_path_index][current_index];
-					Set_Servo(1);
+					if (!pen_down_requested) {
+						Set_Servo(1);
+						pen_down_request_ts = HAL_GetTick();
+						pen_down_requested = true;
+						return; // skip all the motion logic until the 500 ms elapses
+					}
+
+					// 2) If we *have* requested pen-down but 500 ms haven’t gone by, wait:
+					if ((HAL_GetTick() - pen_down_request_ts) < 500) {
+						return; // still waiting for servo to stabilize
+					}
+
 					InverseKinematics(target_point.x, target_point.y, &TargetR,
 							&TargetP);
 
@@ -990,20 +1046,20 @@ int main(void) {
 							TenPointArray[counter * 2] =
 									Prismatic_QEIdata.mmPosition;
 							TenPointArray[(counter * 2) + 1] =
-								Revolute_QEIdata.RadPosition;
+									Revolute_QEIdata.RadPosition;
 							SET_TARGET(counter, Prismatic_QEIdata.mmPosition,
 									Revolute_QEIdata.RadPosition);
 							PenIsNotDelay = PenDelay();
 
 							counter++;
 							if (counter >= 10) {
-							counter = 0;
+								counter = 0;
 								testArraydone = true;
 								TenPointMode = true;
+							}
 						}
-					}
-				} else {
-					Mode = 1;
+					} else {
+						Mode = 1;
 					}
 				} else {
 					PenIsNotDelay = PenDelay();
@@ -1030,26 +1086,27 @@ int main(void) {
 					goCenter8 = true;
 
 					if (goCenter8) {
-					TargetR = M_PI_2;
-					TargetP = 0;
-				} else {
-					TargetR = M_PI_4;
-					TargetP = 150;
-				}
+						TargetR = M_PI_2;
+						TargetP = 0;
+					} else {
+						TargetR = M_PI_4;
+						TargetP = 150;
+					}
 
-				if (CascadeControl_Step()) {
+					if (CascadeControl_Step()) {
 						if (PenDelay()) {
 							if (goCenter8) {
 								counter8++;
 							}
 							goCenter8 = !goCenter8;
-				}
+						}
 					}
 				} else if (counter8 >= 10 && IsPress) {
 					counter8 = 0;
+				}
+				//////////////////////////////////////////////////////////////
 			}
-		}
-		//////////////////////////////////////////////////////////////
+			//////////////////////////////////////////////////////////////
 		}
 		/* USER CODE END WHILE */
 
@@ -1159,7 +1216,6 @@ static void MX_TIM1_Init(void) {
 	/* USER CODE BEGIN TIM1_Init 2 */
 
 	/* USER CODE END TIM1_Init 2 */
-
 }
 
 /**
@@ -1218,7 +1274,6 @@ static void MX_TIM2_Init(void) {
 	/* USER CODE BEGIN TIM2_Init 2 */
 
 	/* USER CODE END TIM2_Init 2 */
-
 }
 
 /**
@@ -1265,7 +1320,6 @@ static void MX_TIM3_Init(void) {
 	/* USER CODE BEGIN TIM3_Init 2 */
 
 	/* USER CODE END TIM3_Init 2 */
-
 }
 
 /**
@@ -1312,7 +1366,6 @@ static void MX_TIM4_Init(void) {
 	/* USER CODE BEGIN TIM4_Init 2 */
 
 	/* USER CODE END TIM4_Init 2 */
-
 }
 
 /**
@@ -1354,7 +1407,6 @@ static void MX_TIM5_Init(void) {
 	/* USER CODE BEGIN TIM5_Init 2 */
 
 	/* USER CODE END TIM5_Init 2 */
-
 }
 
 /**
@@ -1436,7 +1488,6 @@ static void MX_TIM8_Init(void) {
 
 	/* USER CODE END TIM8_Init 2 */
 	HAL_TIM_MspPostInit(&htim8);
-
 }
 
 /**
@@ -1508,7 +1559,6 @@ static void MX_TIM15_Init(void) {
 
 	/* USER CODE END TIM15_Init 2 */
 	HAL_TIM_MspPostInit(&htim15);
-
 }
 
 /**
@@ -1541,7 +1591,6 @@ static void MX_TIM16_Init(void) {
 	/* USER CODE BEGIN TIM16_Init 2 */
 
 	/* USER CODE END TIM16_Init 2 */
-
 }
 
 /**
@@ -1586,7 +1635,6 @@ static void MX_USART2_UART_Init(void) {
 	/* USER CODE BEGIN USART2_Init 2 */
 
 	/* USER CODE END USART2_Init 2 */
-
 }
 
 /**
@@ -1605,7 +1653,6 @@ static void MX_DMA_Init(void) {
 	/* DMA1_Channel2_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
-
 }
 
 /**
@@ -2052,8 +2099,8 @@ void InverseKinematics(float x, float y, float *r, float *p) {
 }
 
 void TrapezoidStep(void) {
-//	static float last_TargetR = 0.0f;
-//	static float last_TargetP = 0.0f;
+	//	static float last_TargetR = 0.0f;
+	//	static float last_TargetP = 0.0f;
 
 	// 2a) Detect setpoint jump (revolute, in radians)
 	float r_diff = fabsf(TargetR - last_TargetR);
@@ -2173,7 +2220,7 @@ int CascadeControl_Step(void) {
 	// 5) Tolerance‐check + “lock & hold” (servo + zero motors) if arrived
 	CheckTolerance = ToleranceCheck();
 	return CheckTolerance;
-//	return ToleranceCheck();
+	//	return ToleranceCheck();
 }
 /* USER CODE END 4 */
 
@@ -2190,19 +2237,19 @@ void Error_Handler(void) {
 	/* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* USER CODE BEGIN 6 */
+	/* USER CODE BEGIN 6 */
 	/* User can add his own implementation to report the file name and line number,
 	   ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
+	/* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
