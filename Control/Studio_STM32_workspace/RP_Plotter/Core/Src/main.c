@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdbool.h>
 #include "arm_math.h"
 #include "stdio.h"
 #include "string.h"
@@ -245,14 +246,15 @@ uint64_t servo_timer;
 //////////////////////
 
 // Mode8///////////////
-int loop_counter;
+uint8_t counter8 = 0;
+bool goCenter8 = true;
 //////////////////////
 
 // BaseSystem//////////
 uint8_t counter = 0;
-uint8_t TenPointMode = 0;
+bool TenPointMode = false;
 
-uint8_t Test_no_BaseSystem = 0;
+bool Test_no_BaseSystem = false;
 float TargetR_BaseSystem = 0;
 float TargetP_BaseSystem = 0;
 uint8_t State_BaseSystem = 0;
@@ -264,8 +266,9 @@ uint8_t Last_Pen_BaseSystem = 0;
 ModbusHandleTypedef hmodbus;
 u16u8_t registerFrame[200];
 uint16_t base_status;
-float testArray[20] = { 0 };
-uint8_t testArraydone = 0;
+float TenPointArray[20] = { 0 };
+bool testArraydone = false;
+uint64_t currentTimer = 0;
 // float RD_Velo_Error;
 //////////////////////
 
@@ -309,6 +312,7 @@ void Reset_R();
 void Reset_P();
 void Workspace_limit();
 
+bool PenDelay(void);
 // Cascade//////////
 int CascadeControl_Step(void);
 void TrapezoidStep(void);
@@ -424,9 +428,8 @@ int main(void) {
 	/* USER CODE BEGIN WHILE */
 	while (1) {
 		//////////////////////// <<BaseSystem>> /////////////////////////
-		if (Test_no_BaseSystem == 0
-				&& HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 1) {
-			Test_no_BaseSystem = 1;
+		if (!Test_no_BaseSystem && HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 1) {
+			Test_no_BaseSystem = true;
 		}
 
 		base_status = REG16(REG_BASE_STATUS);
@@ -525,26 +528,20 @@ int main(void) {
 		//////////////////////////////////////////////////////////////
 
 		//////////////////////// <<GOTO>> ////////////////////////////
-		if ((Mode == 2 && (base_status == 2 || Test_no_BaseSystem == 1))
+		if ((Mode == 2 && (base_status == 2 || Test_no_BaseSystem))
 				|| base_status == 8) {
 			REG16(REG_MOTION_STATUS) = 8;
 
 			if (TenPointMode) {
-				//				float R, P;
-				//				ReadOneSlot(counter, &R, &P);
-				//				TargetR = R;
-				//				TargetP = P;
-				TargetR = testArray[(counter * 2) + 1];
-				TargetP = testArray[counter * 2];
+				TargetR = TenPointArray[(counter * 2) + 1];
+				TargetP = TenPointArray[counter * 2];
 			}
 
 			if (CascadeControl_Step()) {
-				Set_Servo(1);
-				if (micros() - pen_delay_timer >= 500000) {
-					Set_Servo(0);
+				if (PenDelay()) {
 					if (TenPointMode) {
 						if (counter == 9) {
-							TenPointMode = 0;
+							TenPointMode = false;
 							counter = 0;
 							Mode = 1;
 						} else {
@@ -555,14 +552,12 @@ int main(void) {
 						REG16(REG_MOTION_STATUS) = 0;
 					}
 				}
-			} else {
-				pen_delay_timer = micros();
 			}
 		}
 		//////////////////////////////////////////////////////////////
 
 		//////////////////////// <<CALIBRATING>> /////////////////////
-		if ((Mode == 3 && (base_status == 2 || Test_no_BaseSystem == 1))
+		if ((Mode == 3 && (base_status == 2 || Test_no_BaseSystem))
 				|| base_status == 1) {
 			switch (calibState) {
 			case CALIB_IDLE:
@@ -727,7 +722,8 @@ int main(void) {
 		//////////////////////////////////////////////////////////////
 
 		////////////////////////// <<BASESYSTEM>> ////////////////////////
-		if (base_status == 2 || Test_no_BaseSystem == 1) {
+		if (base_status == 2 || Test_no_BaseSystem) {
+			currentTimer = micros(); // Current time in microseconds
 
 			//////////////////////// <<RECEIVER>> ////////////////////////
 			Receiver_Period[0] = __HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_1);
@@ -820,7 +816,7 @@ int main(void) {
 						&& Receiver[4] > 30) {
 					Mode = 7;
 				} else if (Receiver[2] > 30 && Receiver[4] > 30) {
-					loop_counter = 0;
+					// loop_counter = 0;
 					TargetR = 4.18879;
 					TargetP = 50;
 					Mode = 8;
@@ -982,63 +978,58 @@ int main(void) {
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////////////////////////////////////////////
-			static uint64_t lastPressTime = 0; // Holds the last time a press was handled
-			uint64_t currentTime = micros();   // Current time in microseconds
 			if (Mode == 6) {
-				if (currentTime - lastPressTime >= 2000000) {
-					if (IsPress) {
-						lastPressTime = currentTime;
-						if (TenPointMode == 1) {
+				static bool PenIsNotDelay = true;
+				static uint64_t lastPressTime6 = 0;
+				if (PenIsNotDelay) {
+					if (IsPress && currentTimer - lastPressTime6 >= 2000000) {
+						lastPressTime6 = currentTimer;
+						if (TenPointMode) {
 							Mode = 2;
-						}
-						testArray[counter * 2] = Prismatic_QEIdata.mmPosition;
-						testArray[(counter * 2) + 1] =
-								Revolute_QEIdata.RadPosition;
-						SET_TARGET(counter,
-								(int16_t) Prismatic_QEIdata.mmPosition,
-								(int16_t) Revolute_QEIdata.RadPosition);
-
-						if (counter == 9) {
-							counter = 0;
-							testArraydone = 1;
-							TenPointMode = 1;
 						} else {
+							TenPointArray[counter * 2] =
+									Prismatic_QEIdata.mmPosition;
+							TenPointArray[(counter * 2) + 1] =
+								Revolute_QEIdata.RadPosition;
+							SET_TARGET(counter, Prismatic_QEIdata.mmPosition,
+									Revolute_QEIdata.RadPosition);
+							PenIsNotDelay = PenDelay();
+
 							counter++;
+							if (counter >= 10) {
+							counter = 0;
+								testArraydone = true;
+								TenPointMode = true;
 						}
 					}
 				} else {
 					Mode = 1;
+					}
+				} else {
+					PenIsNotDelay = PenDelay();
 				}
 			}
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////////////////////////////////////////////
-			static uint64_t lastPressTime1 = 0; // Holds the last time a press was handled
 			if (Mode == 7) {
+				static uint64_t lastPressTime7 = 0;
 				if (testArraydone && IsPress
-						&& currentTime - lastPressTime1 >= 2000000) {
-					lastPressTime1 = currentTime;
-					TenPointMode = 1;
+						&& currentTimer - lastPressTime7 >= 2000000) {
+					lastPressTime7 = currentTimer;
+					TenPointMode = true;
 				} else {
 					Mode = 2;
 				}
-
-//				Set_Motor(0, 5);
-//				if (Z_index_R > 0) {
-//					Set_Motor(0, 0);
-//					Reset_R();
-//					TargetR = Revolute_QEIdata.RadPosition;
-//					Mode = 0;
-//				} else {
-//					Set_Motor(0, 25);
-//				}
 			}
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////////////////////////////////////////////
 			if (Mode == 8) {
-				static uint8_t goCenter = 1;
-				if (goCenter) {
+				if (counter8 < 10) {
+					goCenter8 = true;
+
+					if (goCenter8) {
 					TargetR = M_PI_2;
 					TargetP = 0;
 				} else {
@@ -1047,96 +1038,19 @@ int main(void) {
 				}
 
 				if (CascadeControl_Step()) {
-					Set_Servo(1);
-					if (micros() - pen_delay_timer >= 500000) {
-						Set_Servo(0);
-						if (goCenter) {
-							goCenter = 0;
-						} else {
-							goCenter = 1;
-						}
-					}
-				} else {
-					pen_delay_timer = micros();
+						if (PenDelay()) {
+							if (goCenter8) {
+								counter8++;
+							}
+							goCenter8 = !goCenter8;
 				}
-
-				// static uint64_t pen_delay_timer;
-				// if (loop_counter == 1 && micros() - pen_delay_timer < 300000) {
-				// 	Set_Motor(0, 0);
-				// 	Set_Motor(1, 0);
-				// 	Set_Servo(1);
-				// } else if (loop_counter == 1
-				// 		&& micros() - pen_delay_timer < 500000) {
-				// 	Set_Servo(0);
-				// } else if (loop_counter < 100) {
-				// 	static uint16_t loop_temp = 0;
-				// 	Set_Servo(0);
-
-				// 	R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
-				// 	P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
-
-				// 	static uint64_t timestampState8 = 0;
-				// 	int64_t currentTimeState8 = micros();
-				// 	if (currentTimeState8 > timestampState8) {
-				// 		timestampState8 = currentTimeState8 + 10000; // us
-				// 		R_PWM = PID_Update(R_Pos_Error, R_kP_pos, R_kI_pos,
-				// 				R_kD_pos, 0.01f, -100.0f, 100.0f, &pid_r);
-				// 		P_PWM = PID_Update(P_Pos_Error, P_kP_pos, P_kI_pos,
-				// 				P_kD_pos, 0.01f, -100.0f, 100.0f, &pid_p);
-				// 	}
-
-				// 	Workspace_limit();
-
-				// 	Set_Motor(0, R_PWM);
-				// 	Set_Motor(1, P_PWM);
-				// 	if (fabsf(R_Pos_Error) < R_ERR_TOL_RAD
-				// 			&& fabsf(P_Pos_Error) < P_ERR_TOL_MM) {
-				// 		/* within window —— start or continue timer */
-				// 		if (lock_timer_us == 0)
-				// 			lock_timer_us = micros(); /* start timing */
-
-				// 		else if ((micros() - lock_timer_us) >= HOLD_TIME_US) {
-				// 			if (loop_temp == 0) {
-				// 				pid_r.integ = 0;
-				// 				pid_r.prevError = 0;
-				// 				pid_p.integ = 0;
-				// 				pid_p.prevError = 0;
-				// 				TargetR = -1.0472;
-				// 				TargetP = 250;
-				// 				loop_temp = 1;
-				// 			} else {
-				// 				pid_r.integ = 0;
-				// 				pid_r.prevError = 0;
-				// 				pid_p.integ = 0;
-				// 				pid_p.prevError = 0;
-				// 				TargetR = 4.18879;
-				// 				TargetP = 50;
-				// 				loop_temp = 0;
-				// 				loop_counter++;
-				// 				if (loop_counter == 1) {
-				// 					pen_delay_timer = micros();
-				// 				}
-				// 				if (loop_counter == 100) {
-				// 					pen_delay_timer = micros();
-				// 				}
-				// 			}
-				// 		}
-				// 	} else {
-				// 		lock_timer_us = 0;
-				// 	}
-				// } else {
-				// 	if (micros() - pen_delay_timer < 500000) {
-				// 		Set_Motor(0, 0);
-				// 		Set_Motor(1, 0);
-				// 		Set_Servo(1);
-				// 	} else {
-				// 		Set_Servo(0);
-				// 		Mode = 0;
-				// 	}
-				// }
+					}
+				} else if (counter8 >= 10 && IsPress) {
+					counter8 = 0;
 			}
 		}
 		//////////////////////////////////////////////////////////////
+		}
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
@@ -1800,6 +1714,22 @@ static void MX_GPIO_Init(void) {
 }
 
 /* USER CODE BEGIN 4 */
+bool PenDelay() {
+	static bool timerStarted = false;
+	if (!timerStarted) {
+		pen_delay_timer = micros();
+		Set_Servo(1);
+		timerStarted = true;
+	}
+	// check if 500 ms have passed
+	if (micros() - pen_delay_timer >= 500000UL) {
+		Set_Servo(0);
+		timerStarted = false;
+		return true;
+	}
+	return false;
+}
+
 float map(float x, float in_min, float in_max, float out_min, float out_max) {
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
@@ -2245,116 +2175,6 @@ int CascadeControl_Step(void) {
 	return CheckTolerance;
 //	return ToleranceCheck();
 }
-
-// void CascadeControl_Step(void)
-// {
-// 	static uint64_t timestampState2 = 0;
-// 	static int loop_counter = 0;
-// 	static float last_TargetR = 0.0f;
-// 	static float last_TargetP = 0.0f;
-// 	static float R_Target_Velocity = 0.0f;
-// 	static float P_Target_Velocity = 0.0f;
-// 	static uint64_t lock_timer_us = 0;
-
-// 	// 1) Convert desired angle to radians, compute pos‐error
-// 	TargetR = TargetR_Deg * M_PI / 180.0f;
-// 	R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
-// 	P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
-// 	R_Pos_Error_Deg = R_Pos_Error * 180 / M_PI;
-
-// 	uint64_t currentTimeState2 = micros();
-// 	if (currentTimeState2 <= timestampState2)
-// 	{
-// 		return; // not yet time for the next 1 ms tick
-// 	}
-// 	timestampState2 = currentTimeState2 + 1000; // schedule next tick in 1 ms
-// 	loop_counter++;
-
-// 	// 2) Re‐init trapezoid if setpoint jumped
-// 	float r_target_diff = fabsf(TargetR - last_TargetR);
-// 	float p_target_diff = fabsf(TargetP - last_TargetP);
-// 	if (r_target_diff > 0.001f)
-// 	{
-// 		Trapezoidal_Init(&revolute, R_Pos_Error, 1.40f, 9.0f);
-// 		last_TargetR = TargetR;
-// 	}
-// 	if (p_target_diff > 0.01f)
-// 	{
-// 		Trapezoidal_Init(&prismatic, P_Pos_Error, 600.0f, 3000.0f);
-// 		last_TargetP = TargetP;
-// 	}
-
-// 	// 3) Update trapezoids, get feedforward pos/vel
-// 	Trapezoidal_Update(&revolute, 0.001f);
-// 	TargetRPos = revolute.current_position;
-// 	TargetRVel = revolute.current_velocity;
-// 	TargetRAcc = revolute.current_acceleration;
-// 	Trapezoidal_Update(&prismatic, 0.001f);
-// 	TargetPPos = prismatic.current_position;
-// 	TargetPVel = prismatic.current_velocity;
-// 	TargetPAcc = prismatic.current_acceleration;
-
-// 	// 4) Outer‐loop position PID every 10 ms
-// 	if (loop_counter >= 10)
-// 	{
-// 		loop_counter = 0;
-// 		float R_Pos_Error_now = TargetR - Revolute_QEIdata.RadPosition;
-// 		float P_Pos_Error_now = TargetP - Prismatic_QEIdata.mmPosition;
-
-// 		float R_Corrective_Vel = PID_Update(
-// 			R_Pos_Error_now,
-// 			R_kP_pos, R_kI_pos, R_kD_pos,
-// 			0.010f, -100.0f, +100.0f,
-// 			&pid_r);
-// 		float P_Corrective_Vel = PID_Update(
-// 			P_Pos_Error_now,
-// 			P_kP_pos, P_kI_pos, P_kD_pos,
-// 			0.010f, -100.0f, +100.0f,
-// 			&pid_p);
-// 		R_Target_Velocity = TargetRVel + R_Corrective_Vel;
-// 		P_Target_Velocity = TargetPVel + P_Corrective_Vel;
-// 	}
-
-// 	// 5) Inner‐loop velocity PID every 1 ms
-// 	R_Velo_Error = R_Target_Velocity - Revolute_QEIdata.Velocity_f;
-// 	R_PWM = PID_Update(
-// 		R_Velo_Error,
-// 		R_kP_vel, R_kI_vel, R_kD_vel,
-// 		0.001f, -100.0f, +100.0f,
-// 		&pid_r_v);
-// 	P_Velo_Error = P_Target_Velocity - Prismatic_QEIdata.Velocity_f;
-// 	P_PWM = PID_Update(
-// 		P_Velo_Error,
-// 		P_kP_vel, P_kI_vel, P_kD_vel,
-// 		0.001f, -100.0f, +100.0f,
-// 		&pid_p_v);
-
-// 	// 6) Apply workspace limits & issue motor commands
-// 	Workspace_limit();
-// 	Set_Motor(0, R_PWM);
-// 	Set_Motor(1, P_PWM);
-
-// 	// 7) “Lock & hold” if within tolerance for HOLD_TIME_US
-// 	if (fabsf(TargetR - Revolute_QEIdata.RadPosition) < R_ERR_TOL_RAD && fabsf(TargetP - Prismatic_QEIdata.mmPosition) < P_ERR_TOL_MM)
-// 	{
-// 		if (lock_timer_us == 0)
-// 		{
-// 			lock_timer_us = micros();
-// 		}
-// 		else if ((micros() - lock_timer_us) >= HOLD_TIME_US)
-// 		{
-// 			Set_Servo(1);
-// 			Set_Motor(0, 0);
-// 			Set_Motor(1, 0);
-// 			revolute.finished = 0;
-// 			prismatic.finished = 0;
-// 		}
-// 	}
-// 	else
-// 	{
-// 		lock_timer_us = 0;
-// 	}
-// }
 /* USER CODE END 4 */
 
 /**
