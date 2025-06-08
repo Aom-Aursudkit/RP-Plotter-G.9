@@ -733,7 +733,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 ./Core/Src/syscalls.o
  .debug_macro   0x00000000       0xce ./Core/Src/syscalls.o
  .debug_line    0x00000000      0x8ac ./Core/Src/syscalls.o
- .debug_str     0x00000000     0x99f9 ./Core/Src/syscalls.o
+ .debug_str     0x00000000     0x9a05 ./Core/Src/syscalls.o
  .comment       0x00000000       0x44 ./Core/Src/syscalls.o
  .debug_frame   0x00000000      0x2ac ./Core/Src/syscalls.o
  .ARM.attributes
@@ -798,7 +798,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x6a ./Core/Src/sysmem.o
  .debug_macro   0x00000000      0x1df ./Core/Src/sysmem.o
  .debug_line    0x00000000      0x588 ./Core/Src/sysmem.o
- .debug_str     0x00000000     0x7797 ./Core/Src/sysmem.o
+ .debug_str     0x00000000     0x77a3 ./Core/Src/sysmem.o
  .comment       0x00000000       0x44 ./Core/Src/sysmem.o
  .debug_frame   0x00000000       0x34 ./Core/Src/sysmem.o
  .ARM.attributes
@@ -937,7 +937,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x185 ./Core/Src/trapezoid_traj.o
  .debug_macro   0x00000000      0x19b ./Core/Src/trapezoid_traj.o
  .debug_line    0x00000000      0x61c ./Core/Src/trapezoid_traj.o
- .debug_str     0x00000000     0x7018 ./Core/Src/trapezoid_traj.o
+ .debug_str     0x00000000     0x7024 ./Core/Src/trapezoid_traj.o
  .comment       0x00000000       0x44 ./Core/Src/trapezoid_traj.o
  .debug_frame   0x00000000       0x5c ./Core/Src/trapezoid_traj.o
  .ARM.attributes
@@ -1409,7 +1409,7 @@ Discarded input sections
  .debug_macro   0x00000000       0xa6 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.o
  .debug_macro   0x00000000      0x358 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.o
  .debug_line    0x00000000      0x914 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.o
- .debug_str     0x00000000    0xf32d9 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.o
+ .debug_str     0x00000000    0xf32e5 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.o
  .comment       0x00000000       0x44 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.o
  .debug_frame   0x00000000       0xd4 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.o
  .ARM.attributes
@@ -1519,7 +1519,7 @@ Discarded input sections
  .debug_macro   0x00000000       0xa6 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.o
  .debug_macro   0x00000000      0x358 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.o
  .debug_line    0x00000000      0xada ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.o
- .debug_str     0x00000000    0xf30bc ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.o
+ .debug_str     0x00000000    0xf30c8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.o
  .comment       0x00000000       0x44 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.o
  .debug_frame   0x00000000      0x174 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.o
  .ARM.attributes
@@ -1640,7 +1640,7 @@ Discarded input sections
  .debug_macro   0x00000000       0xa6 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.o
  .debug_macro   0x00000000      0x358 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.o
  .debug_line    0x00000000      0xb17 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.o
- .debug_str     0x00000000    0xf32f2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.o
+ .debug_str     0x00000000    0xf32fe ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.o
  .comment       0x00000000       0x44 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.o
  .debug_frame   0x00000000      0x21c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.o
  .ARM.attributes
@@ -1776,7 +1776,7 @@ Discarded input sections
  .debug_macro   0x00000000       0xa6 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.o
  .debug_macro   0x00000000      0x358 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.o
  .debug_line    0x00000000      0xfd4 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.o
- .debug_str     0x00000000    0xf3442 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.o
+ .debug_str     0x00000000    0xf344e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.o
  .comment       0x00000000       0x44 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.o
  .debug_frame   0x00000000      0x344 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.o
  .ARM.attributes
@@ -1869,7 +1869,7 @@ Discarded input sections
  .debug_macro   0x00000000       0xa6 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.o
  .debug_macro   0x00000000      0x358 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.o
  .debug_line    0x00000000      0x837 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.o
- .debug_str     0x00000000    0xf3111 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.o
+ .debug_str     0x00000000    0xf311d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.o
  .comment       0x00000000       0x44 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.o
  .debug_frame   0x00000000       0x78 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.o
  .ARM.attributes
@@ -2080,7 +2080,7 @@ Discarded input sections
  .debug_macro   0x00000000       0xa6 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.o
  .debug_macro   0x00000000      0x358 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.o
  .debug_line    0x00000000      0x92f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.o
- .debug_str     0x00000000    0xf3392 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.o
+ .debug_str     0x00000000    0xf339e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.o
  .comment       0x00000000       0x44 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.o
  .debug_frame   0x00000000      0x230 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.o
  .ARM.attributes
@@ -3340,8 +3340,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x3c ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctions.o
  .debug_macro   0x00000000       0x3b ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctions.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctions.o
- .debug_line    0x00000000     0x1b6c ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctions.o
- .debug_str     0x00000000     0x9b9d ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctions.o
+ .debug_line    0x00000000     0x1b78 ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctions.o
+ .debug_str     0x00000000     0x9ba9 ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctions.o
  .debug_frame   0x00000000      0x99c ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctions.o
  .ARM.attributes
@@ -3422,8 +3422,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x42 ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctionsF16.o
  .debug_macro   0x00000000       0x35 ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctionsF16.o
- .debug_line    0x00000000      0x80d ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctionsF16.o
- .debug_str     0x00000000     0x9756 ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctionsF16.o
+ .debug_line    0x00000000      0x819 ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctionsF16.o
+ .debug_str     0x00000000     0x9762 ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctionsF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctionsF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/BasicMathFunctions/BasicMathFunctionsF16.o
@@ -3511,8 +3511,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctions.o
  .debug_macro   0x00000000       0x28 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctions.o
  .debug_macro   0x00000000       0x10 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctions.o
- .debug_line    0x00000000      0x878 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctions.o
- .debug_str     0x00000000     0x9971 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctions.o
+ .debug_line    0x00000000      0x884 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctions.o
+ .debug_str     0x00000000     0x997d ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctions.o
  .debug_frame   0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctions.o
  .ARM.attributes
@@ -3595,8 +3595,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x35 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctionsF16.o
- .debug_line    0x00000000      0x80a ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctionsF16.o
- .debug_str     0x00000000     0x985d ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctionsF16.o
+ .debug_line    0x00000000      0x816 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctionsF16.o
+ .debug_str     0x00000000     0x9869 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctionsF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctionsF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/BayesFunctions/BayesFunctionsF16.o
@@ -4054,8 +4054,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTables.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTables.o
  .debug_macro   0x00000000       0xc7 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTables.o
- .debug_line    0x00000000      0x7f2 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTables.o
- .debug_str     0x00000000     0xaff0 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTables.o
+ .debug_line    0x00000000      0x7fe ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTables.o
+ .debug_str     0x00000000     0xaffc ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTables.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTables.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTables.o
@@ -4129,8 +4129,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x17 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTablesF16.o
  .debug_macro   0x00000000      0x118 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTablesF16.o
  .debug_macro   0x00000000       0xb9 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTablesF16.o
- .debug_line    0x00000000      0x728 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTablesF16.o
- .debug_str     0x00000000     0x9213 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTablesF16.o
+ .debug_line    0x00000000      0x734 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTablesF16.o
+ .debug_str     0x00000000     0x921f ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTablesF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTablesF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/CommonTables/CommonTablesF16.o
@@ -4258,8 +4258,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x3b ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctions.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctions.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctions.o
- .debug_line    0x00000000     0x11c5 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctions.o
- .debug_str     0x00000000     0x9bf7 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctions.o
+ .debug_line    0x00000000     0x11d1 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctions.o
+ .debug_str     0x00000000     0x9c03 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctions.o
  .debug_frame   0x00000000      0x3e4 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctions.o
  .ARM.attributes
@@ -4342,8 +4342,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x35 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctionsF16.o
- .debug_line    0x00000000      0x862 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctionsF16.o
- .debug_str     0x00000000     0x9834 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctionsF16.o
+ .debug_line    0x00000000      0x86e ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctionsF16.o
+ .debug_str     0x00000000     0x9840 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctionsF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctionsF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/ComplexMathFunctions/ComplexMathFunctionsF16.o
@@ -4599,8 +4599,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctions.o
  .debug_macro   0x00000000       0x16 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctions.o
  .debug_macro   0x00000000       0x29 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctions.o
- .debug_line    0x00000000     0x18d1 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctions.o
- .debug_str     0x00000000     0xae68 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctions.o
+ .debug_line    0x00000000     0x18dd ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctions.o
+ .debug_str     0x00000000     0xae74 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctions.o
  .debug_frame   0x00000000      0x4ac ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctions.o
  .ARM.attributes
@@ -4683,8 +4683,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x35 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctionsF16.o
- .debug_line    0x00000000      0x90f ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctionsF16.o
- .debug_str     0x00000000     0x9866 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctionsF16.o
+ .debug_line    0x00000000      0x91b ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctionsF16.o
+ .debug_str     0x00000000     0x9872 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctionsF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctionsF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/DistanceFunctions/DistanceFunctionsF16.o
@@ -4834,8 +4834,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctions.o
  .debug_macro   0x00000000       0x1c ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctions.o
  .debug_macro   0x00000000       0x1c ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctions.o
- .debug_line    0x00000000     0x1dc9 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctions.o
- .debug_str     0x00000000     0xa5c6 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctions.o
+ .debug_line    0x00000000     0x1dd5 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctions.o
+ .debug_str     0x00000000     0xa5d2 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctions.o
  .debug_frame   0x00000000      0x3ac ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctions.o
  .ARM.attributes
@@ -4918,8 +4918,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x35 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctionsF16.o
- .debug_line    0x00000000      0x7fc ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctionsF16.o
- .debug_str     0x00000000     0x9829 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctionsF16.o
+ .debug_line    0x00000000      0x808 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctionsF16.o
+ .debug_str     0x00000000     0x9835 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctionsF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctionsF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/FastMathFunctions/FastMathFunctionsF16.o
@@ -5217,8 +5217,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x10 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctions.o
  .debug_macro   0x00000000       0xc7 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctions.o
  .debug_macro   0x00000000       0x28 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctions.o
- .debug_line    0x00000000     0xb85d ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctions.o
- .debug_str     0x00000000     0xb20d ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctions.o
+ .debug_line    0x00000000     0xb869 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctions.o
+ .debug_str     0x00000000     0xb219 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctions.o
  .debug_frame   0x00000000     0x1230 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctions.o
  .ARM.attributes
@@ -5299,8 +5299,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x42 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctionsF16.o
  .debug_macro   0x00000000       0x35 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctionsF16.o
- .debug_line    0x00000000      0x8a0 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctionsF16.o
- .debug_str     0x00000000     0x9755 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctionsF16.o
+ .debug_line    0x00000000      0x8ac ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctionsF16.o
+ .debug_str     0x00000000     0x9761 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctionsF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctionsF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/FilteringFunctions/FilteringFunctionsF16.o
@@ -5402,8 +5402,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x3c ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctions.o
  .debug_macro   0x00000000       0x3b ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctions.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctions.o
- .debug_line    0x00000000     0x1081 ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctions.o
- .debug_str     0x00000000     0x9a46 ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctions.o
+ .debug_line    0x00000000     0x108d ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctions.o
+ .debug_str     0x00000000     0x9a52 ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctions.o
  .debug_frame   0x00000000      0x1fc ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctions.o
  .ARM.attributes
@@ -5484,8 +5484,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x42 ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctionsF16.o
  .debug_macro   0x00000000       0x35 ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctionsF16.o
- .debug_line    0x00000000      0x7ac ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctionsF16.o
- .debug_str     0x00000000     0x9761 ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctionsF16.o
+ .debug_line    0x00000000      0x7b8 ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctionsF16.o
+ .debug_str     0x00000000     0x976d ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctionsF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctionsF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/InterpolationFunctions/InterpolationFunctionsF16.o
@@ -5675,8 +5675,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x10 ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctions.o
  .debug_macro   0x00000000       0x7e ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctions.o
  .debug_macro   0x00000000       0x28 ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctions.o
- .debug_line    0x00000000     0x4533 ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctions.o
- .debug_str     0x00000000     0xaf92 ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctions.o
+ .debug_line    0x00000000     0x453f ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctions.o
+ .debug_str     0x00000000     0xaf9e ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctions.o
  .debug_frame   0x00000000      0x8c4 ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctions.o
  .ARM.attributes
@@ -5761,8 +5761,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctionsF16.o
  .debug_macro   0x00000000       0x7e ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctionsF16.o
- .debug_line    0x00000000      0x95f ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctionsF16.o
- .debug_str     0x00000000     0xa62d ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctionsF16.o
+ .debug_line    0x00000000      0x96b ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctionsF16.o
+ .debug_str     0x00000000     0xa639 ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctionsF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctionsF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/MatrixFunctions/MatrixFunctionsF16.o
@@ -5860,8 +5860,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x3c ./Middlewares/Third_Party/ARM_CMSIS/Source/QuaternionMathFunctions/QuaternionMathFunctions.o
  .debug_macro   0x00000000       0x3b ./Middlewares/Third_Party/ARM_CMSIS/Source/QuaternionMathFunctions/QuaternionMathFunctions.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/QuaternionMathFunctions/QuaternionMathFunctions.o
- .debug_line    0x00000000      0xdca ./Middlewares/Third_Party/ARM_CMSIS/Source/QuaternionMathFunctions/QuaternionMathFunctions.o
- .debug_str     0x00000000     0x9915 ./Middlewares/Third_Party/ARM_CMSIS/Source/QuaternionMathFunctions/QuaternionMathFunctions.o
+ .debug_line    0x00000000      0xdd6 ./Middlewares/Third_Party/ARM_CMSIS/Source/QuaternionMathFunctions/QuaternionMathFunctions.o
+ .debug_str     0x00000000     0x9921 ./Middlewares/Third_Party/ARM_CMSIS/Source/QuaternionMathFunctions/QuaternionMathFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/QuaternionMathFunctions/QuaternionMathFunctions.o
  .debug_frame   0x00000000      0x148 ./Middlewares/Third_Party/ARM_CMSIS/Source/QuaternionMathFunctions/QuaternionMathFunctions.o
  .ARM.attributes
@@ -5962,8 +5962,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x3c ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctions.o
  .debug_macro   0x00000000       0x3b ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctions.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctions.o
- .debug_line    0x00000000      0xb5b ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctions.o
- .debug_str     0x00000000     0x9956 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctions.o
+ .debug_line    0x00000000      0xb67 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctions.o
+ .debug_str     0x00000000     0x9962 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctions.o
  .debug_frame   0x00000000      0x19c ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctions.o
  .ARM.attributes
@@ -6044,8 +6044,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x42 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctionsF16.o
  .debug_macro   0x00000000       0x35 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctionsF16.o
- .debug_line    0x00000000      0x855 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctionsF16.o
- .debug_str     0x00000000     0x9754 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctionsF16.o
+ .debug_line    0x00000000      0x861 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctionsF16.o
+ .debug_str     0x00000000     0x9760 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctionsF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctionsF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/SVMFunctions/SVMFunctionsF16.o
@@ -6277,8 +6277,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x3b ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctions.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctions.o
  .debug_macro   0x00000000       0x28 ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctions.o
- .debug_line    0x00000000     0x309f ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctions.o
- .debug_str     0x00000000     0x9f58 ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctions.o
+ .debug_line    0x00000000     0x30ab ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctions.o
+ .debug_str     0x00000000     0x9f64 ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctions.o
  .debug_frame   0x00000000      0xbd0 ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctions.o
  .ARM.attributes
@@ -6361,8 +6361,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x35 ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctionsF16.o
- .debug_line    0x00000000      0x971 ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctionsF16.o
- .debug_str     0x00000000     0x984e ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctionsF16.o
+ .debug_line    0x00000000      0x97d ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctionsF16.o
+ .debug_str     0x00000000     0x985a ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctionsF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctionsF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/StatisticsFunctions/StatisticsFunctionsF16.o
@@ -6548,8 +6548,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctions.o
  .debug_macro   0x00000000       0x16 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctions.o
  .debug_macro   0x00000000       0x16 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctions.o
- .debug_line    0x00000000     0x1a68 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctions.o
- .debug_str     0x00000000     0x9fb6 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctions.o
+ .debug_line    0x00000000     0x1a74 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctions.o
+ .debug_str     0x00000000     0x9fc2 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctions.o
  .debug_frame   0x00000000      0x75c ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctions.o
  .ARM.attributes
@@ -6630,8 +6630,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x42 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctionsF16.o
  .debug_macro   0x00000000       0x35 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctionsF16.o
- .debug_line    0x00000000      0x82e ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctionsF16.o
- .debug_str     0x00000000     0x974f ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctionsF16.o
+ .debug_line    0x00000000      0x83a ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctionsF16.o
+ .debug_str     0x00000000     0x975b ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctionsF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctionsF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/SupportFunctions/SupportFunctionsF16.o
@@ -7077,8 +7077,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctions.o
  .debug_macro   0x00000000       0x16 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctions.o
  .debug_macro   0x00000000       0x16 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctions.o
- .debug_line    0x00000000     0x7975 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctions.o
- .debug_str     0x00000000     0xcee4 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctions.o
+ .debug_line    0x00000000     0x7981 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctions.o
+ .debug_str     0x00000000     0xcef0 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctions.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctions.o
  .debug_frame   0x00000000     0x1afc ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctions.o
  .ARM.attributes
@@ -7163,8 +7163,8 @@ Discarded input sections
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctionsF16.o
  .debug_macro   0x00000000       0x22 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctionsF16.o
  .debug_macro   0x00000000       0xc7 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctionsF16.o
- .debug_line    0x00000000      0x99c ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctionsF16.o
- .debug_str     0x00000000     0x9ef0 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctionsF16.o
+ .debug_line    0x00000000      0x9a8 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctionsF16.o
+ .debug_str     0x00000000     0x9efc ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctionsF16.o
  .comment       0x00000000       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctionsF16.o
  .ARM.attributes
                 0x00000000       0x34 ./Middlewares/Third_Party/ARM_CMSIS/Source/TransformFunctions/TransformFunctionsF16.o
@@ -7879,51 +7879,54 @@ LOAD C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .text.Trapezoidal_Update
                 0x08001b90      0x280 ./Core/Src/Trapezoidal.o
                 0x08001b90                Trapezoidal_Update
- .text.main     0x08001e10     0x1690 ./Core/Src/main.o
+ .text.main     0x08001e10     0x162c ./Core/Src/main.o
                 0x08001e10                main
  .text.SystemClock_Config
-                0x080034a0       0x96 ./Core/Src/main.o
-                0x080034a0                SystemClock_Config
- *fill*         0x08003536        0x2 
+                0x0800343c       0x96 ./Core/Src/main.o
+                0x0800343c                SystemClock_Config
+ *fill*         0x080034d2        0x2 
  .text.MX_TIM1_Init
-                0x08003538      0x10c ./Core/Src/main.o
+                0x080034d4      0x10c ./Core/Src/main.o
  .text.MX_TIM2_Init
-                0x08003644      0x100 ./Core/Src/main.o
+                0x080035e0      0x100 ./Core/Src/main.o
  .text.MX_TIM3_Init
-                0x08003744       0xac ./Core/Src/main.o
+                0x080036e0       0xac ./Core/Src/main.o
  .text.MX_TIM4_Init
-                0x080037f0       0xac ./Core/Src/main.o
+                0x0800378c       0xac ./Core/Src/main.o
  .text.MX_TIM5_Init
-                0x0800389c       0x9c ./Core/Src/main.o
+                0x08003838       0x9c ./Core/Src/main.o
  .text.MX_TIM8_Init
-                0x08003938      0x178 ./Core/Src/main.o
+                0x080038d4      0x178 ./Core/Src/main.o
  .text.MX_TIM15_Init
-                0x08003ab0      0x148 ./Core/Src/main.o
+                0x08003a4c      0x148 ./Core/Src/main.o
  .text.MX_TIM16_Init
-                0x08003bf8       0x60 ./Core/Src/main.o
+                0x08003b94       0x60 ./Core/Src/main.o
  .text.MX_USART2_UART_Init
-                0x08003c58       0x9c ./Core/Src/main.o
+                0x08003bf4       0x9c ./Core/Src/main.o
  .text.MX_DMA_Init
-                0x08003cf4       0x64 ./Core/Src/main.o
+                0x08003c90       0x64 ./Core/Src/main.o
  .text.MX_GPIO_Init
-                0x08003d58      0x20c ./Core/Src/main.o
- .text.map      0x08003f64       0x5c ./Core/Src/main.o
-                0x08003f64                map
+                0x08003cf4      0x20c ./Core/Src/main.o
+ .text.PenDelay
+                0x08003f00       0x68 ./Core/Src/main.o
+                0x08003f00                PenDelay
+ .text.map      0x08003f68       0x5c ./Core/Src/main.o
+                0x08003f68                map
  .text.DWT_Init
-                0x08003fc0       0x30 ./Core/Src/main.o
-                0x08003fc0                DWT_Init
+                0x08003fc4       0x30 ./Core/Src/main.o
+                0x08003fc4                DWT_Init
  .text.HAL_GPIO_EXTI_Callback
-                0x08003ff0      0x188 ./Core/Src/main.o
-                0x08003ff0                HAL_GPIO_EXTI_Callback
+                0x08003ff4      0x188 ./Core/Src/main.o
+                0x08003ff4                HAL_GPIO_EXTI_Callback
  .text.HAL_TIM_PeriodElapsedCallback
-                0x08004178       0x34 ./Core/Src/main.o
-                0x08004178                HAL_TIM_PeriodElapsedCallback
- .text.micros   0x080041ac       0x34 ./Core/Src/main.o
-                0x080041ac                micros
+                0x0800417c       0x34 ./Core/Src/main.o
+                0x0800417c                HAL_TIM_PeriodElapsedCallback
+ .text.micros   0x080041b0       0x34 ./Core/Src/main.o
+                0x080041b0                micros
  .text.PID_Update
-                0x080041e0      0x192 ./Core/Src/main.o
-                0x080041e0                PID_Update
- *fill*         0x08004372        0x6 
+                0x080041e4      0x192 ./Core/Src/main.o
+                0x080041e4                PID_Update
+ *fill*         0x08004376        0x2 
  .text.Revolute_PosVel_Update
                 0x08004378      0x214 ./Core/Src/main.o
                 0x08004378                Revolute_PosVel_Update
@@ -8685,9 +8688,12 @@ LOAD C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .data.P_kD_pos
                 0x20000228        0x4 ./Core/Src/main.o
                 0x20000228                P_kD_pos
- .data.goCenter.7
+ .data.goCenter8
                 0x2000022c        0x1 ./Core/Src/main.o
- *fill*         0x2000022d        0x3 
+                0x2000022c                goCenter8
+ .data.PenIsNotDelay.9
+                0x2000022d        0x1 ./Core/Src/main.o
+ *fill*         0x2000022e        0x2 
  .data.SystemCoreClock
                 0x20000230        0x4 ./Core/Src/system_stm32g4xx.o
                 0x20000230                SystemCoreClock
@@ -8875,56 +8881,56 @@ LOAD C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .bss.servo_timer
                 0x20000c30        0x8 ./Core/Src/main.o
                 0x20000c30                servo_timer
- .bss.loop_counter
-                0x20000c38        0x4 ./Core/Src/main.o
-                0x20000c38                loop_counter
- .bss.counter   0x20000c3c        0x1 ./Core/Src/main.o
-                0x20000c3c                counter
+ .bss.counter8  0x20000c38        0x1 ./Core/Src/main.o
+                0x20000c38                counter8
+ .bss.counter   0x20000c39        0x1 ./Core/Src/main.o
+                0x20000c39                counter
  .bss.TenPointMode
-                0x20000c3d        0x1 ./Core/Src/main.o
-                0x20000c3d                TenPointMode
+                0x20000c3a        0x1 ./Core/Src/main.o
+                0x20000c3a                TenPointMode
  .bss.Test_no_BaseSystem
-                0x20000c3e        0x1 ./Core/Src/main.o
-                0x20000c3e                Test_no_BaseSystem
- *fill*         0x20000c3f        0x1 
+                0x20000c3b        0x1 ./Core/Src/main.o
+                0x20000c3b                Test_no_BaseSystem
  .bss.TargetR_BaseSystem
-                0x20000c40        0x4 ./Core/Src/main.o
-                0x20000c40                TargetR_BaseSystem
+                0x20000c3c        0x4 ./Core/Src/main.o
+                0x20000c3c                TargetR_BaseSystem
  .bss.TargetP_BaseSystem
-                0x20000c44        0x4 ./Core/Src/main.o
-                0x20000c44                TargetP_BaseSystem
+                0x20000c40        0x4 ./Core/Src/main.o
+                0x20000c40                TargetP_BaseSystem
  .bss.Pen_BaseSystem
-                0x20000c48        0x1 ./Core/Src/main.o
-                0x20000c48                Pen_BaseSystem
- *fill*         0x20000c49        0x3 
+                0x20000c44        0x1 ./Core/Src/main.o
+                0x20000c44                Pen_BaseSystem
+ *fill*         0x20000c45        0x3 
  .bss.Last_TargetR_BaseSystem
-                0x20000c4c        0x4 ./Core/Src/main.o
-                0x20000c4c                Last_TargetR_BaseSystem
+                0x20000c48        0x4 ./Core/Src/main.o
+                0x20000c48                Last_TargetR_BaseSystem
  .bss.Last_Pen_BaseSystem
-                0x20000c50        0x1 ./Core/Src/main.o
-                0x20000c50                Last_Pen_BaseSystem
- *fill*         0x20000c51        0x3 
- .bss.hmodbus   0x20000c54      0x4d8 ./Core/Src/main.o
-                0x20000c54                hmodbus
+                0x20000c4c        0x1 ./Core/Src/main.o
+                0x20000c4c                Last_Pen_BaseSystem
+ *fill*         0x20000c4d        0x3 
+ .bss.hmodbus   0x20000c50      0x4d8 ./Core/Src/main.o
+                0x20000c50                hmodbus
  .bss.registerFrame
-                0x2000112c      0x190 ./Core/Src/main.o
-                0x2000112c                registerFrame
+                0x20001128      0x190 ./Core/Src/main.o
+                0x20001128                registerFrame
  .bss.base_status
-                0x200012bc        0x2 ./Core/Src/main.o
-                0x200012bc                base_status
- *fill*         0x200012be        0x2 
- .bss.testArray
-                0x200012c0       0x50 ./Core/Src/main.o
-                0x200012c0                testArray
+                0x200012b8        0x2 ./Core/Src/main.o
+                0x200012b8                base_status
+ *fill*         0x200012ba        0x2 
+ .bss.TenPointArray
+                0x200012bc       0x50 ./Core/Src/main.o
+                0x200012bc                TenPointArray
  .bss.testArraydone
-                0x20001310        0x1 ./Core/Src/main.o
-                0x20001310                testArraydone
- *fill*         0x20001311        0x3 
+                0x2000130c        0x1 ./Core/Src/main.o
+                0x2000130c                testArraydone
+ *fill*         0x2000130d        0x3 
+ .bss.currentTimer
+                0x20001310        0x8 ./Core/Src/main.o
+                0x20001310                currentTimer
  .bss.last_TargetR
-                0x20001314        0x4 ./Core/Src/main.o
- .bss.last_TargetP
                 0x20001318        0x4 ./Core/Src/main.o
- *fill*         0x2000131c        0x4 
+ .bss.last_TargetP
+                0x2000131c        0x4 ./Core/Src/main.o
  .bss.pen_delay_timer
                 0x20001320        0x8 ./Core/Src/main.o
                 0x20001320                pen_delay_timer
@@ -8938,23 +8944,21 @@ LOAD C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
                 0x20001370       0x44 ./Core/Src/main.o
                 0x20001370                prismatic
  *fill*         0x200013b4        0x4 
- .bss.timestamp.14
+ .bss.timestamp.13
                 0x200013b8        0x8 ./Core/Src/main.o
- .bss.timestamp1.13
+ .bss.timestamp1.12
                 0x200013c0        0x8 ./Core/Src/main.o
- .bss.timestamp2.12
+ .bss.timestamp2.11
                 0x200013c8        0x8 ./Core/Src/main.o
- .bss.timestampState1.11
+ .bss.timestampState1.10
                 0x200013d0        0x8 ./Core/Src/main.o
- .bss.lastPressTime.10
+ .bss.lastPressTime6.8
                 0x200013d8        0x8 ./Core/Src/main.o
- .bss.lastPressTime1.9
+ .bss.lastPressTime7.7
                 0x200013e0        0x8 ./Core/Src/main.o
- .bss.counter8.8
-                0x200013e8        0x1 ./Core/Src/main.o
  .bss.timerStarted.6
-                0x200013e9        0x1 ./Core/Src/main.o
- *fill*         0x200013ea        0x2 
+                0x200013e8        0x1 ./Core/Src/main.o
+ *fill*         0x200013e9        0x3 
  .bss.state.5   0x200013ec        0x3 ./Core/Src/main.o
  *fill*         0x200013ef        0x1 
  .bss.loop_counter1.4
@@ -9099,26 +9103,26 @@ LOAD C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
 LOAD C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a
 LOAD C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a
 
-.debug_info     0x00000000    0x1801b
+.debug_info     0x00000000    0x18029
  .debug_info    0x00000000     0x1775 ./Core/Src/ModBusRTU.o
  .debug_info    0x00001775      0x319 ./Core/Src/Trapezoidal.o
- .debug_info    0x00001a8e     0x3826 ./Core/Src/main.o
- .debug_info    0x000052b4     0x19dc ./Core/Src/stm32g4xx_hal_msp.o
- .debug_info    0x00006c90     0x101a ./Core/Src/stm32g4xx_it.o
- .debug_info    0x00007caa      0x58e ./Core/Src/system_stm32g4xx.o
- .debug_info    0x00008238       0x30 ./Core/Startup/startup_stm32g474retx.o
- .debug_info    0x00008268      0xb95 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
- .debug_info    0x00008dfd      0xdf9 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
- .debug_info    0x00009bf6      0x85f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
- .debug_info    0x0000a455      0x763 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
- .debug_info    0x0000abb8      0x93f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
- .debug_info    0x0000b4f7      0xbe0 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
- .debug_info    0x0000c0d7      0xc45 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
- .debug_info    0x0000cd1c     0x301a ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
- .debug_info    0x0000fd36     0x1f5e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
- .debug_info    0x00011c94     0x4ad2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
- .debug_info    0x00016766     0x10c8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
- .debug_info    0x0001782e      0x7ed ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
+ .debug_info    0x00001a8e     0x3834 ./Core/Src/main.o
+ .debug_info    0x000052c2     0x19dc ./Core/Src/stm32g4xx_hal_msp.o
+ .debug_info    0x00006c9e     0x101a ./Core/Src/stm32g4xx_it.o
+ .debug_info    0x00007cb8      0x58e ./Core/Src/system_stm32g4xx.o
+ .debug_info    0x00008246       0x30 ./Core/Startup/startup_stm32g474retx.o
+ .debug_info    0x00008276      0xb95 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
+ .debug_info    0x00008e0b      0xdf9 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
+ .debug_info    0x00009c04      0x85f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
+ .debug_info    0x0000a463      0x763 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
+ .debug_info    0x0000abc6      0x93f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
+ .debug_info    0x0000b505      0xbe0 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
+ .debug_info    0x0000c0e5      0xc45 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
+ .debug_info    0x0000cd2a     0x301a ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
+ .debug_info    0x0000fd44     0x1f5e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
+ .debug_info    0x00011ca2     0x4ad2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
+ .debug_info    0x00016774     0x10c8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
+ .debug_info    0x0001783c      0x7ed ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
 
 .debug_abbrev   0x00000000     0x2d38
  .debug_abbrev  0x00000000      0x3af ./Core/Src/ModBusRTU.o
@@ -9141,86 +9145,86 @@ LOAD C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_abbrev  0x0000285f      0x2d2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
  .debug_abbrev  0x00002b31      0x207 ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
 
-.debug_aranges  0x00000000     0x12d0
+.debug_aranges  0x00000000     0x12d8
  .debug_aranges
                 0x00000000       0x80 ./Core/Src/ModBusRTU.o
  .debug_aranges
                 0x00000080       0x28 ./Core/Src/Trapezoidal.o
  .debug_aranges
-                0x000000a8      0x128 ./Core/Src/main.o
+                0x000000a8      0x130 ./Core/Src/main.o
  .debug_aranges
-                0x000001d0       0x68 ./Core/Src/stm32g4xx_hal_msp.o
+                0x000001d8       0x68 ./Core/Src/stm32g4xx_hal_msp.o
  .debug_aranges
-                0x00000238       0xc0 ./Core/Src/stm32g4xx_it.o
+                0x00000240       0xc0 ./Core/Src/stm32g4xx_it.o
  .debug_aranges
-                0x000002f8       0x28 ./Core/Src/system_stm32g4xx.o
+                0x00000300       0x28 ./Core/Src/system_stm32g4xx.o
  .debug_aranges
-                0x00000320       0x28 ./Core/Startup/startup_stm32g474retx.o
+                0x00000328       0x28 ./Core/Startup/startup_stm32g474retx.o
  .debug_aranges
-                0x00000348      0x148 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
+                0x00000350      0x148 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
  .debug_aranges
-                0x00000490      0x128 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
+                0x00000498      0x128 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
  .debug_aranges
-                0x000005b8       0x90 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
+                0x000005c0       0x90 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
  .debug_aranges
-                0x00000648       0x58 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
+                0x00000650       0x58 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
  .debug_aranges
-                0x000006a0      0x140 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
+                0x000006a8      0x140 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
  .debug_aranges
-                0x000007e0       0x98 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
+                0x000007e8       0x98 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
  .debug_aranges
-                0x00000878       0xb0 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
+                0x00000880       0xb0 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
  .debug_aranges
-                0x00000928      0x3f8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
+                0x00000930      0x3f8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
  .debug_aranges
-                0x00000d20      0x240 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
+                0x00000d28      0x240 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
  .debug_aranges
-                0x00000f60      0x270 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
+                0x00000f68      0x270 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
  .debug_aranges
-                0x000011d0       0xa8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
+                0x000011d8       0xa8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
  .debug_aranges
-                0x00001278       0x58 ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
+                0x00001280       0x58 ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
 
 .debug_rnglists
-                0x00000000      0xec5
+                0x00000000      0xecb
  .debug_rnglists
                 0x00000000       0x61 ./Core/Src/ModBusRTU.o
  .debug_rnglists
                 0x00000061       0x1b ./Core/Src/Trapezoidal.o
  .debug_rnglists
-                0x0000007c       0xf0 ./Core/Src/main.o
+                0x0000007c       0xf6 ./Core/Src/main.o
  .debug_rnglists
-                0x0000016c       0x4f ./Core/Src/stm32g4xx_hal_msp.o
+                0x00000172       0x4f ./Core/Src/stm32g4xx_hal_msp.o
  .debug_rnglists
-                0x000001bb       0x8b ./Core/Src/stm32g4xx_it.o
+                0x000001c1       0x8b ./Core/Src/stm32g4xx_it.o
  .debug_rnglists
-                0x00000246       0x1a ./Core/Src/system_stm32g4xx.o
+                0x0000024c       0x1a ./Core/Src/system_stm32g4xx.o
  .debug_rnglists
-                0x00000260       0x19 ./Core/Startup/startup_stm32g474retx.o
+                0x00000266       0x19 ./Core/Startup/startup_stm32g474retx.o
  .debug_rnglists
-                0x00000279       0xf1 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
+                0x0000027f       0xf1 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
  .debug_rnglists
-                0x0000036a       0xda ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
+                0x00000370       0xda ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
  .debug_rnglists
-                0x00000444       0x71 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
+                0x0000044a       0x71 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
  .debug_rnglists
-                0x000004b5       0x3f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
+                0x000004bb       0x3f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
  .debug_rnglists
-                0x000004f4       0xf1 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
+                0x000004fa       0xf1 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
  .debug_rnglists
-                0x000005e5       0x74 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
+                0x000005eb       0x74 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
  .debug_rnglists
-                0x00000659       0x87 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
+                0x0000065f       0x87 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
  .debug_rnglists
-                0x000006e0      0x33d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
+                0x000006e6      0x33d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
  .debug_rnglists
-                0x00000a1d      0x1cc ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
+                0x00000a23      0x1cc ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
  .debug_rnglists
-                0x00000be9      0x21c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
+                0x00000bef      0x21c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
  .debug_rnglists
-                0x00000e05       0x7f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
+                0x00000e0b       0x7f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
  .debug_rnglists
-                0x00000e84       0x41 ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
+                0x00000e8a       0x41 ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
 
 .debug_macro    0x00000000    0x2744c
  .debug_macro   0x00000000      0x2c4 ./Core/Src/ModBusRTU.o
@@ -9322,48 +9326,48 @@ LOAD C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_macro   0x00027206      0x236 ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
  .debug_macro   0x0002743c       0x10 ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
 
-.debug_line     0x00000000    0x1698a
+.debug_line     0x00000000    0x16a28
  .debug_line    0x00000000      0xe0a ./Core/Src/ModBusRTU.o
  .debug_line    0x00000e0a      0x6b0 ./Core/Src/Trapezoidal.o
- .debug_line    0x000014ba     0x2032 ./Core/Src/main.o
- .debug_line    0x000034ec      0xa10 ./Core/Src/stm32g4xx_hal_msp.o
- .debug_line    0x00003efc      0x935 ./Core/Src/stm32g4xx_it.o
- .debug_line    0x00004831      0x7ce ./Core/Src/system_stm32g4xx.o
- .debug_line    0x00004fff       0x7b ./Core/Startup/startup_stm32g474retx.o
- .debug_line    0x0000507a      0xb9a ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
- .debug_line    0x00005c14      0xcff ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
- .debug_line    0x00006913      0xe99 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
- .debug_line    0x000077ac      0xb73 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
- .debug_line    0x0000831f      0xcf9 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
- .debug_line    0x00009018     0x101d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
- .debug_line    0x0000a035     0x1292 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
- .debug_line    0x0000b2c7     0x4414 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
- .debug_line    0x0000f6db     0x20c2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
- .debug_line    0x0001179d     0x3882 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
- .debug_line    0x0001501f      0xcdc ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
- .debug_line    0x00015cfb      0xc8f ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
+ .debug_line    0x000014ba     0x20c4 ./Core/Src/main.o
+ .debug_line    0x0000357e      0xa10 ./Core/Src/stm32g4xx_hal_msp.o
+ .debug_line    0x00003f8e      0x935 ./Core/Src/stm32g4xx_it.o
+ .debug_line    0x000048c3      0x7ce ./Core/Src/system_stm32g4xx.o
+ .debug_line    0x00005091       0x7b ./Core/Startup/startup_stm32g474retx.o
+ .debug_line    0x0000510c      0xb9a ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
+ .debug_line    0x00005ca6      0xcff ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
+ .debug_line    0x000069a5      0xe99 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
+ .debug_line    0x0000783e      0xb73 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
+ .debug_line    0x000083b1      0xcf9 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
+ .debug_line    0x000090aa     0x101d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
+ .debug_line    0x0000a0c7     0x1292 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
+ .debug_line    0x0000b359     0x4414 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
+ .debug_line    0x0000f76d     0x20c2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
+ .debug_line    0x0001182f     0x3882 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
+ .debug_line    0x000150b1      0xcdc ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
+ .debug_line    0x00015d8d      0xc9b ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
 
-.debug_str      0x00000000   0x100034
- .debug_str     0x00000000   0x100034 ./Core/Src/ModBusRTU.o
-                              0xf8591 (size before relaxing)
- .debug_str     0x00100034     0x70b7 ./Core/Src/Trapezoidal.o
- .debug_str     0x00100034    0xfb683 ./Core/Src/main.o
- .debug_str     0x00100034    0xf47d1 ./Core/Src/stm32g4xx_hal_msp.o
- .debug_str     0x00100034    0xf3e42 ./Core/Src/stm32g4xx_it.o
- .debug_str     0x00100034    0xf3022 ./Core/Src/system_stm32g4xx.o
- .debug_str     0x00100034       0x99 ./Core/Startup/startup_stm32g474retx.o
- .debug_str     0x00100034    0xf3d34 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
- .debug_str     0x00100034    0xf39f0 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
- .debug_str     0x00100034    0xf33fc ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
- .debug_str     0x00100034    0xf31ad ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
- .debug_str     0x00100034    0xf3510 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
- .debug_str     0x00100034    0xf3741 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
- .debug_str     0x00100034    0xf376b ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
- .debug_str     0x00100034    0xf4c83 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
- .debug_str     0x00100034    0xf4457 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
- .debug_str     0x00100034    0xf434f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
- .debug_str     0x00100034    0xf38f6 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
- .debug_str     0x00100034     0xa01f ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
+.debug_str      0x00000000   0x100065
+ .debug_str     0x00000000   0x100065 ./Core/Src/ModBusRTU.o
+                              0xf859d (size before relaxing)
+ .debug_str     0x00100065     0x70c3 ./Core/Src/Trapezoidal.o
+ .debug_str     0x00100065    0xfb69a ./Core/Src/main.o
+ .debug_str     0x00100065    0xf47dd ./Core/Src/stm32g4xx_hal_msp.o
+ .debug_str     0x00100065    0xf3e4e ./Core/Src/stm32g4xx_it.o
+ .debug_str     0x00100065    0xf302e ./Core/Src/system_stm32g4xx.o
+ .debug_str     0x00100065       0xa5 ./Core/Startup/startup_stm32g474retx.o
+ .debug_str     0x00100065    0xf3d40 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
+ .debug_str     0x00100065    0xf39fc ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
+ .debug_str     0x00100065    0xf3408 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
+ .debug_str     0x00100065    0xf31b9 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
+ .debug_str     0x00100065    0xf351c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
+ .debug_str     0x00100065    0xf374d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
+ .debug_str     0x00100065    0xf3777 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
+ .debug_str     0x00100065    0xf4c8f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
+ .debug_str     0x00100065    0xf4463 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
+ .debug_str     0x00100065    0xf435b ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
+ .debug_str     0x00100065    0xf3902 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
+ .debug_str     0x00100065     0xa02b ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
 
 .comment        0x00000000       0x43
  .comment       0x00000000       0x43 ./Core/Src/ModBusRTU.o
@@ -9386,51 +9390,51 @@ LOAD C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .comment       0x00000043       0x44 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
  .comment       0x00000043       0x44 ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
 
-.debug_frame    0x00000000     0x55bc
+.debug_frame    0x00000000     0x55dc
  .debug_frame   0x00000000      0x1f0 ./Core/Src/ModBusRTU.o
  .debug_frame   0x000001f0       0x5c ./Core/Src/Trapezoidal.o
- .debug_frame   0x0000024c      0x4ec ./Core/Src/main.o
- .debug_frame   0x00000738      0x17c ./Core/Src/stm32g4xx_hal_msp.o
- .debug_frame   0x000008b4      0x254 ./Core/Src/stm32g4xx_it.o
- .debug_frame   0x00000b08       0x58 ./Core/Src/system_stm32g4xx.o
- .debug_frame   0x00000b60      0x500 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
- .debug_frame   0x00001060      0x4e8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
- .debug_frame   0x00001548      0x24c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
- .debug_frame   0x00001794      0x14c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
- .debug_frame   0x000018e0      0x4fc ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
- .debug_frame   0x00001ddc      0x23c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
- .debug_frame   0x00002018      0x2ac ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
- .debug_frame   0x000022c4     0x1298 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
- .debug_frame   0x0000355c      0xa70 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
- .debug_frame   0x00003fcc      0xb5c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
- .debug_frame   0x00004b28      0x2c0 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
- .debug_frame   0x00004de8      0x14c ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
- .debug_frame   0x00004f34      0x144 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-findfp.o)
- .debug_frame   0x00005078       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memset.o)
- .debug_frame   0x00005098       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-errno.o)
- .debug_frame   0x000050b8       0x2c C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-init.o)
- .debug_frame   0x000050e4       0x28 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memcpy-stub.o)
- .debug_frame   0x0000510c       0x38 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-wf_sqrt.o)
- .debug_frame   0x00005144       0x38 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-sf_cos.o)
- .debug_frame   0x0000517c       0x38 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-sf_sin.o)
- .debug_frame   0x000051b4       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-ef_sqrt.o)
- .debug_frame   0x000051d4       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-kf_cos.o)
- .debug_frame   0x000051f4       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-kf_sin.o)
- .debug_frame   0x00005214       0x38 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-ef_rem_pio2.o)
- .debug_frame   0x0000524c       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-sf_fabs.o)
- .debug_frame   0x0000526c       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-sf_scalbn.o)
- .debug_frame   0x0000528c       0x5c C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-kf_rem_pio2.o)
- .debug_frame   0x000052e8       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-sf_floor.o)
- .debug_frame   0x00005308       0xac C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_addsubdf3.o)
- .debug_frame   0x000053b4       0x50 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldivdf3.o)
- .debug_frame   0x00005404       0xc4 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_cmpdf2.o)
- .debug_frame   0x000054c8       0x24 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_fixunsdfsi.o)
- .debug_frame   0x000054ec       0x24 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_truncdfsf2.o)
- .debug_frame   0x00005510       0x4c C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_addsubsf3.o)
- .debug_frame   0x0000555c       0x2c C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_aeabi_uldivmod.o)
- .debug_frame   0x00005588       0x34 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_udivmoddi4.o)
+ .debug_frame   0x0000024c      0x50c ./Core/Src/main.o
+ .debug_frame   0x00000758      0x17c ./Core/Src/stm32g4xx_hal_msp.o
+ .debug_frame   0x000008d4      0x254 ./Core/Src/stm32g4xx_it.o
+ .debug_frame   0x00000b28       0x58 ./Core/Src/system_stm32g4xx.o
+ .debug_frame   0x00000b80      0x500 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
+ .debug_frame   0x00001080      0x4e8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
+ .debug_frame   0x00001568      0x24c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
+ .debug_frame   0x000017b4      0x14c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
+ .debug_frame   0x00001900      0x4fc ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
+ .debug_frame   0x00001dfc      0x23c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
+ .debug_frame   0x00002038      0x2ac ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
+ .debug_frame   0x000022e4     0x1298 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
+ .debug_frame   0x0000357c      0xa70 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
+ .debug_frame   0x00003fec      0xb5c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
+ .debug_frame   0x00004b48      0x2c0 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
+ .debug_frame   0x00004e08      0x14c ./Middlewares/Third_Party/ARM_CMSIS/Source/ControllerFunctions/ControllerFunctions.o
+ .debug_frame   0x00004f54      0x144 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-findfp.o)
+ .debug_frame   0x00005098       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memset.o)
+ .debug_frame   0x000050b8       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-errno.o)
+ .debug_frame   0x000050d8       0x2c C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-init.o)
+ .debug_frame   0x00005104       0x28 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memcpy-stub.o)
+ .debug_frame   0x0000512c       0x38 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-wf_sqrt.o)
+ .debug_frame   0x00005164       0x38 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-sf_cos.o)
+ .debug_frame   0x0000519c       0x38 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-sf_sin.o)
+ .debug_frame   0x000051d4       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-ef_sqrt.o)
+ .debug_frame   0x000051f4       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-kf_cos.o)
+ .debug_frame   0x00005214       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-kf_sin.o)
+ .debug_frame   0x00005234       0x38 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-ef_rem_pio2.o)
+ .debug_frame   0x0000526c       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-sf_fabs.o)
+ .debug_frame   0x0000528c       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-sf_scalbn.o)
+ .debug_frame   0x000052ac       0x5c C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-kf_rem_pio2.o)
+ .debug_frame   0x00005308       0x20 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-sf_floor.o)
+ .debug_frame   0x00005328       0xac C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_addsubdf3.o)
+ .debug_frame   0x000053d4       0x50 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldivdf3.o)
+ .debug_frame   0x00005424       0xc4 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_cmpdf2.o)
+ .debug_frame   0x000054e8       0x24 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_fixunsdfsi.o)
+ .debug_frame   0x0000550c       0x24 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_truncdfsf2.o)
+ .debug_frame   0x00005530       0x4c C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_addsubsf3.o)
+ .debug_frame   0x0000557c       0x2c C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_aeabi_uldivmod.o)
+ .debug_frame   0x000055a8       0x34 C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m+fp/hard\libgcc.a(_udivmoddi4.o)
 
 .debug_line_str
-                0x00000000       0x7d
+                0x00000000       0x89
  .debug_line_str
-                0x00000000       0x7d ./Core/Startup/startup_stm32g474retx.o
+                0x00000000       0x89 ./Core/Startup/startup_stm32g474retx.o
