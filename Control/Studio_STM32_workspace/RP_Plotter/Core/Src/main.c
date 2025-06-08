@@ -105,15 +105,16 @@ float R_Kff = 0.5f;
 float Receiver[5];
 int32_t Receiver_Period[5];
 // uint16_t ADC_RawRead[300]={0};
-volatile uint32_t rise_time[3] = { 0 }; // For PC0, PC2, PC3
-volatile uint32_t pulse_width_us[3] = { 0 };
+volatile uint32_t rise_time[3] = {0}; // For PC0, PC2, PC3
+volatile uint32_t pulse_width_us[3] = {0};
 //////////////////////
 
 // Encoder/////////////
 uint32_t revolute_raw;
 uint32_t prismatic_raw;
 
-typedef struct {
+typedef struct
+{
 	uint32_t Position[2];
 	uint64_t TimeStamp[2];
 	float QEIPostion_1turn;
@@ -127,9 +128,10 @@ typedef struct {
 	float DegPosition;
 } Revolute_QEI_StructureTypeDef; // rad
 
-Revolute_QEI_StructureTypeDef Revolute_QEIdata = { 0 };
+Revolute_QEI_StructureTypeDef Revolute_QEIdata = {0};
 
-typedef struct {
+typedef struct
+{
 	uint32_t Position[2];
 	uint64_t TimeStamp[2];
 	float QEIVelocity;
@@ -141,10 +143,12 @@ typedef struct {
 	float mmPosition;
 } Prismatic_QEI_StructureTypeDef; // mm
 
-Prismatic_QEI_StructureTypeDef Prismatic_QEIdata = { 0 };
+Prismatic_QEI_StructureTypeDef Prismatic_QEIdata = {0};
 
-enum {
-	NEW, OLD
+enum
+{
+	NEW,
+	OLD
 };
 
 uint8_t Z_index_R;
@@ -188,17 +192,18 @@ uint64_t lock_timer_us = 0;
 //////////////////////
 
 // PID/////////////////
-arm_pid_instance_f32 PID = { 0 };
+arm_pid_instance_f32 PID = {0};
 
-typedef struct {
+typedef struct
+{
 	float integ;
 	float prevError;
 } PID_State;
 
-PID_State pid_r = { 0 };	 // for Revolute
-PID_State pid_p = { 0 };	 // for Prismatic
-PID_State pid_r_v = { 0 }; // for Revolute
-PID_State pid_p_v = { 0 }; // for Prismatic
+PID_State pid_r = {0};	 // for Revolute
+PID_State pid_p = {0};	 // for Prismatic
+PID_State pid_r_v = {0}; // for Revolute
+PID_State pid_p_v = {0}; // for Prismatic
 
 float R_kP_vel = 50.0f;
 float R_kI_vel = 5.00f;
@@ -218,7 +223,8 @@ float P_kD_pos = 0.0067f;
 //////////////////////
 
 // Mode3///////////////
-typedef enum {
+typedef enum
+{
 	CALIB_IDLE,
 	CALIB_WAIT_REMOTE,
 	CALIB_MOVE_P_TO_LIMIT,
@@ -260,7 +266,7 @@ uint8_t Last_Pen_BaseSystem = 0;
 ModbusHandleTypedef hmodbus;
 u16u8_t registerFrame[200];
 uint16_t base_status;
-float TenPointArray[20] = { 0 };
+float TenPointArray[20] = {0};
 bool testArraydone = false;
 uint64_t currentTimer = 0;
 // float RD_Velo_Error;
@@ -297,7 +303,7 @@ void DWT_Init(void);
 float map(float x, float in_min, float in_max, float out_min, float out_max);
 uint64_t micros();
 float PID_Update(float error, float kP, float kI, float kD, float dt,
-		float outMin, float outMax, PID_State *state);
+				 float outMin, float outMax, PID_State *state);
 void Revolute_PosVel_Update();
 void Prismatic_PosVel_Update();
 void Set_Motor(int motor_num, float speed);
@@ -306,6 +312,7 @@ void Reset_R();
 void Reset_P();
 void Workspace_limit();
 
+bool PenDelay(void);
 // Cascade//////////
 int CascadeControl_Step(void);
 void TrapezoidStep(void);
@@ -328,7 +335,8 @@ void ResetAllTargets(void);
  * @brief  The application entry point.
  * @retval int
  */
-int main(void) {
+int main(void)
+{
 
 	/* USER CODE BEGIN 1 */
 	/* USER CODE END 1 */
@@ -409,15 +417,19 @@ int main(void) {
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-	while (1) {
+	while (1)
+	{
 		//////////////////////// <<BaseSystem>> /////////////////////////
-		if (!Test_no_BaseSystem && HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 1) {
+		if (!Test_no_BaseSystem && HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == 1)
+		{
 			Test_no_BaseSystem = true;
 		}
 
 		base_status = REG16(REG_BASE_STATUS);
-		if (EmergencyState == 0) {
-			switch (base_status) {
+		if (EmergencyState == 0)
+		{
+			switch (base_status)
+			{
 			case 1: // Home
 				REG16(REG_MOTION_STATUS) = 1;
 				break;
@@ -434,15 +446,18 @@ int main(void) {
 				break;
 			}
 
-			if (TargetR_BaseSystem != Last_TargetR_BaseSystem) {
+			if (TargetR_BaseSystem != Last_TargetR_BaseSystem)
+			{
 				TargetR = TargetR_BaseSystem;
 				Last_TargetR_BaseSystem = TargetR_BaseSystem;
 			}
-			if (TargetP_BaseSystem != Last_Pen_BaseSystem) {
+			if (TargetP_BaseSystem != Last_Pen_BaseSystem)
+			{
 				TargetP = TargetP_BaseSystem;
 				Last_Pen_BaseSystem = TargetP_BaseSystem;
 			}
-			if (Pen_BaseSystem != Last_Pen_BaseSystem) {
+			if (Pen_BaseSystem != Last_Pen_BaseSystem)
+			{
 				Set_Servo(Pen_BaseSystem);
 				Last_Pen_BaseSystem = Pen_BaseSystem;
 			}
@@ -457,7 +472,8 @@ int main(void) {
 		// Call every 0.001 s
 		static uint64_t timestamp = 0;
 		int64_t currentTime = micros();
-		if (currentTime > timestamp) {
+		if (currentTime > timestamp)
+		{
 			timestamp = currentTime + 1000; // us
 			Revolute_PosVel_Update();
 			Prismatic_PosVel_Update();
@@ -465,73 +481,89 @@ int main(void) {
 		// Call every 0.01 s
 		static uint64_t timestamp1 = 0;
 		int64_t currentTime1 = micros();
-		if (currentTime1 > timestamp1) {
+		if (currentTime1 > timestamp1)
+		{
 			timestamp1 = currentTime1 + 10000; // us
 		}
 		// Call every 0.1 s
 		static uint64_t timestamp2 = 0;
 		int64_t currentTime2 = micros();
-		if (currentTime2 > timestamp2) {
+		if (currentTime2 > timestamp2)
+		{
 			timestamp2 = currentTime2 + 100000; // us
 		}
-		End_x = Prismatic_QEIdata.mmPosition
-				* cosf(Revolute_QEIdata.RadPosition * -1);
-		End_y = Prismatic_QEIdata.mmPosition
-				* sinf(Revolute_QEIdata.RadPosition);
+		End_x = Prismatic_QEIdata.mmPosition * cosf(Revolute_QEIdata.RadPosition * -1);
+		End_y = Prismatic_QEIdata.mmPosition * sinf(Revolute_QEIdata.RadPosition);
 		//////////////////////////////////////////////////////////////
 
 		//////////////////////// <<MODE>> ///////////////////////////
-		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) == 1) {
+		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) == 1)
+		{
 			Mode = 0;
 			EmergencyState = 1;
 			Set_Servo(0);
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
 		}
-		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15) == 1) {
+		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15) == 1)
+		{
 			EmergencyState = 0;
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
 		}
 
-		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11) == 1) {
+		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11) == 1)
+		{
 			Pen_Status = 0;
 		}
-		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_2) == 1) {
+		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_2) == 1)
+		{
 			Pen_Status = 1;
 		}
-		if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 1) {
+		if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 1)
+		{
 			z_temp = 1;
-		} else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 0) {
+		}
+		else if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 0)
+		{
 			z_temp = 0;
 		}
 
 		//////////////////////////////////////////////////////////////
-		if (EmergencyState == 1) {
+		if (EmergencyState == 1)
+		{
 			REG16(REG_MOTION_STATUS) = 0;
 		}
 		//////////////////////////////////////////////////////////////
 
 		//////////////////////// <<GOTO>> ////////////////////////////
-		if ((Mode == 2 && (base_status == 2 || Test_no_BaseSystem))
-				|| base_status == 8) {
+		if ((Mode == 2 && (base_status == 2 || Test_no_BaseSystem)) || base_status == 8)
+		{
 			REG16(REG_MOTION_STATUS) = 8;
 
-			if (TenPointMode) {
+			if (TenPointMode)
+			{
 				TargetR = TenPointArray[(counter * 2) + 1];
 				TargetP = TenPointArray[counter * 2];
 			}
 
-			if (CascadeControl_Step()) {
-				if (PenDelay()) {
-					if (TenPointMode) {
-						if (counter == 9) {
+			if (CascadeControl_Step())
+			{
+				if (PenDelay())
+				{
+					if (TenPointMode)
+					{
+						if (counter == 9)
+						{
 							TenPointMode = false;
 							counter = 0;
 							Mode = 1;
-						} else {
+						}
+						else
+						{
 							counter++;
 						}
 					}
-					if (base_status == 8) {
+					if (base_status == 8)
+					{
 						REG16(REG_MOTION_STATUS) = 0;
 					}
 				}
@@ -540,9 +572,10 @@ int main(void) {
 		//////////////////////////////////////////////////////////////
 
 		//////////////////////// <<CALIBRATING>> /////////////////////
-		if ((Mode == 3 && (base_status == 2 || Test_no_BaseSystem))
-				|| base_status == 1) {
-			switch (calibState) {
+		if ((Mode == 3 && (base_status == 2 || Test_no_BaseSystem)) || base_status == 1)
+		{
+			switch (calibState)
+			{
 			case CALIB_IDLE:
 				Set_Motor(0, 0);
 				Set_Motor(1, 0);
@@ -553,10 +586,13 @@ int main(void) {
 				break;
 
 			case CALIB_WAIT_REMOTE:
-				if (Receiver[0] > 80) {
+				if (Receiver[0] > 80)
+				{
 					Cal_Side = 1;
 					calibState = CALIB_MOVE_P_TO_LIMIT;
-				} else if (Receiver[0] < -80) {
+				}
+				else if (Receiver[0] < -80)
+				{
 					Cal_Side = 2;
 					calibState = CALIB_MOVE_P_TO_LIMIT;
 				}
@@ -565,7 +601,8 @@ int main(void) {
 			case CALIB_MOVE_P_TO_LIMIT:
 				Set_Motor(1, -15);
 
-				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1 || P_Limit > 0) {
+				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1 || P_Limit > 0)
+				{
 					Set_Motor(1, 0);
 					calib_timer = micros();
 					P_Limit = 0;
@@ -576,7 +613,8 @@ int main(void) {
 			case CALIB_WAIT_BACKOFF_P:
 				Set_Motor(1, 0);
 
-				if (micros() - calib_timer > 100000) {
+				if (micros() - calib_timer > 100000)
+				{
 					Set_Motor(1, 15);
 					calib_timer = micros();
 					P_Limit = 0;
@@ -586,7 +624,8 @@ int main(void) {
 			case CALIB_BACKOFF_P:
 				Set_Motor(1, 15);
 
-				if (micros() - calib_timer > 100000) {
+				if (micros() - calib_timer > 100000)
+				{
 					Set_Motor(1, 0);
 					calib_timer = micros();
 					P_Limit = 0;
@@ -597,7 +636,8 @@ int main(void) {
 			case CALIB_WAIT_RETOUCH_P:
 				Set_Motor(1, 0);
 
-				if (micros() - calib_timer > 100000) {
+				if (micros() - calib_timer > 100000)
+				{
 					Set_Motor(1, -5);
 					calib_timer = micros();
 					P_Limit = 0;
@@ -608,7 +648,8 @@ int main(void) {
 			case CALIB_RETOUCH_P:
 				Set_Motor(1, -5);
 
-				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1 || P_Limit > 0) {
+				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1 || P_Limit > 0)
+				{
 					Set_Motor(1, 0);
 					Reset_P();
 					P_Limit = 0;
@@ -622,7 +663,8 @@ int main(void) {
 				else
 					Set_Motor(0, 30);
 
-				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1 || R_Limit > 0) {
+				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1 || R_Limit > 0)
+				{
 					Set_Motor(0, 0);
 					calib_timer = micros();
 					R_Limit = 0;
@@ -633,7 +675,8 @@ int main(void) {
 			case CALIB_WAIT_BACKOFF_R:
 				Set_Motor(0, 0);
 
-				if (micros() - calib_timer > 100000) {
+				if (micros() - calib_timer > 100000)
+				{
 					if (Cal_Side == 1)
 						Set_Motor(0, 30);
 					else
@@ -650,7 +693,8 @@ int main(void) {
 				else
 					Set_Motor(0, -30);
 
-				if (micros() - calib_timer > 200000) {
+				if (micros() - calib_timer > 200000)
+				{
 					Set_Motor(0, 0);
 					calib_timer = micros();
 					R_Limit = 0;
@@ -662,7 +706,8 @@ int main(void) {
 				Set_Motor(0, 0);
 				Z_index_R = 0;
 
-				if (micros() - calib_timer > 100000) {
+				if (micros() - calib_timer > 100000)
+				{
 					if (Cal_Side == 1)
 						Set_Motor(0, -25);
 					else
@@ -680,7 +725,8 @@ int main(void) {
 					Set_Motor(0, 25);
 
 				//				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1 || R_Limit > 0) {
-				if (Z_index_R > 0) {
+				if (Z_index_R > 0)
+				{
 					Set_Motor(0, 0);
 					Reset_R();
 					R_Limit = 0;
@@ -695,7 +741,8 @@ int main(void) {
 				R_Limit = 0;
 				calibState = CALIB_IDLE;
 				//////////////////////////////////////////////////////////////
-				if (base_status == 1) {
+				if (base_status == 1)
+				{
 					REG16(REG_MOTION_STATUS) = 0;
 				}
 				//////////////////////////////////////////////////////////////
@@ -705,18 +752,19 @@ int main(void) {
 		//////////////////////////////////////////////////////////////
 
 		////////////////////////// <<BASESYSTEM>> ////////////////////////
-		if (base_status == 2 || Test_no_BaseSystem) {
-			currentTimer = micros();   // Current time in microseconds
+		if (base_status == 2 || Test_no_BaseSystem)
+		{
+			currentTimer = micros(); // Current time in microseconds
 
 			//////////////////////// <<RECEIVER>> ////////////////////////
 			Receiver_Period[0] = __HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_1);
 			Receiver_Period[1] = __HAL_TIM_GET_COMPARE(&htim1, TIM_CHANNEL_2);
 			float RX_temp = map(
-			__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_2) - 1500.00, -500.00,
-					500.00, -100.00, 100.00);
+				__HAL_TIM_GET_COMPARE(&htim2, TIM_CHANNEL_2) - 1500.00, -500.00,
+				500.00, -100.00, 100.00);
 			float RY_temp = map(
-			__HAL_TIM_GET_COMPARE(&htim1, TIM_CHANNEL_1) - 18530.00, -500.00,
-					500.00, -100.00, 100.00);
+				__HAL_TIM_GET_COMPARE(&htim1, TIM_CHANNEL_1) - 18530.00, -500.00,
+				500.00, -100.00, 100.00);
 
 			if (RX_temp >= -4 && RX_temp <= 4)
 				Receiver[0] = 0.00;
@@ -742,75 +790,96 @@ int main(void) {
 			if (pulse_width_us[2] > 4000.00)
 				pulse_width_us[2] = pulse_width_us[2] - 4900.00;
 
-			Receiver[2] = map((float) pulse_width_us[0] - 1500.00, -500.00,
-					500.00, -100.00, 100.00);
-			Receiver[3] = map((float) pulse_width_us[1] - 1500.00, -500.00,
-					500.00, -100.00, 100.00);
-			Receiver[4] = map((float) pulse_width_us[2] - 1500.00, -500.00,
-					500.00, -100.00, 100.00);
+			Receiver[2] = map((float)pulse_width_us[0] - 1500.00, -500.00,
+							  500.00, -100.00, 100.00);
+			Receiver[3] = map((float)pulse_width_us[1] - 1500.00, -500.00,
+							  500.00, -100.00, 100.00);
+			Receiver[4] = map((float)pulse_width_us[2] - 1500.00, -500.00,
+							  500.00, -100.00, 100.00);
 
 			//		if(Receiver[2] > 1500.00) Receiver[2] = Receiver[2] - 3400.00;
 			//		if(Receiver[3] > 1500.00) Receiver[3] = Receiver[3] - 3400.00;
 			//		if(Receiver[4] > 1500.00) Receiver[4] = Receiver[4] - 3400.00;
 
 			// Adjust as needed
-			vx = map((float) Receiver[0], -100.00, 100.00, -300.00, 300.00);
-			vy = map((float) Receiver[1], -100.00, 100.00, -300.00, 300.00);
+			vx = map((float)Receiver[0], -100.00, 100.00, -300.00, 300.00);
+			vy = map((float)Receiver[1], -100.00, 100.00, -300.00, 300.00);
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////// <<MODE>> ///////////////////////////
 
-			if (EmergencyState == 1) {
+			if (EmergencyState == 1)
+			{
 				Mode = 0;
-			} else if (Receiver[2] < -30 && Receiver[4] < -30) {
+			}
+			else if (Receiver[2] < -30 && Receiver[4] < -30)
+			{
 				Mode = 0;
 				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
-			} else if (Receiver[3] > 0 && IsPress == 0) {
+			}
+			else if (Receiver[3] > 0 && IsPress == 0)
+			{
 				IsPress = 1;
 				calibState = CALIB_IDLE;
-				if (Receiver[2] > -30 && Receiver[2] < 30
-						&& Receiver[4] < -30) {
-					if (Mode != 1) {
+				if (Receiver[2] > -30 && Receiver[2] < 30 && Receiver[4] < -30)
+				{
+					if (Mode != 1)
+					{
 						Mode = 1;
-					} else {
+					}
+					else
+					{
 						TargetX = End_x;
 						TargetY = End_y;
 						TargetR = Revolute_QEIdata.RadPosition;
 						TargetP = Prismatic_QEIdata.mmPosition;
 					}
-				} else if (Receiver[2] > 30 && Receiver[4] < -30) {
+				}
+				else if (Receiver[2] > 30 && Receiver[4] < -30)
+				{
 					revolute.finished = 0;
 					prismatic.finished = 0;
 					Mode = 2;
-				} else if (Receiver[2] < -30 && Receiver[4] > -30
-						&& Receiver[4] < 30) {
+				}
+				else if (Receiver[2] < -30 && Receiver[4] > -30 && Receiver[4] < 30)
+				{
 					Mode = 3;
-				} else if (Receiver[2] > -30 && Receiver[2] < 30
-						&& Receiver[4] > -30 && Receiver[4] < 30) {
+				}
+				else if (Receiver[2] > -30 && Receiver[2] < 30 && Receiver[4] > -30 && Receiver[4] < 30)
+				{
 					revolute.finished = 0;
 					prismatic.finished = 0;
 					Mode = 4;
-				} else if (Receiver[2] > 30 && Receiver[4] > -30
-						&& Receiver[4] < 30) {
+				}
+				else if (Receiver[2] > 30 && Receiver[4] > -30 && Receiver[4] < 30)
+				{
 					Mode = 5;
-				} else if (Receiver[2] < -30 && Receiver[4] > 30) {
+				}
+				else if (Receiver[2] < -30 && Receiver[4] > 30)
+				{
 					Mode = 6;
-				} else if (Receiver[2] > -30 && Receiver[2] < 30
-						&& Receiver[4] > 30) {
+				}
+				else if (Receiver[2] > -30 && Receiver[2] < 30 && Receiver[4] > 30)
+				{
 					Mode = 7;
-				} else if (Receiver[2] > 30 && Receiver[4] > 30) {
-					loop_counter = 0;
+				}
+				else if (Receiver[2] > 30 && Receiver[4] > 30)
+				{
+					// loop_counter = 0;
 					TargetR = 4.18879;
 					TargetP = 50;
 					Mode = 8;
 				}
-			} else {
+			}
+			else
+			{
 				IsPress = 0;
 			}
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////// <<STOP>> ////////////////////////////
-			if (Mode == 0) {
+			if (Mode == 0)
+			{
 				Set_Motor(0, 0);
 				Set_Motor(1, 0);
 				Set_Servo(0);
@@ -818,30 +887,32 @@ int main(void) {
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////// <<MANUAL>> //////////////////////////
-			if (Mode == 1) {
+			if (Mode == 1)
+			{
 				//////////////////////// <<CONTROL>> /////////////////////////
 				//		inv_L = (Prismatic_QEIdata.mmPosition > 1.0f) ? (1.0f / Prismatic_QEIdata.mmPosition) : 0.0f;
 				//		TargetRVel 	= (-sinf(Revolute_QEIdata.RadPosition) * vx + cosf(Revolute_QEIdata.RadPosition) * vy) / inv_L;
 				//		TargetPVel  =  cosf(Revolute_QEIdata.RadPosition) * vx + sinf(Revolute_QEIdata.RadPosition) * vy;
-				TargetRVel = (map((float) Receiver[0], -100.00, 100.00, -1.00,
-						1.00));
-				TargetPVel = map((float) Receiver[1], -100.00, 100.00, -500.00,
-						500.00);
+				TargetRVel = (map((float)Receiver[0], -100.00, 100.00, -1.00,
+								  1.00));
+				TargetPVel = map((float)Receiver[1], -100.00, 100.00, -500.00,
+								 500.00);
 				//////////////////////////////////////////////////////////////
 
 				//////////////////////// <<MOTOR>> ///////////////////////////
 				R_Velo_Error = (TargetRVel - Revolute_QEIdata.Velocity_f);
 				P_Velo_Error = TargetPVel - Prismatic_QEIdata.Velocity;
 
-				//Call every 0.001 s
+				// Call every 0.001 s
 				static uint64_t timestampState1 = 0;
 				int64_t currentTimeState1 = micros();
-				if (currentTimeState1 > timestampState1) {
-					timestampState1 = currentTimeState1 + 1000;		//us
+				if (currentTimeState1 > timestampState1)
+				{
+					timestampState1 = currentTimeState1 + 1000; // us
 					R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel,
-							R_kD_vel, 0.01f, -100.0f, 100.0f, &pid_r_v);
+									   R_kD_vel, 0.01f, -100.0f, 100.0f, &pid_r_v);
 					P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel,
-							P_kD_vel, 0.01f, -100.0f, 100.0f, &pid_p_v);
+									   P_kD_vel, 0.01f, -100.0f, 100.0f, &pid_p_v);
 				}
 
 				//			R_PWM = Receiver[0];
@@ -856,12 +927,14 @@ int main(void) {
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////////////////////////////////////////////
-			if (Mode == 4) {
+			if (Mode == 4)
+			{
 				// TargetR = (atan2f(TargetX * -1, TargetY) + M_PI_2);
 				// TargetP = sqrtf(TargetX * TargetX + TargetY * TargetY);
 
 				TargetR = TargetR_Deg * M_PI / 180;
-				if (CascadeControl_Step()) {
+				if (CascadeControl_Step())
+				{
 					Set_Servo(1);
 					Set_Motor(0, 0);
 					Set_Motor(1, 0);
@@ -872,7 +945,8 @@ int main(void) {
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////////////////////////////////////////////
-			if (Mode == 5) {
+			if (Mode == 5)
+			{
 
 				Workspace_limit();
 				Set_Motor(0, R_PWM);
@@ -881,64 +955,95 @@ int main(void) {
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////////////////////////////////////////////
-			if (Mode == 6) {
+			if (Mode == 6)
+			{
+				static bool PenIsNotDelay = true;
 				static uint64_t lastPressTime6 = 0;
-				if (IsPress && currentTimer - lastPressTime6 >= 2000000) {
-					lastPressTime6 = currentTimer;
-					if (TenPointMode) {
-						Mode = 2;
-					}
-					TenPointArray[counter * 2] = Prismatic_QEIdata.mmPosition;
-					TenPointArray[(counter * 2) + 1] = Revolute_QEIdata.RadPosition;
-					SET_TARGET(counter, Prismatic_QEIdata.mmPosition, Revolute_QEIdata.RadPosition);
+				if (PenIsNotDelay)
+				{
+					if (IsPress && currentTimer - lastPressTime6 >= 2000000)
+					{
+						lastPressTime6 = currentTimer;
+						if (TenPointMode)
+						{
+							Mode = 2;
+						}
+						else
+						{
+							TenPointArray[counter * 2] = Prismatic_QEIdata.mmPosition;
+							TenPointArray[(counter * 2) + 1] = Revolute_QEIdata.RadPosition;
+							SET_TARGET(counter, Prismatic_QEIdata.mmPosition, Revolute_QEIdata.RadPosition);
+							PenIsNotDelay = PenDelay();
 
-					counter++;
-					if (counter >= 10) {
-						counter = 0;
-						testArraydone = true;
-						TenPointMode = true;
+							counter++;
+							if (counter >= 10)
+							{
+								counter = 0;
+								testArraydone = true;
+								TenPointMode = true;
+							}
+						}
 					}
-				} else {
-					Mode = 1;
+					else
+					{
+						Mode = 1;
+					}
+				}
+				else
+				{
+					PenIsNotDelay = PenDelay();
 				}
 			}
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////////////////////////////////////////////
-			if (Mode == 7) {
+			if (Mode == 7)
+			{
 				static uint64_t lastPressTime7 = 0;
-				if (testArraydone && IsPress
-						&& currentTimer - lastPressTime7 >= 2000000) {
+				if (testArraydone && IsPress && currentTimer - lastPressTime7 >= 2000000)
+				{
 					lastPressTime7 = currentTimer;
 					TenPointMode = true;
-				} else {
+				}
+				else
+				{
 					Mode = 2;
 				}
 			}
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////////////////////////////////////////////
-			if (Mode == 8) {
-				if (counter8 < 10) {
+			if (Mode == 8)
+			{
+				if (counter8 < 10)
+				{
 					goCenter8 = true;
 
-					if (goCenter8) {
+					if (goCenter8)
+					{
 						TargetR = M_PI_2;
 						TargetP = 0;
-					} else {
+					}
+					else
+					{
 						TargetR = M_PI_4;
 						TargetP = 150;
 					}
 
-					if (CascadeControl_Step()) {
-						if (PenDelay()) {
-							if (goCenter8) {
+					if (CascadeControl_Step())
+					{
+						if (PenDelay())
+						{
+							if (goCenter8)
+							{
 								counter8++;
 							}
 							goCenter8 = !goCenter8;
 						}
 					}
-				} else if (counter8 >= 10 && IsPress) {
+				}
+				else if (counter8 >= 10 && IsPress)
+				{
 					counter8 = 0;
 				}
 			}
@@ -955,9 +1060,10 @@ int main(void) {
  * @brief System Clock Configuration
  * @retval None
  */
-void SystemClock_Config(void) {
-	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
-	RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
+void SystemClock_Config(void)
+{
+	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
 	/** Configure the main internal regulator output voltage
 	 */
@@ -976,20 +1082,21 @@ void SystemClock_Config(void) {
 	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
 	RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
 	RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
-	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+	{
 		Error_Handler();
 	}
 
 	/** Initializes the CPU, AHB and APB buses clocks
 	 */
-	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
-			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
 	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
+	{
 		Error_Handler();
 	}
 }
@@ -999,15 +1106,16 @@ void SystemClock_Config(void) {
  * @param None
  * @retval None
  */
-static void MX_TIM1_Init(void) {
+static void MX_TIM1_Init(void)
+{
 
 	/* USER CODE BEGIN TIM1_Init 0 */
 
 	/* USER CODE END TIM1_Init 0 */
 
-	TIM_SlaveConfigTypeDef sSlaveConfig = { 0 };
-	TIM_IC_InitTypeDef sConfigIC = { 0 };
-	TIM_MasterConfigTypeDef sMasterConfig = { 0 };
+	TIM_SlaveConfigTypeDef sSlaveConfig = {0};
+	TIM_IC_InitTypeDef sConfigIC = {0};
+	TIM_MasterConfigTypeDef sMasterConfig = {0};
 
 	/* USER CODE BEGIN TIM1_Init 1 */
 
@@ -1019,7 +1127,8 @@ static void MX_TIM1_Init(void) {
 	htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim1.Init.RepetitionCounter = 0;
 	htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_IC_Init(&htim1) != HAL_OK) {
+	if (HAL_TIM_IC_Init(&htim1) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sSlaveConfig.SlaveMode = TIM_SLAVEMODE_RESET;
@@ -1027,32 +1136,34 @@ static void MX_TIM1_Init(void) {
 	sSlaveConfig.TriggerPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
 	sSlaveConfig.TriggerPrescaler = TIM_ICPSC_DIV1;
 	sSlaveConfig.TriggerFilter = 0;
-	if (HAL_TIM_SlaveConfigSynchro(&htim1, &sSlaveConfig) != HAL_OK) {
+	if (HAL_TIM_SlaveConfigSynchro(&htim1, &sSlaveConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
 	sConfigIC.ICSelection = TIM_ICSELECTION_INDIRECTTI;
 	sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
 	sConfigIC.ICFilter = 0;
-	if (HAL_TIM_IC_ConfigChannel(&htim1, &sConfigIC, TIM_CHANNEL_1) != HAL_OK) {
+	if (HAL_TIM_IC_ConfigChannel(&htim1, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
 	sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
-	if (HAL_TIM_IC_ConfigChannel(&htim1, &sConfigIC, TIM_CHANNEL_2) != HAL_OK) {
+	if (HAL_TIM_IC_ConfigChannel(&htim1, &sConfigIC, TIM_CHANNEL_2) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig)
-			!= HAL_OK) {
+	if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM1_Init 2 */
 
 	/* USER CODE END TIM1_Init 2 */
-
 }
 
 /**
@@ -1060,15 +1171,16 @@ static void MX_TIM1_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_TIM2_Init(void) {
+static void MX_TIM2_Init(void)
+{
 
 	/* USER CODE BEGIN TIM2_Init 0 */
 
 	/* USER CODE END TIM2_Init 0 */
 
-	TIM_SlaveConfigTypeDef sSlaveConfig = { 0 };
-	TIM_IC_InitTypeDef sConfigIC = { 0 };
-	TIM_MasterConfigTypeDef sMasterConfig = { 0 };
+	TIM_SlaveConfigTypeDef sSlaveConfig = {0};
+	TIM_IC_InitTypeDef sConfigIC = {0};
+	TIM_MasterConfigTypeDef sMasterConfig = {0};
 
 	/* USER CODE BEGIN TIM2_Init 1 */
 
@@ -1079,7 +1191,8 @@ static void MX_TIM2_Init(void) {
 	htim2.Init.Period = 4294967295;
 	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_IC_Init(&htim2) != HAL_OK) {
+	if (HAL_TIM_IC_Init(&htim2) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sSlaveConfig.SlaveMode = TIM_SLAVEMODE_RESET;
@@ -1087,31 +1200,33 @@ static void MX_TIM2_Init(void) {
 	sSlaveConfig.TriggerPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
 	sSlaveConfig.TriggerPrescaler = TIM_ICPSC_DIV1;
 	sSlaveConfig.TriggerFilter = 0;
-	if (HAL_TIM_SlaveConfigSynchro(&htim2, &sSlaveConfig) != HAL_OK) {
+	if (HAL_TIM_SlaveConfigSynchro(&htim2, &sSlaveConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
 	sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
 	sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
 	sConfigIC.ICFilter = 0;
-	if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_1) != HAL_OK) {
+	if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
 	sConfigIC.ICSelection = TIM_ICSELECTION_INDIRECTTI;
-	if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_2) != HAL_OK) {
+	if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_2) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig)
-			!= HAL_OK) {
+	if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM2_Init 2 */
 
 	/* USER CODE END TIM2_Init 2 */
-
 }
 
 /**
@@ -1119,14 +1234,15 @@ static void MX_TIM2_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_TIM3_Init(void) {
+static void MX_TIM3_Init(void)
+{
 
 	/* USER CODE BEGIN TIM3_Init 0 */
 
 	/* USER CODE END TIM3_Init 0 */
 
-	TIM_Encoder_InitTypeDef sConfig = { 0 };
-	TIM_MasterConfigTypeDef sMasterConfig = { 0 };
+	TIM_Encoder_InitTypeDef sConfig = {0};
+	TIM_MasterConfigTypeDef sMasterConfig = {0};
 
 	/* USER CODE BEGIN TIM3_Init 1 */
 
@@ -1146,19 +1262,19 @@ static void MX_TIM3_Init(void) {
 	sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
 	sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
 	sConfig.IC2Filter = 4;
-	if (HAL_TIM_Encoder_Init(&htim3, &sConfig) != HAL_OK) {
+	if (HAL_TIM_Encoder_Init(&htim3, &sConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig)
-			!= HAL_OK) {
+	if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM3_Init 2 */
 
 	/* USER CODE END TIM3_Init 2 */
-
 }
 
 /**
@@ -1166,14 +1282,15 @@ static void MX_TIM3_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_TIM4_Init(void) {
+static void MX_TIM4_Init(void)
+{
 
 	/* USER CODE BEGIN TIM4_Init 0 */
 
 	/* USER CODE END TIM4_Init 0 */
 
-	TIM_Encoder_InitTypeDef sConfig = { 0 };
-	TIM_MasterConfigTypeDef sMasterConfig = { 0 };
+	TIM_Encoder_InitTypeDef sConfig = {0};
+	TIM_MasterConfigTypeDef sMasterConfig = {0};
 
 	/* USER CODE BEGIN TIM4_Init 1 */
 
@@ -1193,19 +1310,19 @@ static void MX_TIM4_Init(void) {
 	sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
 	sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
 	sConfig.IC2Filter = 4;
-	if (HAL_TIM_Encoder_Init(&htim4, &sConfig) != HAL_OK) {
+	if (HAL_TIM_Encoder_Init(&htim4, &sConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig)
-			!= HAL_OK) {
+	if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM4_Init 2 */
 
 	/* USER CODE END TIM4_Init 2 */
-
 }
 
 /**
@@ -1213,14 +1330,15 @@ static void MX_TIM4_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_TIM5_Init(void) {
+static void MX_TIM5_Init(void)
+{
 
 	/* USER CODE BEGIN TIM5_Init 0 */
 
 	/* USER CODE END TIM5_Init 0 */
 
-	TIM_ClockConfigTypeDef sClockSourceConfig = { 0 };
-	TIM_MasterConfigTypeDef sMasterConfig = { 0 };
+	TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+	TIM_MasterConfigTypeDef sMasterConfig = {0};
 
 	/* USER CODE BEGIN TIM5_Init 1 */
 
@@ -1231,23 +1349,24 @@ static void MX_TIM5_Init(void) {
 	htim5.Init.Period = 4294967295;
 	htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_Base_Init(&htim5) != HAL_OK) {
+	if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-	if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK) {
+	if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig)
-			!= HAL_OK) {
+	if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM5_Init 2 */
 
 	/* USER CODE END TIM5_Init 2 */
-
 }
 
 /**
@@ -1255,16 +1374,17 @@ static void MX_TIM5_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_TIM8_Init(void) {
+static void MX_TIM8_Init(void)
+{
 
 	/* USER CODE BEGIN TIM8_Init 0 */
 
 	/* USER CODE END TIM8_Init 0 */
 
-	TIM_ClockConfigTypeDef sClockSourceConfig = { 0 };
-	TIM_MasterConfigTypeDef sMasterConfig = { 0 };
-	TIM_OC_InitTypeDef sConfigOC = { 0 };
-	TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = { 0 };
+	TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+	TIM_MasterConfigTypeDef sMasterConfig = {0};
+	TIM_OC_InitTypeDef sConfigOC = {0};
+	TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
 
 	/* USER CODE BEGIN TIM8_Init 1 */
 
@@ -1276,21 +1396,24 @@ static void MX_TIM8_Init(void) {
 	htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim8.Init.RepetitionCounter = 0;
 	htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_Base_Init(&htim8) != HAL_OK) {
+	if (HAL_TIM_Base_Init(&htim8) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-	if (HAL_TIM_ConfigClockSource(&htim8, &sClockSourceConfig) != HAL_OK) {
+	if (HAL_TIM_ConfigClockSource(&htim8, &sClockSourceConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
-	if (HAL_TIM_PWM_Init(&htim8) != HAL_OK) {
+	if (HAL_TIM_PWM_Init(&htim8) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim8, &sMasterConfig)
-			!= HAL_OK) {
+	if (HAL_TIMEx_MasterConfigSynchronization(&htim8, &sMasterConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
@@ -1300,12 +1423,12 @@ static void MX_TIM8_Init(void) {
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
 	sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-	if (HAL_TIM_PWM_ConfigChannel(&htim8, &sConfigOC, TIM_CHANNEL_3)
-			!= HAL_OK) {
+	if (HAL_TIM_PWM_ConfigChannel(&htim8, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+	{
 		Error_Handler();
 	}
-	if (HAL_TIM_PWM_ConfigChannel(&htim8, &sConfigOC, TIM_CHANNEL_4)
-			!= HAL_OK) {
+	if (HAL_TIM_PWM_ConfigChannel(&htim8, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
@@ -1321,15 +1444,14 @@ static void MX_TIM8_Init(void) {
 	sBreakDeadTimeConfig.Break2Filter = 0;
 	sBreakDeadTimeConfig.Break2AFMode = TIM_BREAK_AFMODE_INPUT;
 	sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-	if (HAL_TIMEx_ConfigBreakDeadTime(&htim8, &sBreakDeadTimeConfig)
-			!= HAL_OK) {
+	if (HAL_TIMEx_ConfigBreakDeadTime(&htim8, &sBreakDeadTimeConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM8_Init 2 */
 
 	/* USER CODE END TIM8_Init 2 */
 	HAL_TIM_MspPostInit(&htim8);
-
 }
 
 /**
@@ -1337,16 +1459,17 @@ static void MX_TIM8_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_TIM15_Init(void) {
+static void MX_TIM15_Init(void)
+{
 
 	/* USER CODE BEGIN TIM15_Init 0 */
 
 	/* USER CODE END TIM15_Init 0 */
 
-	TIM_ClockConfigTypeDef sClockSourceConfig = { 0 };
-	TIM_MasterConfigTypeDef sMasterConfig = { 0 };
-	TIM_OC_InitTypeDef sConfigOC = { 0 };
-	TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = { 0 };
+	TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+	TIM_MasterConfigTypeDef sMasterConfig = {0};
+	TIM_OC_InitTypeDef sConfigOC = {0};
+	TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
 
 	/* USER CODE BEGIN TIM15_Init 1 */
 
@@ -1358,20 +1481,23 @@ static void MX_TIM15_Init(void) {
 	htim15.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim15.Init.RepetitionCounter = 0;
 	htim15.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_Base_Init(&htim15) != HAL_OK) {
+	if (HAL_TIM_Base_Init(&htim15) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-	if (HAL_TIM_ConfigClockSource(&htim15, &sClockSourceConfig) != HAL_OK) {
+	if (HAL_TIM_ConfigClockSource(&htim15, &sClockSourceConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
-	if (HAL_TIM_PWM_Init(&htim15) != HAL_OK) {
+	if (HAL_TIM_PWM_Init(&htim15) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	if (HAL_TIMEx_MasterConfigSynchronization(&htim15, &sMasterConfig)
-			!= HAL_OK) {
+	if (HAL_TIMEx_MasterConfigSynchronization(&htim15, &sMasterConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
@@ -1381,8 +1507,8 @@ static void MX_TIM15_Init(void) {
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
 	sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-	if (HAL_TIM_PWM_ConfigChannel(&htim15, &sConfigOC, TIM_CHANNEL_1)
-			!= HAL_OK) {
+	if (HAL_TIM_PWM_ConfigChannel(&htim15, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
@@ -1393,15 +1519,14 @@ static void MX_TIM15_Init(void) {
 	sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
 	sBreakDeadTimeConfig.BreakFilter = 0;
 	sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-	if (HAL_TIMEx_ConfigBreakDeadTime(&htim15, &sBreakDeadTimeConfig)
-			!= HAL_OK) {
+	if (HAL_TIMEx_ConfigBreakDeadTime(&htim15, &sBreakDeadTimeConfig) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM15_Init 2 */
 
 	/* USER CODE END TIM15_Init 2 */
 	HAL_TIM_MspPostInit(&htim15);
-
 }
 
 /**
@@ -1409,7 +1534,8 @@ static void MX_TIM15_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_TIM16_Init(void) {
+static void MX_TIM16_Init(void)
+{
 
 	/* USER CODE BEGIN TIM16_Init 0 */
 
@@ -1425,16 +1551,17 @@ static void MX_TIM16_Init(void) {
 	htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim16.Init.RepetitionCounter = 0;
 	htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-	if (HAL_TIM_Base_Init(&htim16) != HAL_OK) {
+	if (HAL_TIM_Base_Init(&htim16) != HAL_OK)
+	{
 		Error_Handler();
 	}
-	if (HAL_TIM_OnePulse_Init(&htim16, TIM_OPMODE_SINGLE) != HAL_OK) {
+	if (HAL_TIM_OnePulse_Init(&htim16, TIM_OPMODE_SINGLE) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM16_Init 2 */
 
 	/* USER CODE END TIM16_Init 2 */
-
 }
 
 /**
@@ -1442,7 +1569,8 @@ static void MX_TIM16_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_USART2_UART_Init(void) {
+static void MX_USART2_UART_Init(void)
+{
 
 	/* USER CODE BEGIN USART2_Init 0 */
 
@@ -1462,30 +1590,32 @@ static void MX_USART2_UART_Init(void) {
 	huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
 	huart2.Init.ClockPrescaler = UART_PRESCALER_DIV1;
 	huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-	if (HAL_UART_Init(&huart2) != HAL_OK) {
+	if (HAL_UART_Init(&huart2) != HAL_OK)
+	{
 		Error_Handler();
 	}
-	if (HAL_UARTEx_SetTxFifoThreshold(&huart2, UART_TXFIFO_THRESHOLD_1_8)
-			!= HAL_OK) {
+	if (HAL_UARTEx_SetTxFifoThreshold(&huart2, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+	{
 		Error_Handler();
 	}
-	if (HAL_UARTEx_SetRxFifoThreshold(&huart2, UART_RXFIFO_THRESHOLD_1_8)
-			!= HAL_OK) {
+	if (HAL_UARTEx_SetRxFifoThreshold(&huart2, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+	{
 		Error_Handler();
 	}
-	if (HAL_UARTEx_DisableFifoMode(&huart2) != HAL_OK) {
+	if (HAL_UARTEx_DisableFifoMode(&huart2) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN USART2_Init 2 */
 
 	/* USER CODE END USART2_Init 2 */
-
 }
 
 /**
  * Enable DMA controller clock
  */
-static void MX_DMA_Init(void) {
+static void MX_DMA_Init(void)
+{
 
 	/* DMA controller clock enable */
 	__HAL_RCC_DMAMUX1_CLK_ENABLE();
@@ -1498,7 +1628,6 @@ static void MX_DMA_Init(void) {
 	/* DMA1_Channel2_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
-
 }
 
 /**
@@ -1506,8 +1635,9 @@ static void MX_DMA_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_GPIO_Init(void) {
-	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+static void MX_GPIO_Init(void)
+{
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	/* USER CODE BEGIN MX_GPIO_Init_1 */
 	/* USER CODE END MX_GPIO_Init_1 */
 
@@ -1522,7 +1652,7 @@ static void MX_GPIO_Init(void) {
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_12,
-			GPIO_PIN_RESET);
+					  GPIO_PIN_RESET);
 
 	/*Configure GPIO pin : PC13 */
 	GPIO_InitStruct.Pin = GPIO_PIN_13;
@@ -1607,15 +1737,18 @@ static void MX_GPIO_Init(void) {
 }
 
 /* USER CODE BEGIN 4 */
-bool PenDelay() {
+bool PenDelay()
+{
 	static bool timerStarted = false;
-	if (!timerStarted) {
+	if (!timerStarted)
+	{
 		pen_delay_timer = micros();
 		Set_Servo(1);
 		timerStarted = true;
 	}
 	// check if 500 ms have passed
-	if (micros() - pen_delay_timer >= 500000UL) {
+	if (micros() - pen_delay_timer >= 500000UL)
+	{
 		Set_Servo(0);
 		timerStarted = false;
 		return true;
@@ -1623,45 +1756,61 @@ bool PenDelay() {
 	return false;
 }
 
-float map(float x, float in_min, float in_max, float out_min, float out_max) {
+float map(float x, float in_min, float in_max, float out_min, float out_max)
+{
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-void DWT_Init(void) {
+void DWT_Init(void)
+{
 	CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
 	DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 }
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	if (GPIO_Pin == GPIO_PIN_9) {
-		if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 1) {
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if (GPIO_Pin == GPIO_PIN_9)
+	{
+		if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 1)
+		{
 			Z_index_R += 1;
 		}
 	}
-	if (GPIO_Pin == GPIO_PIN_10) {
-		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) == 1) {
+	if (GPIO_Pin == GPIO_PIN_10)
+	{
+		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10) == 1)
+		{
 			Mode = 0;
 			EmergencyState = 1;
 		}
 	}
-	if (GPIO_Pin == GPIO_PIN_12) {
-		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1) {
+	if (GPIO_Pin == GPIO_PIN_12)
+	{
+		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1)
+		{
 			P_Limit = 1;
-		} else {
+		}
+		else
+		{
 			P_Limit = 0;
 		}
 	}
-	if (GPIO_Pin == GPIO_PIN_13) {
-		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1) {
+	if (GPIO_Pin == GPIO_PIN_13)
+	{
+		if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1)
+		{
 			R_Limit = 1;
-		} else {
+		}
+		else
+		{
 			R_Limit = 0;
 		}
 	}
-	if (GPIO_Pin == GPIO_PIN_15) {
+	if (GPIO_Pin == GPIO_PIN_15)
+	{
 		EmergencyState = 0;
 	}
 
-	static uint8_t state[3] = { 0 }; // 0 = waiting for rise, 1 = waiting for fall
+	static uint8_t state[3] = {0}; // 0 = waiting for rise, 1 = waiting for fall
 
 	uint32_t now = DWT->CYCCNT;
 	uint32_t idx;
@@ -1675,31 +1824,36 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	else
 		return;
 
-	if (state[idx] == 0) {
+	if (state[idx] == 0)
+	{
 		rise_time[idx] = now;
 		state[idx] = 1;
-	} else {
+	}
+	else
+	{
 		uint32_t delta =
-				(now >= rise_time[idx]) ?
-						(now - rise_time[idx]) :
-						(0xFFFFFFFF - rise_time[idx] + now);
+			(now >= rise_time[idx]) ? (now - rise_time[idx]) : (0xFFFFFFFF - rise_time[idx] + now);
 		pulse_width_us[idx] = delta / (SystemCoreClock / 1000000);
 		state[idx] = 0;
 	}
 }
 
 // MicroSecondTimer Implement
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	if (htim == &htim5) {
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if (htim == &htim5)
+	{
 		_micros += UINT32_MAX;
 	}
 }
-uint64_t micros() {
+uint64_t micros()
+{
 	return __HAL_TIM_GET_COUNTER(&htim5) + _micros;
 }
 
 float PID_Update(float error, float kP, float kI, float kD, float dt,
-		float outMin, float outMax, PID_State *state) {
+				 float outMin, float outMax, PID_State *state)
+{
 	/* --- Proportional -------------------------------------- */
 	float Pout = kP * error;
 
@@ -1730,7 +1884,8 @@ float PID_Update(float error, float kP, float kI, float kD, float dt,
 	return out;
 }
 
-void Revolute_PosVel_Update() {
+void Revolute_PosVel_Update()
+{
 	// Collect data
 	Revolute_QEIdata.TimeStamp[NEW] = micros();
 	Revolute_QEIdata.Position[NEW] = __HAL_TIM_GET_COUNTER(&htim4);
@@ -1739,8 +1894,7 @@ void Revolute_PosVel_Update() {
 	Revolute_QEIdata.QEIPostion_1turn = Revolute_QEIdata.Position[NEW] % 16384;
 
 	// Calculate position difference
-	int32_t diffPosition_r = Revolute_QEIdata.Position[NEW]
-			- Revolute_QEIdata.Position[OLD];
+	int32_t diffPosition_r = Revolute_QEIdata.Position[NEW] - Revolute_QEIdata.Position[OLD];
 
 	// Handle wrap-around
 	if (diffPosition_r > (65536 / 2))
@@ -1749,17 +1903,15 @@ void Revolute_PosVel_Update() {
 		diffPosition_r += 65536;
 
 	// Time difference in seconds
-	float diffTime_r = (Revolute_QEIdata.TimeStamp[NEW]
-			- Revolute_QEIdata.TimeStamp[OLD]) * 0.000001f;
+	float diffTime_r = (Revolute_QEIdata.TimeStamp[NEW] - Revolute_QEIdata.TimeStamp[OLD]) * 0.000001f;
 	if (diffTime_r == 0)
 		return;
 
 	// Raw angular velocity in counts/sec
-	float Vel_counts_r = (float) diffPosition_r / diffTime_r;
+	float Vel_counts_r = (float)diffPosition_r / diffTime_r;
 
 	// Raw angular acceleration in counts/sec²
-	Revolute_QEIdata.QEIAcceleration = (Vel_counts_r
-			- Revolute_QEIdata.QEIVelocity) / diffTime_r;
+	Revolute_QEIdata.QEIAcceleration = (Vel_counts_r - Revolute_QEIdata.QEIVelocity) / diffTime_r;
 
 	// Store raw velocity
 	Revolute_QEIdata.QEIVelocity = Vel_counts_r;
@@ -1767,19 +1919,16 @@ void Revolute_PosVel_Update() {
 	// Angular velocity in rad/s
 	Revolute_QEIdata.Velocity = Vel_counts_r * (2.0f * M_PI / 16384.0f);
 	float R_alpha = 0.4f;
-	Revolute_QEIdata.Velocity_f = R_alpha * Revolute_QEIdata.Velocity
-			+ (1 - R_alpha) * Revolute_QEIdata.Velocity_f;
+	Revolute_QEIdata.Velocity_f = R_alpha * Revolute_QEIdata.Velocity + (1 - R_alpha) * Revolute_QEIdata.Velocity_f;
 
 	// Angular acceleration in rad/s²
-	Revolute_QEIdata.Acceleration = Revolute_QEIdata.QEIAcceleration
-			* (2.0f * M_PI / 16384.0f);
+	Revolute_QEIdata.Acceleration = Revolute_QEIdata.QEIAcceleration * (2.0f * M_PI / 16384.0f);
 
 	// Absolute position update
 	Revolute_QEIdata.AbsolutePosition += diffPosition_r;
 
 	// Rad position
-	Revolute_QEIdata.RadPosition = Revolute_QEIdata.AbsolutePosition
-			* (2.0f * M_PI / 16384.0f);
+	Revolute_QEIdata.RadPosition = Revolute_QEIdata.AbsolutePosition * (2.0f * M_PI / 16384.0f);
 
 	// Deg position
 	Revolute_QEIdata.DegPosition = Revolute_QEIdata.RadPosition * 180 / M_PI;
@@ -1789,14 +1938,14 @@ void Revolute_PosVel_Update() {
 	Revolute_QEIdata.TimeStamp[OLD] = Revolute_QEIdata.TimeStamp[NEW];
 }
 
-void Prismatic_PosVel_Update() {
+void Prismatic_PosVel_Update()
+{
 	// Collect data
 	Prismatic_QEIdata.TimeStamp[NEW] = micros();
 	Prismatic_QEIdata.Position[NEW] = __HAL_TIM_GET_COUNTER(&htim3);
 
 	// Calculate position difference
-	int32_t diffPosition_p = Prismatic_QEIdata.Position[NEW]
-			- Prismatic_QEIdata.Position[OLD];
+	int32_t diffPosition_p = Prismatic_QEIdata.Position[NEW] - Prismatic_QEIdata.Position[OLD];
 
 	// Handle wrap-around
 	if (diffPosition_p > (65536 / 2))
@@ -1805,17 +1954,15 @@ void Prismatic_PosVel_Update() {
 		diffPosition_p += 65536;
 
 	// Time difference in seconds
-	float diffTime_p = (Prismatic_QEIdata.TimeStamp[NEW]
-			- Prismatic_QEIdata.TimeStamp[OLD]) * 0.000001f;
+	float diffTime_p = (Prismatic_QEIdata.TimeStamp[NEW] - Prismatic_QEIdata.TimeStamp[OLD]) * 0.000001f;
 	if (diffTime_p == 0)
 		return;
 
 	// Raw angular velocity in counts/sec
-	float Vel_counts_p = (float) diffPosition_p / diffTime_p;
+	float Vel_counts_p = (float)diffPosition_p / diffTime_p;
 
 	// Raw angular acceleration in counts/sec²
-	Prismatic_QEIdata.QEIAcceleration = (Vel_counts_p
-			- Prismatic_QEIdata.QEIVelocity) / diffTime_p;
+	Prismatic_QEIdata.QEIAcceleration = (Vel_counts_p - Prismatic_QEIdata.QEIVelocity) / diffTime_p;
 
 	// Store raw velocity
 	Prismatic_QEIdata.QEIVelocity = Vel_counts_p;
@@ -1823,85 +1970,104 @@ void Prismatic_PosVel_Update() {
 	// Velocity in mm/s
 	Prismatic_QEIdata.Velocity = Vel_counts_p * (10.0f / 8192.0f);
 	float P_alpha = 0.4f;
-	Prismatic_QEIdata.Velocity_f = P_alpha * Prismatic_QEIdata.Velocity
-			+ (1 - P_alpha) * Prismatic_QEIdata.Velocity_f;
+	Prismatic_QEIdata.Velocity_f = P_alpha * Prismatic_QEIdata.Velocity + (1 - P_alpha) * Prismatic_QEIdata.Velocity_f;
 
 	// Acceleration in mm/s²
-	Prismatic_QEIdata.Acceleration = Prismatic_QEIdata.QEIAcceleration
-			* (10.0f / 8192.0f);
+	Prismatic_QEIdata.Acceleration = Prismatic_QEIdata.QEIAcceleration * (10.0f / 8192.0f);
 
 	// Absolute position update
 	Prismatic_QEIdata.AbsolutePosition += diffPosition_p;
 
 	// mm position
-	Prismatic_QEIdata.mmPosition = Prismatic_QEIdata.AbsolutePosition
-			* (10.0f / 8192.0f);
+	Prismatic_QEIdata.mmPosition = Prismatic_QEIdata.AbsolutePosition * (10.0f / 8192.0f);
 
 	// Store previous values
 	Prismatic_QEIdata.Position[OLD] = Prismatic_QEIdata.Position[NEW];
 	Prismatic_QEIdata.TimeStamp[OLD] = Prismatic_QEIdata.TimeStamp[NEW];
 }
 
-void Set_Motor(int motor_num, float speed) {
+void Set_Motor(int motor_num, float speed)
+{
 	if (speed > 100.0f)
 		speed = 100.0f;
 	if (speed < -100.0f)
 		speed = -100.0f;
-	uint32_t pwm_value = (uint32_t) ((fabsf(speed) * 100) / 100);
-	if (motor_num == 0) {
-		if (speed > 0) {
+	uint32_t pwm_value = (uint32_t)((fabsf(speed) * 100) / 100);
+	if (motor_num == 0)
+	{
+		if (speed > 0)
+		{
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_RESET);
-		} else if (speed < 0) {
+		}
+		else if (speed < 0)
+		{
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_5, GPIO_PIN_SET);
 		}
 		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, pwm_value);
-	} else if (motor_num == 1) {
-		if (speed > 0) {
+	}
+	else if (motor_num == 1)
+	{
+		if (speed > 0)
+		{
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
-		} else if (speed < 0) {
+		}
+		else if (speed < 0)
+		{
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
 		}
 		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_4, pwm_value);
 	}
 }
 
-void Set_Servo(int Pen_Pos) {
-	if (Pen_Pos == 0) {
+void Set_Servo(int Pen_Pos)
+{
+	if (Pen_Pos == 0)
+	{
 		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 500);
 		Pen_Status_in = 0;
 		servo_timer = micros();
-	} else {
+	}
+	else
+	{
 		__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_1, 1000);
 		Pen_Status_in = 1;
 	}
 }
 
-void Reset_R() {
+void Reset_R()
+{
 	Revolute_QEIdata.AbsolutePosition = M_PI_2 / (2.0f * M_PI / 16384.0f);
 	//	Revolute_QEIdata.RadPosition = M_PI_2;
 }
-void Reset_P() {
+void Reset_P()
+{
 	Prismatic_QEIdata.AbsolutePosition = -2.00 / (10.0f / 8192.0f);
 	//	Prismatic_QEIdata.mmPosition = 0;
 }
 
-void Workspace_limit() {
-	if (Revolute_QEIdata.RadPosition < -1.91986 && R_PWM > 0) {
+void Workspace_limit()
+{
+	if (Revolute_QEIdata.RadPosition < -1.91986 && R_PWM > 0)
+	{
 		R_PWM = 0;
 	}
-	if (Revolute_QEIdata.RadPosition > 5.06145 && R_PWM < 0) {
+	if (Revolute_QEIdata.RadPosition > 5.06145 && R_PWM < 0)
+	{
 		R_PWM = 0;
 	}
-	if (Prismatic_QEIdata.mmPosition > 305 && P_PWM > 0) {
+	if (Prismatic_QEIdata.mmPosition > 305 && P_PWM > 0)
+	{
 		P_PWM = 0;
 	}
-	if (Prismatic_QEIdata.mmPosition < -1 && P_PWM < 0) {
+	if (Prismatic_QEIdata.mmPosition < -1 && P_PWM < 0)
+	{
 		P_PWM = 0;
 	}
 }
 
 void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
-		float *rev_ang_vel_rad, float *rev_ang_acc_rad, float *rev_rad_pos) {
+				 float *rev_ang_vel_rad, float *rev_ang_acc_rad, float *rev_rad_pos)
+{
 	if (prism_vel_mm)
 		*prism_vel_mm = Prismatic_QEIdata.Velocity;
 	if (prism_acc_mm)
@@ -1916,10 +2082,12 @@ void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
 		*rev_rad_pos = Revolute_QEIdata.RadPosition;
 }
 
-float Trapezoidal_CalcTotalTime(float distance, float vmax, float amax) {
+float Trapezoidal_CalcTotalTime(float distance, float vmax, float amax)
+{
 	float t_acc = vmax / amax;
 	float d_acc = 0.5f * amax * t_acc * t_acc;
-	if (2 * d_acc > distance) {
+	if (2 * d_acc > distance)
+	{
 		t_acc = sqrtf(distance / amax);
 		return 2 * t_acc;
 	}
@@ -1928,36 +2096,41 @@ float Trapezoidal_CalcTotalTime(float distance, float vmax, float amax) {
 	return 2 * t_acc + t_const;
 }
 
-float Trapezoidal_CalcVmaxFromTime(float distance, float amax, float total_time) {
+float Trapezoidal_CalcVmaxFromTime(float distance, float amax, float total_time)
+{
 	float t_half = total_time / 2.0f;
 	float d_half = distance / 2.0f;
 
 	float v_peak = amax * t_half;
-	if (0.5f * v_peak * t_half >= d_half) {
+	if (0.5f * v_peak * t_half >= d_half)
+	{
 		return sqrtf(distance * amax);
 	}
 	return (distance - 0.5f * amax * t_half * t_half) / t_half;
 }
 
-void TrapezoidStep(void) {
-//	static float last_TargetR = 0.0f;
-//	static float last_TargetP = 0.0f;
+void TrapezoidStep(void)
+{
+	//	static float last_TargetR = 0.0f;
+	//	static float last_TargetP = 0.0f;
 
 	// 2a) Detect setpoint jump (revolute, in radians)
 	float r_diff = fabsf(TargetR - last_TargetR);
-	if (r_diff > 0.001f) {
+	if (r_diff > 0.001f)
+	{
 		// Re‐init revolute trapezoid: distance_to_go = R_Pos_Error (rad)
-		Trapezoidal_Init(&revolute, R_Pos_Error, /*maxVel*/1.40f, /*maxAcc*/
-		9.0f);
+		Trapezoidal_Init(&revolute, R_Pos_Error, /*maxVel*/ 1.40f, /*maxAcc*/
+						 9.0f);
 		last_TargetR = TargetR;
 	}
 
 	// 2b) Detect setpoint jump (prismatic, in mm)
 	float p_diff = fabsf(TargetP - last_TargetP);
-	if (p_diff > 0.01f) {
+	if (p_diff > 0.01f)
+	{
 		// Re‐init prismatic trapezoid: distance_to_go = P_Pos_Error (mm)
-		Trapezoidal_Init(&prismatic, P_Pos_Error, /*maxVel*/600.0f, /*maxAcc*/
-		3000.0f);
+		Trapezoidal_Init(&prismatic, P_Pos_Error, /*maxVel*/ 600.0f, /*maxAcc*/
+						 3000.0f);
 		last_TargetP = TargetP;
 	}
 
@@ -1973,14 +2146,16 @@ void TrapezoidStep(void) {
 	TargetPAcc = prismatic.current_acceleration;
 }
 
-void PIDStep(void) {
+void PIDStep(void)
+{
 	static int loop_counter1 = 0;
 	static float R_Target_Velocity = 0.0f;
 	static float P_Target_Velocity = 0.0f;
 
 	loop_counter1++;
 	// 3a) Outer‐loop (position) PID every 10 ms
-	if (loop_counter1 >= 10) {
+	if (loop_counter1 >= 10)
+	{
 		loop_counter1 = 0;
 
 		// Recompute “true” pos‐errors
@@ -1989,12 +2164,12 @@ void PIDStep(void) {
 
 		// Position‐PID → corrective velocity for revolute
 		float R_corr_vel = PID_Update(R_Pos_now, R_kP_pos, R_kI_pos, R_kD_pos,
-				0.010f, // dt = 10 ms
-				-100.0f, +100.0f, &pid_r);
+									  0.010f, // dt = 10 ms
+									  -100.0f, +100.0f, &pid_r);
 
 		// Position‐PID → corrective velocity for prismatic
 		float P_corr_vel = PID_Update(P_Pos_now, P_kP_pos, P_kI_pos, P_kD_pos,
-				0.010f, -100.0f, +100.0f, &pid_p);
+									  0.010f, -100.0f, +100.0f, &pid_p);
 
 		// Combine with feedforward velocities
 		R_Target_Velocity = TargetRVel + R_corr_vel;
@@ -2004,32 +2179,39 @@ void PIDStep(void) {
 	// 3b) Inner‐loop (velocity) PID _every_ 1 ms:
 	R_Velo_Error = R_Target_Velocity - Revolute_QEIdata.Velocity_f;
 	R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel, R_kD_vel, 0.001f, // dt = 1 ms
-			-100.0f, +100.0f, &pid_r_v);
+					   -100.0f, +100.0f, &pid_r_v);
 
 	P_Velo_Error = P_Target_Velocity - Prismatic_QEIdata.Velocity_f;
 	P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel, P_kD_vel, 0.001f,
-			-100.0f, +100.0f, &pid_p_v);
+					   -100.0f, +100.0f, &pid_p_v);
 }
 
-int ToleranceCheck(void) {
+int ToleranceCheck(void)
+{
 	static uint64_t lock_timer_us = 0;
 
-	if ((fabsf(TargetR - Revolute_QEIdata.RadPosition) < R_ERR_TOL_RAD)
-			&& (fabsf(TargetP - Prismatic_QEIdata.mmPosition) < P_ERR_TOL_MM)) {
-		if (lock_timer_us == 0) {
+	if ((fabsf(TargetR - Revolute_QEIdata.RadPosition) < R_ERR_TOL_RAD) && (fabsf(TargetP - Prismatic_QEIdata.mmPosition) < P_ERR_TOL_MM))
+	{
+		if (lock_timer_us == 0)
+		{
 			lock_timer_us = micros();
-		} else if ((micros() - lock_timer_us) >= HOLD_TIME_US) {
+		}
+		else if ((micros() - lock_timer_us) >= HOLD_TIME_US)
+		{
 			// We have stayed inside tolerance for long enough → “lock & hold”
 			return 1;
 		}
-	} else {
+	}
+	else
+	{
 		lock_timer_us = 0;
 	}
 
 	return 0;
 }
 
-int CascadeControl_Step(void) {
+int CascadeControl_Step(void)
+{
 	static uint64_t timestampState2 = 0;
 
 	// 1a) Convert desired‐angle (deg) → (rad) and compute current pos‐errors
@@ -2040,7 +2222,8 @@ int CascadeControl_Step(void) {
 
 	// 1b) 1 ms timer check
 	uint64_t nowtimestamp = micros();
-	if (nowtimestamp <= timestampState2) {
+	if (nowtimestamp <= timestampState2)
+	{
 		// Not yet 1 ms since last run → bail out
 		return 0;
 	}
@@ -2061,146 +2244,38 @@ int CascadeControl_Step(void) {
 	// 5) Tolerance‐check + “lock & hold” (servo + zero motors) if arrived
 	CheckTolerance = ToleranceCheck();
 	return CheckTolerance;
-//	return ToleranceCheck();
+	//	return ToleranceCheck();
 }
-
-// void CascadeControl_Step(void)
-// {
-// 	static uint64_t timestampState2 = 0;
-// 	static int loop_counter = 0;
-// 	static float last_TargetR = 0.0f;
-// 	static float last_TargetP = 0.0f;
-// 	static float R_Target_Velocity = 0.0f;
-// 	static float P_Target_Velocity = 0.0f;
-// 	static uint64_t lock_timer_us = 0;
-
-// 	// 1) Convert desired angle to radians, compute pos‐error
-// 	TargetR = TargetR_Deg * M_PI / 180.0f;
-// 	R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
-// 	P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
-// 	R_Pos_Error_Deg = R_Pos_Error * 180 / M_PI;
-
-// 	uint64_t currentTimeState2 = micros();
-// 	if (currentTimeState2 <= timestampState2)
-// 	{
-// 		return; // not yet time for the next 1 ms tick
-// 	}
-// 	timestampState2 = currentTimeState2 + 1000; // schedule next tick in 1 ms
-// 	loop_counter++;
-
-// 	// 2) Re‐init trapezoid if setpoint jumped
-// 	float r_target_diff = fabsf(TargetR - last_TargetR);
-// 	float p_target_diff = fabsf(TargetP - last_TargetP);
-// 	if (r_target_diff > 0.001f)
-// 	{
-// 		Trapezoidal_Init(&revolute, R_Pos_Error, 1.40f, 9.0f);
-// 		last_TargetR = TargetR;
-// 	}
-// 	if (p_target_diff > 0.01f)
-// 	{
-// 		Trapezoidal_Init(&prismatic, P_Pos_Error, 600.0f, 3000.0f);
-// 		last_TargetP = TargetP;
-// 	}
-
-// 	// 3) Update trapezoids, get feedforward pos/vel
-// 	Trapezoidal_Update(&revolute, 0.001f);
-// 	TargetRPos = revolute.current_position;
-// 	TargetRVel = revolute.current_velocity;
-// 	TargetRAcc = revolute.current_acceleration;
-// 	Trapezoidal_Update(&prismatic, 0.001f);
-// 	TargetPPos = prismatic.current_position;
-// 	TargetPVel = prismatic.current_velocity;
-// 	TargetPAcc = prismatic.current_acceleration;
-
-// 	// 4) Outer‐loop position PID every 10 ms
-// 	if (loop_counter >= 10)
-// 	{
-// 		loop_counter = 0;
-// 		float R_Pos_Error_now = TargetR - Revolute_QEIdata.RadPosition;
-// 		float P_Pos_Error_now = TargetP - Prismatic_QEIdata.mmPosition;
-
-// 		float R_Corrective_Vel = PID_Update(
-// 			R_Pos_Error_now,
-// 			R_kP_pos, R_kI_pos, R_kD_pos,
-// 			0.010f, -100.0f, +100.0f,
-// 			&pid_r);
-// 		float P_Corrective_Vel = PID_Update(
-// 			P_Pos_Error_now,
-// 			P_kP_pos, P_kI_pos, P_kD_pos,
-// 			0.010f, -100.0f, +100.0f,
-// 			&pid_p);
-// 		R_Target_Velocity = TargetRVel + R_Corrective_Vel;
-// 		P_Target_Velocity = TargetPVel + P_Corrective_Vel;
-// 	}
-
-// 	// 5) Inner‐loop velocity PID every 1 ms
-// 	R_Velo_Error = R_Target_Velocity - Revolute_QEIdata.Velocity_f;
-// 	R_PWM = PID_Update(
-// 		R_Velo_Error,
-// 		R_kP_vel, R_kI_vel, R_kD_vel,
-// 		0.001f, -100.0f, +100.0f,
-// 		&pid_r_v);
-// 	P_Velo_Error = P_Target_Velocity - Prismatic_QEIdata.Velocity_f;
-// 	P_PWM = PID_Update(
-// 		P_Velo_Error,
-// 		P_kP_vel, P_kI_vel, P_kD_vel,
-// 		0.001f, -100.0f, +100.0f,
-// 		&pid_p_v);
-
-// 	// 6) Apply workspace limits & issue motor commands
-// 	Workspace_limit();
-// 	Set_Motor(0, R_PWM);
-// 	Set_Motor(1, P_PWM);
-
-// 	// 7) “Lock & hold” if within tolerance for HOLD_TIME_US
-// 	if (fabsf(TargetR - Revolute_QEIdata.RadPosition) < R_ERR_TOL_RAD && fabsf(TargetP - Prismatic_QEIdata.mmPosition) < P_ERR_TOL_MM)
-// 	{
-// 		if (lock_timer_us == 0)
-// 		{
-// 			lock_timer_us = micros();
-// 		}
-// 		else if ((micros() - lock_timer_us) >= HOLD_TIME_US)
-// 		{
-// 			Set_Servo(1);
-// 			Set_Motor(0, 0);
-// 			Set_Motor(1, 0);
-// 			revolute.finished = 0;
-// 			prismatic.finished = 0;
-// 		}
-// 	}
-// 	else
-// 	{
-// 		lock_timer_us = 0;
-// 	}
-// }
 /* USER CODE END 4 */
 
 /**
  * @brief  This function is executed in case of error occurrence.
  * @retval None
  */
-void Error_Handler(void) {
+void Error_Handler(void)
+{
 	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
-	while (1) {
+	while (1)
+	{
 	}
 	/* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* USER CODE BEGIN 6 */
+	/* USER CODE BEGIN 6 */
 	/* User can add his own implementation to report the file name and line number,
 	   ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
+	/* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
