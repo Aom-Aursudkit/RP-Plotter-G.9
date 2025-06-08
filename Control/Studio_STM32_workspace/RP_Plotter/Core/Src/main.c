@@ -34,6 +34,12 @@
 #include "Trapezoidal.h"
 //////////////////////
 
+// FIBO_G09///////////
+#include "all_path.h"
+#include "dora.h"
+#include <stdbool.h>
+//////////////////////
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -314,6 +320,16 @@ int ToleranceCheck(void);
 void processTargets(void);
 void ResetAllTargets(void);
 //////////////////////
+
+// FIBO_G09//////////
+float Trapezoidal_CalcTotalTime(float distance, float vmax, float amax);
+float Trapezoidal_CalcVmaxFromTime(float distance, float amax, float total_time);
+void InverseKinematics(float x, float y, float *r, float *p);
+int current_index = 0;
+int current_path_index = 0;
+void updatePathStep(Point *path_name, int path_length);
+//////////////////////
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -862,26 +878,106 @@ int main(void) {
 
 			//////////////////////////////////////////////////////////////
 			if (Mode == 4) {
-				// TargetR = (atan2f(TargetX * -1, TargetY) + M_PI_2);
-				// TargetP = sqrtf(TargetX * TargetX + TargetY * TargetY);
-
-				TargetR = TargetR_Deg * M_PI / 180;
+				InverseKinematics(TargetX, TargetY, &TargetR, &TargetP);
+				//TargetR = TargetR_Deg * M_PI / 180;
 				if (CascadeControl_Step()) {
 					Set_Servo(1);
 					Set_Motor(0, 0);
 					Set_Motor(1, 0);
-					revolute.finished = 0;
-					prismatic.finished = 0;
 				}
 			}
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////////////////////////////////////////////
 			if (Mode == 5) {
+				static uint64_t timestampState5 = 0;
+				int64_t currentTimeState5 = micros();
+				if (currentTimeState5 > timestampState5) {
+					timestampState5 = currentTimeState5 + 1000; //us
 
-				Workspace_limit();
-				Set_Motor(0, R_PWM);
-				Set_Motor(1, P_PWM);
+					P_kP_vel = 1.05845642f;
+					P_kI_vel = 0.0496f;
+					P_kD_vel = 0.00f;
+
+					P_kP_pos = 3.0367f;
+					P_kI_pos = 0.10198f;
+					P_kD_pos = 0.0047f;
+
+					bool reachedR = fabsf(
+							TargetR - Revolute_QEIdata.RadPosition) < 0.068;
+					bool reachedP = fabsf(
+							TargetP - Prismatic_QEIdata.mmPosition) < 0.4;
+					bool all_reached = revolute.finished && prismatic.finished
+							&& reachedR && reachedP;
+
+					if (all_reached) {
+					    // Advance to next point in current path
+					    current_index++;
+
+					    // Check if current path is done
+					    if (current_index >= path_lengths[current_path_index]) {
+					        Set_Servo(0);  // 🖊️ Lift pen
+
+					        // Advance to next path
+					        current_path_index = (current_path_index + 1) % 14;
+					        current_index = 0;
+
+					        Set_Servo(1);  // 🖊️ Press pen immediately after switching path
+					    }
+
+					    return;  // ⛔ Skip motion update while everything has already been reached
+					}
+
+					Point target_point =
+							paths[current_path_index][current_index];
+					Set_Servo(1);
+					InverseKinematics(target_point.x, target_point.y, &TargetR,
+							&TargetP);
+
+					R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
+					P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
+					float R_Time = Trapezoidal_CalcTotalTime(R_Pos_Error, 1.4f,
+							9.0f);
+					float P_Time = Trapezoidal_CalcTotalTime(P_Pos_Error,
+							300.0f, 1500.0f);
+					float new_R_vmax = 1.4f;
+					float new_P_vmax = 300.0f;
+					if (R_Time > P_Time) {
+						// Revolute is slower -> reduce Prismatic vmax
+						new_P_vmax = Trapezoidal_CalcVmaxFromTime(P_Pos_Error,
+								1500.0f, R_Time);
+						P_Time = R_Time;
+					} else if (P_Time > R_Time) {
+						// Prismatic is slower -> reduce Revolute vmax
+						new_R_vmax = Trapezoidal_CalcVmaxFromTime(R_Pos_Error,
+								9.0f, P_Time);
+						R_Time = P_Time;
+					}
+					if (revolute.finished
+							&& fabsf(TargetR - last_TargetR) > 0.001f) {
+						Trapezoidal_Init(&revolute, R_Pos_Error, new_R_vmax,
+								9.0f);
+						last_TargetR = TargetR;
+					}
+					if (prismatic.finished
+							&& fabsf(TargetP - last_TargetP) > 0.01f) {
+						Trapezoidal_Init(&prismatic, P_Pos_Error, new_P_vmax,
+								1500.0f);
+						last_TargetP = TargetP;
+					}
+					Trapezoidal_Update(&revolute, 0.001f);
+					TargetRPos = revolute.current_position;
+					TargetRVel = revolute.current_velocity;
+					TargetRAcc = revolute.current_acceleration;
+					Trapezoidal_Update(&prismatic, 0.001f);
+					TargetPPos = prismatic.current_position;
+					TargetPVel = prismatic.current_velocity;
+					TargetPAcc = prismatic.current_acceleration;
+					PIDStep();
+					Workspace_limit();
+					Set_Motor(0, R_PWM);
+					Set_Motor(1, P_PWM);
+				}
 			}
 			//////////////////////////////////////////////////////////////
 
@@ -2018,6 +2114,11 @@ float Trapezoidal_CalcVmaxFromTime(float distance, float amax, float total_time)
 		return sqrtf(distance * amax);
 	}
 	return (distance - 0.5f * amax * t_half * t_half) / t_half;
+}
+
+void InverseKinematics(float x, float y, float *r, float *p) {
+	*r = atan2f(x * -1, y) + M_PI_2;
+	*p = sqrtf(x * x + y * y);
 }
 
 void TrapezoidStep(void) {

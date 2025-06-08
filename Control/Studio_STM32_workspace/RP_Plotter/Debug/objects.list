@@ -1,5 +1,7 @@
 "./Core/Src/ModBusRTU.o"
 "./Core/Src/Trapezoidal.o"
+"./Core/Src/all_path.o"
+"./Core/Src/dora.o"
 "./Core/Src/main.o"
 "./Core/Src/stm32g4xx_hal_msp.o"
 "./Core/Src/stm32g4xx_it.o"
