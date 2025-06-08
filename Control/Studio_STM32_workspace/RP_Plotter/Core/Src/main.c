@@ -35,6 +35,12 @@
 #include "Trapezoidal.h"
 //////////////////////
 
+// FIBO_G09///////////
+#include "all_path.h"
+#include "dora.h"
+#include <stdbool.h>
+//////////////////////
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -318,6 +324,16 @@ int ToleranceCheck(void);
 void processTargets(void);
 void ResetAllTargets(void);
 //////////////////////
+
+// FIBO_G09//////////
+float Trapezoidal_CalcTotalTime(float distance, float vmax, float amax);
+float Trapezoidal_CalcVmaxFromTime(float distance, float amax, float total_time);
+void InverseKinematics(float x, float y, float *r, float *p);
+int current_index = 0;
+int current_path_index = 0;
+void updatePathStep(Point *path_name, int path_length);
+//////////////////////
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -834,11 +850,11 @@ int main(void) {
 				R_Velo_Error = (TargetRVel - Revolute_QEIdata.Velocity_f);
 				P_Velo_Error = TargetPVel - Prismatic_QEIdata.Velocity;
 
-				// Call every 0.001 s
+				//Call every 0.001 s
 				static uint64_t timestampState1 = 0;
 				int64_t currentTimeState1 = micros();
 				if (currentTimeState1 > timestampState1) {
-					timestampState1 = currentTimeState1 + 1000; // us
+					timestampState1 = currentTimeState1 + 1000;		//us
 					R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel,
 							R_kD_vel, 0.01f, -100.0f, 100.0f, &pid_r_v);
 					P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel,
@@ -858,26 +874,106 @@ int main(void) {
 
 			//////////////////////////////////////////////////////////////
 			if (Mode == 4) {
-				// TargetR = (atan2f(TargetX * -1, TargetY) + M_PI_2);
-				// TargetP = sqrtf(TargetX * TargetX + TargetY * TargetY);
-
-				TargetR = TargetR_Deg * M_PI / 180;
+				InverseKinematics(TargetX, TargetY, &TargetR, &TargetP);
+				//TargetR = TargetR_Deg * M_PI / 180;
 				if (CascadeControl_Step()) {
 					Set_Servo(1);
 					Set_Motor(0, 0);
 					Set_Motor(1, 0);
-					revolute.finished = 0;
-					prismatic.finished = 0;
 				}
 			}
 			//////////////////////////////////////////////////////////////
 
 			//////////////////////////////////////////////////////////////
 			if (Mode == 5) {
+				static uint64_t timestampState5 = 0;
+				int64_t currentTimeState5 = micros();
+				if (currentTimeState5 > timestampState5) {
+					timestampState5 = currentTimeState5 + 1000; //us
 
-				Workspace_limit();
-				Set_Motor(0, R_PWM);
-				Set_Motor(1, P_PWM);
+					P_kP_vel = 1.05845642f;
+					P_kI_vel = 0.0496f;
+					P_kD_vel = 0.00f;
+
+					P_kP_pos = 3.0367f;
+					P_kI_pos = 0.10198f;
+					P_kD_pos = 0.0047f;
+
+					bool reachedR = fabsf(
+							TargetR - Revolute_QEIdata.RadPosition) < 0.068;
+					bool reachedP = fabsf(
+							TargetP - Prismatic_QEIdata.mmPosition) < 0.4;
+					bool all_reached = revolute.finished && prismatic.finished
+							&& reachedR && reachedP;
+
+					if (all_reached) {
+					    // Advance to next point in current path
+					    current_index++;
+
+					    // Check if current path is done
+					    if (current_index >= path_lengths[current_path_index]) {
+					        Set_Servo(0);  // 🖊️ Lift pen
+
+					        // Advance to next path
+					        current_path_index = (current_path_index + 1) % 14;
+					        current_index = 0;
+
+					        Set_Servo(1);  // 🖊️ Press pen immediately after switching path
+					    }
+
+					    return;  // ⛔ Skip motion update while everything has already been reached
+					}
+
+					Point target_point =
+							paths[current_path_index][current_index];
+					Set_Servo(1);
+					InverseKinematics(target_point.x, target_point.y, &TargetR,
+							&TargetP);
+
+					R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
+					P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
+					float R_Time = Trapezoidal_CalcTotalTime(R_Pos_Error, 1.4f,
+							9.0f);
+					float P_Time = Trapezoidal_CalcTotalTime(P_Pos_Error,
+							300.0f, 1500.0f);
+					float new_R_vmax = 1.4f;
+					float new_P_vmax = 300.0f;
+					if (R_Time > P_Time) {
+						// Revolute is slower -> reduce Prismatic vmax
+						new_P_vmax = Trapezoidal_CalcVmaxFromTime(P_Pos_Error,
+								1500.0f, R_Time);
+						P_Time = R_Time;
+					} else if (P_Time > R_Time) {
+						// Prismatic is slower -> reduce Revolute vmax
+						new_R_vmax = Trapezoidal_CalcVmaxFromTime(R_Pos_Error,
+								9.0f, P_Time);
+						R_Time = P_Time;
+					}
+					if (revolute.finished
+							&& fabsf(TargetR - last_TargetR) > 0.001f) {
+						Trapezoidal_Init(&revolute, R_Pos_Error, new_R_vmax,
+								9.0f);
+						last_TargetR = TargetR;
+					}
+					if (prismatic.finished
+							&& fabsf(TargetP - last_TargetP) > 0.01f) {
+						Trapezoidal_Init(&prismatic, P_Pos_Error, new_P_vmax,
+								1500.0f);
+						last_TargetP = TargetP;
+					}
+					Trapezoidal_Update(&revolute, 0.001f);
+					TargetRPos = revolute.current_position;
+					TargetRVel = revolute.current_velocity;
+					TargetRAcc = revolute.current_acceleration;
+					Trapezoidal_Update(&prismatic, 0.001f);
+					TargetPPos = prismatic.current_position;
+					TargetPVel = prismatic.current_velocity;
+					TargetPAcc = prismatic.current_acceleration;
+					PIDStep();
+					Workspace_limit();
+					Set_Motor(0, R_PWM);
+					Set_Motor(1, P_PWM);
+				}
 			}
 			//////////////////////////////////////////////////////////////
 
@@ -894,20 +990,20 @@ int main(void) {
 							TenPointArray[counter * 2] =
 									Prismatic_QEIdata.mmPosition;
 							TenPointArray[(counter * 2) + 1] =
-									Revolute_QEIdata.RadPosition;
+								Revolute_QEIdata.RadPosition;
 							SET_TARGET(counter, Prismatic_QEIdata.mmPosition,
 									Revolute_QEIdata.RadPosition);
 							PenIsNotDelay = PenDelay();
 
 							counter++;
 							if (counter >= 10) {
-								counter = 0;
+							counter = 0;
 								testArraydone = true;
 								TenPointMode = true;
-							}
 						}
-					} else {
-						Mode = 1;
+					}
+				} else {
+					Mode = 1;
 					}
 				} else {
 					PenIsNotDelay = PenDelay();
@@ -934,26 +1030,26 @@ int main(void) {
 					goCenter8 = true;
 
 					if (goCenter8) {
-						TargetR = M_PI_2;
-						TargetP = 0;
-					} else {
-						TargetR = M_PI_4;
-						TargetP = 150;
-					}
+					TargetR = M_PI_2;
+					TargetP = 0;
+				} else {
+					TargetR = M_PI_4;
+					TargetP = 150;
+				}
 
-					if (CascadeControl_Step()) {
+				if (CascadeControl_Step()) {
 						if (PenDelay()) {
 							if (goCenter8) {
 								counter8++;
 							}
 							goCenter8 = !goCenter8;
-						}
+				}
 					}
 				} else if (counter8 >= 10 && IsPress) {
 					counter8 = 0;
-				}
 			}
-			//////////////////////////////////////////////////////////////
+		}
+		//////////////////////////////////////////////////////////////
 		}
 		/* USER CODE END WHILE */
 
@@ -1063,6 +1159,7 @@ static void MX_TIM1_Init(void) {
 	/* USER CODE BEGIN TIM1_Init 2 */
 
 	/* USER CODE END TIM1_Init 2 */
+
 }
 
 /**
@@ -1121,6 +1218,7 @@ static void MX_TIM2_Init(void) {
 	/* USER CODE BEGIN TIM2_Init 2 */
 
 	/* USER CODE END TIM2_Init 2 */
+
 }
 
 /**
@@ -1167,6 +1265,7 @@ static void MX_TIM3_Init(void) {
 	/* USER CODE BEGIN TIM3_Init 2 */
 
 	/* USER CODE END TIM3_Init 2 */
+
 }
 
 /**
@@ -1213,6 +1312,7 @@ static void MX_TIM4_Init(void) {
 	/* USER CODE BEGIN TIM4_Init 2 */
 
 	/* USER CODE END TIM4_Init 2 */
+
 }
 
 /**
@@ -1254,6 +1354,7 @@ static void MX_TIM5_Init(void) {
 	/* USER CODE BEGIN TIM5_Init 2 */
 
 	/* USER CODE END TIM5_Init 2 */
+
 }
 
 /**
@@ -1335,6 +1436,7 @@ static void MX_TIM8_Init(void) {
 
 	/* USER CODE END TIM8_Init 2 */
 	HAL_TIM_MspPostInit(&htim8);
+
 }
 
 /**
@@ -1406,6 +1508,7 @@ static void MX_TIM15_Init(void) {
 
 	/* USER CODE END TIM15_Init 2 */
 	HAL_TIM_MspPostInit(&htim15);
+
 }
 
 /**
@@ -1438,6 +1541,7 @@ static void MX_TIM16_Init(void) {
 	/* USER CODE BEGIN TIM16_Init 2 */
 
 	/* USER CODE END TIM16_Init 2 */
+
 }
 
 /**
@@ -1482,6 +1586,7 @@ static void MX_USART2_UART_Init(void) {
 	/* USER CODE BEGIN USART2_Init 2 */
 
 	/* USER CODE END USART2_Init 2 */
+
 }
 
 /**
@@ -1500,6 +1605,7 @@ static void MX_DMA_Init(void) {
 	/* DMA1_Channel2_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+
 }
 
 /**
@@ -1940,9 +2046,14 @@ float Trapezoidal_CalcVmaxFromTime(float distance, float amax, float total_time)
 	return (distance - 0.5f * amax * t_half * t_half) / t_half;
 }
 
+void InverseKinematics(float x, float y, float *r, float *p) {
+	*r = atan2f(x * -1, y) + M_PI_2;
+	*p = sqrtf(x * x + y * y);
+}
+
 void TrapezoidStep(void) {
-	//	static float last_TargetR = 0.0f;
-	//	static float last_TargetP = 0.0f;
+//	static float last_TargetR = 0.0f;
+//	static float last_TargetP = 0.0f;
 
 	// 2a) Detect setpoint jump (revolute, in radians)
 	float r_diff = fabsf(TargetR - last_TargetR);
@@ -2062,7 +2173,7 @@ int CascadeControl_Step(void) {
 	// 5) Tolerance‐check + “lock & hold” (servo + zero motors) if arrived
 	CheckTolerance = ToleranceCheck();
 	return CheckTolerance;
-	//	return ToleranceCheck();
+//	return ToleranceCheck();
 }
 /* USER CODE END 4 */
 
@@ -2079,19 +2190,19 @@ void Error_Handler(void) {
 	/* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef USE_FULL_ASSERT
+#ifdef  USE_FULL_ASSERT
 /**
- * @brief  Reports the name of the source file and the source line number
- *         where the assert_param error has occurred.
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
- * @retval None
- */
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-	/* USER CODE BEGIN 6 */
+  /* USER CODE BEGIN 6 */
 	/* User can add his own implementation to report the file name and line number,
 	   ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-	/* USER CODE END 6 */
+  /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
