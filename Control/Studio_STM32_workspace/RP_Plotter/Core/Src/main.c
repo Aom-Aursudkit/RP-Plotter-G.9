@@ -206,13 +206,13 @@ PID_State pid_p = { 0 };	 // for Prismatic
 PID_State pid_r_v = { 0 }; // for Revolute
 PID_State pid_p_v = { 0 }; // for Prismatic
 
-float R_kP_vel = 50.0f;
-float R_kI_vel = 5.00f;
+float R_kP_vel = 90.0f;
+float R_kI_vel = 4.00f;
 float R_kD_vel = 0.20f;
 
-float R_kP_pos = 15.10f;
-float R_kI_pos = 6.20f;
-float R_kD_pos = 2.50f;
+float R_kP_pos = 5.00f;
+float R_kI_pos = 4.00f;
+float R_kD_pos = 1.00f;
 
 float P_kP_vel = 1.39524f;
 float P_kI_vel = 0.034f;
