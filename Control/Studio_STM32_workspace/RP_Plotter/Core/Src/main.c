@@ -278,6 +278,10 @@ static float last_TargetP = 0.0f;
 //////////////////////
 
 //////////////////////
+typedef enum {
+	IDLE, WAITING_BEFORE, WAITING_AFTER
+} ServoState;
+ServoState servo_state = IDLE;
 uint64_t pen_delay_timer = 0;
 uint8_t CheckTolerance = 0;
 VELO_PROFILE revolute;
@@ -1041,7 +1045,7 @@ int main(void) {
 								TenPointMode = true;
 							}
 						}
-					else if(!TenPointMode) {
+					} else if (!TenPointMode) {
 						Mode = 1;
 					}
 				} else {
