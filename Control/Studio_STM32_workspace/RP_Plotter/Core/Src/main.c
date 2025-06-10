@@ -50,8 +50,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define R_ERR_TOL_RAD 0.034f   // 0.00174533f/* ±0.1 degree */
-#define P_ERR_TOL_MM 0.20f	   // 0.10f      /* ±0.1 mm */
 #define R_ERR_TOL_RAD 0.0068f   // 0.00174533f/* ±0.1 degree */
 #define P_ERR_TOL_MM 0.40f	   // 0.10f      /* ±0.1 mm */
 #define HOLD_TIME_US 1000000UL /* 1s  in microseconds */
@@ -216,15 +214,10 @@ float R_kP_pos = 15.10f;
 float R_kI_pos = 6.20f;
 float R_kD_pos = 2.50f;
 
-float P_kP_vel = 1.324f;
-float P_kI_vel = 0.02f;
 float P_kP_vel = 1.39524f;
 float P_kI_vel = 0.034f;
 float P_kD_vel = 0.00f;
 
-float P_kP_pos = 0.3867f;
-float P_kI_pos = 0.094f;
-float P_kD_pos = 0.0067f;
 float P_kP_pos = 2.85f;
 float P_kI_pos = 0.41f;
 float P_kD_pos = 0.2034f;
@@ -818,7 +811,6 @@ int main(void) {
 						&& Receiver[4] < 30) {
 					Mode = 5;
 				} else if (Receiver[2] < -30 && Receiver[4] > 30) {
-					Mode = 6;
 					if (TenPointMode) {
 						Mode = 2;
 					}else {
@@ -952,15 +944,14 @@ int main(void) {
 
 					if (current_index >= path_lengths[current_path_index]) {
 					    if (all_reached) {
+					        Set_Servo(0); // Pen up before switching path
 
-					    // Check if current path is done
-					    if (current_index >= path_lengths[current_path_index]) {
-					        Set_Servo(0);  // 🖊️ Lift pen
+					        current_path_index++;
+					        if (current_path_index >= 14) {
+					            current_path_index = 0;
+					        }
 
-					        // Advance to next path
-					        current_path_index = (current_path_index + 1) % 14;
 					        current_index = 0;
-
 					    }
 					} else {
 					    // --- Handle stepping inside the current path ---
