@@ -813,7 +813,7 @@ int main(void) {
 				} else if (Receiver[2] < -30 && Receiver[4] > 30) {
 					if (TenPointMode) {
 						Mode = 2;
-					}else {
+					} else {
 						Mode = 6;
 					}
 				} else if (Receiver[2] > -30 && Receiver[2] < 30
@@ -888,7 +888,8 @@ int main(void) {
 				static bool new_target = true;
 
 				// Detect change in target (with small tolerance to avoid float jitter)
-				if (fabsf(TargetX - last_TargetX) > 1e-3f || fabsf(TargetY - last_TargetY) > 1e-3f) {
+				if (fabsf(TargetX - last_TargetX) > 1e-3f
+						|| fabsf(TargetY - last_TargetY) > 1e-3f) {
 					last_TargetX = TargetX;
 					last_TargetY = TargetY;
 					new_target = true;
@@ -898,7 +899,8 @@ int main(void) {
 				TargetR_Deg = TargetR * 180.0f / M_PI;
 
 				// Only start when there's a new target AND we're at the target
-				if (!sequence_active && new_target && Pen_Status == 1 && CascadeControl_Step()) {
+				if (!sequence_active && new_target && Pen_Status == 1
+						&& CascadeControl_Step()) {
 					Set_Servo(1); // Tell pen to press
 					pen_timestamp = micros();
 					sequence_active = true;
@@ -906,13 +908,15 @@ int main(void) {
 					new_target = false; // consume the new target
 				}
 
-				if (sequence_active && waiting_for_up && micros() - pen_timestamp >= pen_delay) {
+				if (sequence_active && waiting_for_up
+						&& micros() - pen_timestamp >= pen_delay) {
 					Set_Servo(0); // Tell pen to lift
 					pen_timestamp = micros();
 					waiting_for_up = false;
 				}
 
-				if (sequence_active && !waiting_for_up && Pen_Status == 1 && micros() - pen_timestamp >= pen_delay) {
+				if (sequence_active && !waiting_for_up && Pen_Status == 1
+						&& micros() - pen_timestamp >= pen_delay) {
 					Set_Motor(0, 0);
 					Set_Motor(1, 0);
 					sequence_active = false;
@@ -943,25 +947,27 @@ int main(void) {
 							&& reachedR && reachedP;
 
 					if (current_index >= path_lengths[current_path_index]) {
-					    if (all_reached) {
-					        Set_Servo(0); // Pen up before switching path
+						if (all_reached) {
+							Set_Servo(0); // Pen up before switching path
 
-					        current_path_index++;
-					        if (current_path_index >= 14) {
-					            current_path_index = 0;
-					        }
+							current_path_index++;
+							if (current_path_index >= 14) {
+								current_path_index = 0;
+							}
 
-					        current_index = 0;
-					    }
+							current_index = 0;
+						}
 					} else {
-					    // --- Handle stepping inside the current path ---
-					    if (all_reached) {
-					        current_index++;
-					    }
+						// --- Handle stepping inside the current path ---
+						if (all_reached) {
+							current_index++;
+						}
 					}
 
-					Point target_point = paths[current_path_index][current_index];
-					InverseKinematics(target_point.x, target_point.y, &TargetR, &TargetP);
+					Point target_point =
+							paths[current_path_index][current_index];
+					InverseKinematics(target_point.x, target_point.y, &TargetR,
+							&TargetP);
 
 					R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
 					P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
@@ -1023,18 +1029,19 @@ int main(void) {
 							TenPointArray[counter * 2] =
 									Prismatic_QEIdata.mmPosition;
 							TenPointArray[(counter * 2) + 1] =
-								Revolute_QEIdata.RadPosition;
+									Revolute_QEIdata.RadPosition;
 							SET_TARGET(counter, Prismatic_QEIdata.mmPosition,
 									Revolute_QEIdata.RadPosition);
 							PenIsNotDelay = PenDelay();
 
 							counter++;
 							if (counter >= 10) {
-							counter = 0;
+								counter = 0;
 								testArraydone = true;
 								TenPointMode = true;
+							}
 						}
-					} else if(!TenPointMode) {
+					else if(!TenPointMode) {
 						Mode = 1;
 					}
 				} else {
@@ -1062,26 +1069,26 @@ int main(void) {
 					goCenter8 = true;
 
 					if (goCenter8) {
-					TargetR = M_PI_2;
-					TargetP = 0;
-				} else {
-					TargetR = M_PI_4;
-					TargetP = 150;
-				}
+						TargetR = M_PI_2;
+						TargetP = 0;
+					} else {
+						TargetR = M_PI_4;
+						TargetP = 150;
+					}
 
-				if (CascadeControl_Step()) {
+					if (CascadeControl_Step()) {
 						if (PenDelay()) {
 							if (goCenter8) {
 								counter8++;
 							}
 							goCenter8 = !goCenter8;
-				}
+						}
 					}
 				} else if (counter8 >= 10 && IsPress) {
 					counter8 = 0;
+				}
 			}
-		}
-		//////////////////////////////////////////////////////////////
+			//////////////////////////////////////////////////////////////
 		}
 		/* USER CODE END WHILE */
 
@@ -1747,36 +1754,36 @@ static void MX_GPIO_Init(void) {
 
 /* USER CODE BEGIN 4 */
 bool PenDelay(void) {
-    static int state = 0;
-    unsigned long now = micros();
+	static int state = 0;
+	unsigned long now = micros();
 
-    switch (state) {
-        case 0: // Start sequence with initial wait
-        	pen_delay_timer = now;
-            state = 1;
-            break;
-        case 1: // Waiting for first 500ms
-            if (now - pen_delay_timer >= 500000UL) {
-                Set_Servo(1);
-                pen_delay_timer = now;
-                state = 2;
-            }
-            break;
-        case 2: // Waiting for second 500ms after servo set to 1
-            if (now - pen_delay_timer >= 500000UL) {
-                Set_Servo(0);
-                pen_delay_timer = now;
-                state = 3;
-            }
-            break;
-        case 3: // Waiting for third 500ms after servo set to 0
-            if (now - pen_delay_timer >= 500000UL) {
-                state = 0;
-                return true;
-            }
-            break;
-    }
-    return false;
+	switch (state) {
+	case 0: // Start sequence with initial wait
+		pen_delay_timer = now;
+		state = 1;
+		break;
+	case 1: // Waiting for first 500ms
+		if (now - pen_delay_timer >= 500000UL) {
+			Set_Servo(1);
+			pen_delay_timer = now;
+			state = 2;
+		}
+		break;
+	case 2: // Waiting for second 500ms after servo set to 1
+		if (now - pen_delay_timer >= 500000UL) {
+			Set_Servo(0);
+			pen_delay_timer = now;
+			state = 3;
+		}
+		break;
+	case 3: // Waiting for third 500ms after servo set to 0
+		if (now - pen_delay_timer >= 500000UL) {
+			state = 0;
+			return true;
+		}
+		break;
+	}
+	return false;
 }
 
 float map(float x, float in_min, float in_max, float out_min, float out_max) {
