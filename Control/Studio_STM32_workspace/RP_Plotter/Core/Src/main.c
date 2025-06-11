@@ -461,7 +461,7 @@ int main(void) {
 			}
 			if (TargetP_BaseSystem != Last_Pen_BaseSystem) {
 				TargetP = TargetP_BaseSystem;
-				Last_Pen_BaseSystem = TargetP_BaseSystem;
+				Last_TargetP_BaseSystem = TargetP_BaseSystem;
 			}
 			if (Pen_BaseSystem != Last_Pen_BaseSystem) {
 				Set_Servo(Pen_BaseSystem);
