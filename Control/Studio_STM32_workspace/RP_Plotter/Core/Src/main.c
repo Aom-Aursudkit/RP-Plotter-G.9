@@ -50,8 +50,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define R_ERR_TOL_RAD 0.034f   // 0.00174533f/* ±0.1 degree */
-#define P_ERR_TOL_MM 0.20f	   // 0.10f      /* ±0.1 mm */
+#define R_ERR_TOL_RAD 0.0068f   // 0.00174533f/* ±0.1 degree */
+#define P_ERR_TOL_MM 0.40f	   // 0.10f      /* ±0.1 mm */
 #define HOLD_TIME_US 1000000UL /* 1s  in microseconds */
 /* USER CODE END PD */
 
@@ -206,21 +206,21 @@ PID_State pid_p = { 0 };	 // for Prismatic
 PID_State pid_r_v = { 0 }; // for Revolute
 PID_State pid_p_v = { 0 }; // for Prismatic
 
-float R_kP_vel = 50.0f;
-float R_kI_vel = 5.00f;
+float R_kP_vel = 90.0f;
+float R_kI_vel = 4.00f;
 float R_kD_vel = 0.20f;
 
-float R_kP_pos = 15.10f;
-float R_kI_pos = 6.20f;
-float R_kD_pos = 2.50f;
+float R_kP_pos = 5.00f;
+float R_kI_pos = 4.00f;
+float R_kD_pos = 1.00f;
 
-float P_kP_vel = 1.324f;
-float P_kI_vel = 0.02f;
+float P_kP_vel = 1.39524f;
+float P_kI_vel = 0.034f;
 float P_kD_vel = 0.00f;
 
-float P_kP_pos = 0.3867f;
-float P_kI_pos = 0.094f;
-float P_kD_pos = 0.0067f;
+float P_kP_pos = 2.85f;
+float P_kI_pos = 0.41f;
+float P_kD_pos = 0.2034f;
 //////////////////////
 
 // Mode3///////////////
@@ -248,18 +248,6 @@ uint64_t servo_timer;
 // Mode8///////////////
 uint8_t counter8 = 0;
 bool goCenter8 = true;
-//////////////////////
-
-// Mode8///////////////
-typedef enum {
-	STATE_DRAW, // currently stepping through path
-	STATE_LIFT, // we just lifted the pen
-	STATE_WAIT_AFTER_LIFT,
-	STATE_PRESS, // we just pressed the pen down
-	STATE_WAIT_AFTER_PRESS
-} DrawState;
-
-DrawState draw_state = STATE_DRAW;
 //////////////////////
 
 // BaseSystem//////////
@@ -290,6 +278,10 @@ static float last_TargetP = 0.0f;
 //////////////////////
 
 //////////////////////
+typedef enum {
+	IDLE, WAITING_BEFORE, WAITING_AFTER
+} ServoState;
+ServoState servo_state = IDLE;
 uint64_t pen_delay_timer = 0;
 uint8_t CheckTolerance = 0;
 VELO_PROFILE revolute;
@@ -310,7 +302,7 @@ static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM16_Init(void);
 static void MX_USART2_UART_Init(void);
-/* USER CODE BEGIN PFP *//
+/* USER CODE BEGIN PFP */
 void DWT_Init(void);
 float map(float x, float in_min, float in_max, float out_min, float out_max);
 uint64_t micros();
@@ -823,7 +815,11 @@ int main(void) {
 						&& Receiver[4] < 30) {
 					Mode = 5;
 				} else if (Receiver[2] < -30 && Receiver[4] > 30) {
-					Mode = 6;
+					if (TenPointMode) {
+						Mode = 2;
+					} else {
+						Mode = 6;
+					}
 				} else if (Receiver[2] > -30 && Receiver[2] < 30
 						&& Receiver[4] > 30) {
 					Mode = 7;
@@ -862,11 +858,11 @@ int main(void) {
 				R_Velo_Error = (TargetRVel - Revolute_QEIdata.Velocity_f);
 				P_Velo_Error = TargetPVel - Prismatic_QEIdata.Velocity;
 
-				// Call every 0.001 s
+				//Call every 0.001 s
 				static uint64_t timestampState1 = 0;
 				int64_t currentTimeState1 = micros();
 				if (currentTimeState1 > timestampState1) {
-					timestampState1 = currentTimeState1 + 1000; // us
+					timestampState1 = currentTimeState1 + 1000;		//us
 					R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel,
 							R_kD_vel, 0.01f, -100.0f, 100.0f, &pid_r_v);
 					P_PWM = PID_Update(P_Velo_Error, P_kP_vel, P_kI_vel,
@@ -886,12 +882,48 @@ int main(void) {
 
 			//////////////////////////////////////////////////////////////
 			if (Mode == 4) {
+				static bool sequence_active = false;
+				static bool waiting_for_up = false;
+				static uint64_t pen_timestamp = 0;
+				const uint64_t pen_delay = 200000; // 200 ms
+
+				static float last_TargetX = 0.0f;
+				static float last_TargetY = 0.0f;
+				static bool new_target = true;
+
+				// Detect change in target (with small tolerance to avoid float jitter)
+				if (fabsf(TargetX - last_TargetX) > 1e-3f
+						|| fabsf(TargetY - last_TargetY) > 1e-3f) {
+					last_TargetX = TargetX;
+					last_TargetY = TargetY;
+					new_target = true;
+				}
+
 				InverseKinematics(TargetX, TargetY, &TargetR, &TargetP);
-				// TargetR = TargetR_Deg * M_PI / 180;
-				if (CascadeControl_Step()) {
-					Set_Servo(1);
+				TargetR_Deg = TargetR * 180.0f / M_PI;
+
+				// Only start when there's a new target AND we're at the target
+				if (!sequence_active && new_target && Pen_Status == 1
+						&& CascadeControl_Step()) {
+					Set_Servo(1); // Tell pen to press
+					pen_timestamp = micros();
+					sequence_active = true;
+					waiting_for_up = true;
+					new_target = false; // consume the new target
+				}
+
+				if (sequence_active && waiting_for_up
+						&& micros() - pen_timestamp >= pen_delay) {
+					Set_Servo(0); // Tell pen to lift
+					pen_timestamp = micros();
+					waiting_for_up = false;
+				}
+
+				if (sequence_active && !waiting_for_up && Pen_Status == 1
+						&& micros() - pen_timestamp >= pen_delay) {
 					Set_Motor(0, 0);
 					Set_Motor(1, 0);
+					sequence_active = false;
 				}
 			}
 			//////////////////////////////////////////////////////////////
@@ -900,8 +932,6 @@ int main(void) {
 			if (Mode == 5) {
 				static uint64_t timestampState5 = 0;
 				int64_t currentTimeState5 = micros();
-				static bool pen_down_requested = false;
-				static uint32_t pen_down_request_ts = 0;
 				if (currentTimeState5 > timestampState5) {
 					timestampState5 = currentTimeState5 + 1000; // us
 
@@ -916,73 +946,30 @@ int main(void) {
 					bool reachedR = fabsf(
 							TargetR - Revolute_QEIdata.RadPosition) < 0.068;
 					bool reachedP = fabsf(
-							TargetP - Prismatic_QEIdata.mmPosition) < 0.4;
+							TargetP - Prismatic_QEIdata.mmPosition) < 0.5;
 					bool all_reached = revolute.finished && prismatic.finished
 							&& reachedR && reachedP;
 
-					if (all_reached) {
-						// Advance to next point in current path
-						current_index++;
+					if (current_index >= path_lengths[current_path_index]) {
+						if (all_reached) {
+							Set_Servo(0); // Pen up before switching path
 
-						// Check if current path is done
-
-						static uint64_t starttimestamp5 = 0;
-						uint64_t timestamp5 = HAL_GetTick();
-						switch (draw_state) {
-						case STATE_DRAW:
-							// normal draw stepping
-							if (current_index
-									>= path_lengths[current_path_index]) {
-								Set_Servo(0);
-								draw_state = STATE_WAIT_AFTER_LIFT;
-								starttimestamp5 = timestamp5;
+							current_path_index++;
+							if (current_path_index >= 14) {
+								current_path_index = 0;
 							}
-							break;
 
-						case STATE_WAIT_AFTER_LIFT:
-							if ((timestamp5 - starttimestamp5) >= 500) {
-								// advance to next path
-								current_path_index = (current_path_index + 1)
-										% 14;
-								current_index = 0;
-
-								// press pen down
-								Set_Servo(1);
-								starttimestamp5 = timestamp5;
-								draw_state = STATE_WAIT_AFTER_PRESS;
-							}
-							break;
-
-						case STATE_WAIT_AFTER_PRESS:
-							// wait 500 ms after press before starting to draw
-							if ((timestamp5 - starttimestamp5) >= 500) {
-								draw_state = STATE_DRAW;
-								pen_down_requested = false;
-							}
-							break;
-
-						default:
-							// should never get here
-							draw_state = STATE_DRAW;
-							break;
+							current_index = 0;
 						}
-						return; // ⛔ Skip motion update while everything has already been reached
+					} else {
+						// --- Handle stepping inside the current path ---
+						if (all_reached) {
+							current_index++;
+						}
 					}
 
 					Point target_point =
 							paths[current_path_index][current_index];
-					if (!pen_down_requested) {
-						Set_Servo(1);
-						pen_down_request_ts = HAL_GetTick();
-						pen_down_requested = true;
-						return; // skip all the motion logic until the 500 ms elapses
-					}
-
-					// 2) If we *have* requested pen-down but 500 ms haven’t gone by, wait:
-					if ((HAL_GetTick() - pen_down_request_ts) < 500) {
-						return; // still waiting for servo to stabilize
-					}
-
 					InverseKinematics(target_point.x, target_point.y, &TargetR,
 							&TargetP);
 
@@ -1048,7 +1035,7 @@ int main(void) {
 							TenPointArray[(counter * 2) + 1] =
 									Revolute_QEIdata.RadPosition;
 							SET_TARGET(counter, Prismatic_QEIdata.mmPosition,
-									RAD_TO_DEG(Revolute_QEIdata.RadPosition));
+									Revolute_QEIdata.RadPosition);
 							PenIsNotDelay = PenDelay();
 
 							counter++;
@@ -1058,7 +1045,7 @@ int main(void) {
 								TenPointMode = true;
 							}
 						}
-					} else {
+					} else if (!TenPointMode) {
 						Mode = 1;
 					}
 				} else {
@@ -1104,7 +1091,6 @@ int main(void) {
 				} else if (counter8 >= 10 && IsPress) {
 					counter8 = 0;
 				}
-				//////////////////////////////////////////////////////////////
 			}
 			//////////////////////////////////////////////////////////////
 		}
@@ -1216,6 +1202,7 @@ static void MX_TIM1_Init(void) {
 	/* USER CODE BEGIN TIM1_Init 2 */
 
 	/* USER CODE END TIM1_Init 2 */
+
 }
 
 /**
@@ -1274,6 +1261,7 @@ static void MX_TIM2_Init(void) {
 	/* USER CODE BEGIN TIM2_Init 2 */
 
 	/* USER CODE END TIM2_Init 2 */
+
 }
 
 /**
@@ -1320,6 +1308,7 @@ static void MX_TIM3_Init(void) {
 	/* USER CODE BEGIN TIM3_Init 2 */
 
 	/* USER CODE END TIM3_Init 2 */
+
 }
 
 /**
@@ -1366,6 +1355,7 @@ static void MX_TIM4_Init(void) {
 	/* USER CODE BEGIN TIM4_Init 2 */
 
 	/* USER CODE END TIM4_Init 2 */
+
 }
 
 /**
@@ -1407,6 +1397,7 @@ static void MX_TIM5_Init(void) {
 	/* USER CODE BEGIN TIM5_Init 2 */
 
 	/* USER CODE END TIM5_Init 2 */
+
 }
 
 /**
@@ -1488,6 +1479,7 @@ static void MX_TIM8_Init(void) {
 
 	/* USER CODE END TIM8_Init 2 */
 	HAL_TIM_MspPostInit(&htim8);
+
 }
 
 /**
@@ -1559,6 +1551,7 @@ static void MX_TIM15_Init(void) {
 
 	/* USER CODE END TIM15_Init 2 */
 	HAL_TIM_MspPostInit(&htim15);
+
 }
 
 /**
@@ -1591,6 +1584,7 @@ static void MX_TIM16_Init(void) {
 	/* USER CODE BEGIN TIM16_Init 2 */
 
 	/* USER CODE END TIM16_Init 2 */
+
 }
 
 /**
@@ -1635,6 +1629,7 @@ static void MX_USART2_UART_Init(void) {
 	/* USER CODE BEGIN USART2_Init 2 */
 
 	/* USER CODE END USART2_Init 2 */
+
 }
 
 /**
@@ -1653,6 +1648,7 @@ static void MX_DMA_Init(void) {
 	/* DMA1_Channel2_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+
 }
 
 /**
@@ -1761,18 +1757,35 @@ static void MX_GPIO_Init(void) {
 }
 
 /* USER CODE BEGIN 4 */
-bool PenDelay() {
-	static bool timerStarted = false;
-	if (!timerStarted) {
-		pen_delay_timer = micros();
-		Set_Servo(1);
-		timerStarted = true;
-	}
-	// check if 500 ms have passed
-	if (micros() - pen_delay_timer >= 500000UL) {
-		Set_Servo(0);
-		timerStarted = false;
-		return true;
+bool PenDelay(void) {
+	static int state = 0;
+	unsigned long now = micros();
+
+	switch (state) {
+	case 0: // Start sequence with initial wait
+		pen_delay_timer = now;
+		state = 1;
+		break;
+	case 1: // Waiting for first 500ms
+		if (now - pen_delay_timer >= 500000UL) {
+			Set_Servo(1);
+			pen_delay_timer = now;
+			state = 2;
+		}
+		break;
+	case 2: // Waiting for second 500ms after servo set to 1
+		if (now - pen_delay_timer >= 500000UL) {
+			Set_Servo(0);
+			pen_delay_timer = now;
+			state = 3;
+		}
+		break;
+	case 3: // Waiting for third 500ms after servo set to 0
+		if (now - pen_delay_timer >= 500000UL) {
+			state = 0;
+			return true;
+		}
+		break;
 	}
 	return false;
 }
@@ -2099,8 +2112,8 @@ void InverseKinematics(float x, float y, float *r, float *p) {
 }
 
 void TrapezoidStep(void) {
-	//	static float last_TargetR = 0.0f;
-	//	static float last_TargetP = 0.0f;
+//	static float last_TargetR = 0.0f;
+//	static float last_TargetP = 0.0f;
 
 	// 2a) Detect setpoint jump (revolute, in radians)
 	float r_diff = fabsf(TargetR - last_TargetR);
@@ -2220,7 +2233,7 @@ int CascadeControl_Step(void) {
 	// 5) Tolerance‐check + “lock & hold” (servo + zero motors) if arrived
 	CheckTolerance = ToleranceCheck();
 	return CheckTolerance;
-	//	return ToleranceCheck();
+//	return ToleranceCheck();
 }
 /* USER CODE END 4 */
 
@@ -2237,19 +2250,19 @@ void Error_Handler(void) {
 	/* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef USE_FULL_ASSERT
+#ifdef  USE_FULL_ASSERT
 /**
- * @brief  Reports the name of the source file and the source line number
- *         where the assert_param error has occurred.
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
- * @retval None
- */
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-	/* USER CODE BEGIN 6 */
+  /* USER CODE BEGIN 6 */
 	/* User can add his own implementation to report the file name and line number,
 	   ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-	/* USER CODE END 6 */
+  /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
