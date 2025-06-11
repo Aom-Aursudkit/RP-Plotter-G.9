@@ -817,7 +817,11 @@ int main(void) {
 				} else if (Receiver[2] < -30 && Receiver[4] > 30) {
 					if (TenPointMode) {
 						Mode = 2;
+<<<<<<< Updated upstream
 					} else {
+=======
+					}else {
+>>>>>>> Stashed changes
 						Mode = 6;
 					}
 				} else if (Receiver[2] > -30 && Receiver[2] < 30
@@ -966,10 +970,29 @@ int main(void) {
 						if (all_reached) {
 							current_index++;
 						}
+<<<<<<< Updated upstream
+=======
+						continue; // ⛔ Skip motion update while everything has already been reached
+>>>>>>> Stashed changes
 					}
 
 					Point target_point =
 							paths[current_path_index][current_index];
+<<<<<<< Updated upstream
+=======
+					if (!pen_down_requested) {
+						Set_Servo(1);
+						pen_down_request_ts = HAL_GetTick();
+						pen_down_requested = true;
+						continue; // skip all the motion logic until the 500 ms elapses
+					}
+
+					// 2) If we *have* requested pen-down but 500 ms haven’t gone by, wait:
+					if ((HAL_GetTick() - pen_down_request_ts) < 500) {
+						continue; // still waiting for servo to stabilize
+					}
+
+>>>>>>> Stashed changes
 					InverseKinematics(target_point.x, target_point.y, &TargetR,
 							&TargetP);
 
@@ -1045,7 +1068,11 @@ int main(void) {
 								TenPointMode = true;
 							}
 						}
+<<<<<<< Updated upstream
 					} else if (!TenPointMode) {
+=======
+					} else if(!TenPointMode) {
+>>>>>>> Stashed changes
 						Mode = 1;
 					}
 				} else {
@@ -1758,6 +1785,7 @@ static void MX_GPIO_Init(void) {
 
 /* USER CODE BEGIN 4 */
 bool PenDelay(void) {
+<<<<<<< Updated upstream
 	static int state = 0;
 	unsigned long now = micros();
 
@@ -1788,6 +1816,38 @@ bool PenDelay(void) {
 		break;
 	}
 	return false;
+=======
+    static int state = 0;
+    unsigned long now = micros();
+
+    switch (state) {
+        case 0: // Start sequence with initial wait
+        	pen_delay_timer = now;
+            state = 1;
+            break;
+        case 1: // Waiting for first 500ms
+            if (now - pen_delay_timer >= 500000UL) {
+                Set_Servo(1);
+                pen_delay_timer = now;
+                state = 2;
+            }
+            break;
+        case 2: // Waiting for second 500ms after servo set to 1
+            if (now - pen_delay_timer >= 500000UL) {
+                Set_Servo(0);
+                pen_delay_timer = now;
+                state = 3;
+            }
+            break;
+        case 3: // Waiting for third 500ms after servo set to 0
+            if (now - pen_delay_timer >= 500000UL) {
+                state = 0;
+                return true;
+            }
+            break;
+    }
+    return false;
+>>>>>>> Stashed changes
 }
 
 float map(float x, float in_min, float in_max, float out_min, float out_max) {
