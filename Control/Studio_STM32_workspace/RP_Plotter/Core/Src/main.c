@@ -310,7 +310,7 @@ static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM16_Init(void);
 static void MX_USART2_UART_Init(void);
-/* USER CODE BEGIN PFP */
+/* USER CODE BEGIN PFP *//
 void DWT_Init(void);
 float map(float x, float in_min, float in_max, float out_min, float out_max);
 uint64_t micros();
