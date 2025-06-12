@@ -152,9 +152,10 @@ void Modbus_Protocal_Worker() {
 	REG16(HEART_BEAT) = 22881;
 	REG16(REG_SERVO_LIMIT_SWITCH) = Pen_Status ? 2 : 1;
 	Pen_BaseSystem = REG16(REG_SERVO_CMD_DOWN) ? 1 : 0;
-	TargetR_BaseSystem = REG16(REG_TARGET_GOAL_R) * 0.1f;
-	TargetP_BaseSystem = (DEG_TO_RED01(REG16(REG_TARGET_GOAL_THETA)));
-//	TargetP_BaseSystem = (DEG_TO_RED01(REG16(REG_TARGET_GOAL_THETA)) - (M_PI / 2.0f));
+	TargetP_BaseSystem = REG16(REG_TARGET_GOAL_R) * 0.1f;
+	float TargetR = ((float)REG16(REG_TARGET_GOAL_THETA)) / 10.0f;
+	if (TargetR > 270) TargetR -= 360;
+	TargetR_BaseSystem = DEG_TO_RED01(TargetR);
 
 	float Velocity_mm, Acceleration_mm, mmPosition, AngularVelocity_rad,
 			AngularAcceleration_rad, RadPosition;
@@ -162,8 +163,9 @@ void Modbus_Protocal_Worker() {
 			&AngularVelocity_rad, &AngularAcceleration_rad, &RadPosition);
 
 // Position remap: [-π/2, 3π/2] → [0, 360]
-//	float mappedDeg = RAD_TO_DEG(RadPosition + (M_PI / 2.0f));
 	float mappedDeg = RAD_TO_DEG(RadPosition);
+    if (mappedDeg < 0) mappedDeg += 360;
+
 	REG16(REG_POSITION_THETA) = (int16_t) (mappedDeg * 10.0f);
 
 // Speed and acceleration: normal conversion

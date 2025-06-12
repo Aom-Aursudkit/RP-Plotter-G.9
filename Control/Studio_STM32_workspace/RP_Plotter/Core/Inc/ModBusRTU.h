@@ -121,6 +121,8 @@ void SET_TARGET(int8_t slot, float dist, float ang);
 void ResetAllTargets(void);
 
 #define RAD_TO_DEG(x) ((x) * (180.0f / M_PI))
+
+#define DEG_TO_RED01(value) ((value) * (M_PI / 180.0f))
 // ── Bulk Read Helper ─────────────────────────────────────────────────────────
 
 //static inline TargetSet readAllTargets(void) {
@@ -162,9 +164,6 @@ void Get_QRIdata(float *prism_vel_mm, float *prism_acc_mm, float *prism_mm_pos,
 // Helper macro to clamp and round a float to uint16_t
 #define FLOAT_TO_intU16(value) ((int16_t)(value * 10.0f) + 0.5f)
 
-// Helper macro to convert radians to degrees * 10, safely
-#define RAD_TO_DEG10(value) ((int16_t)((value) * (1800.0f / M_PI) + 0.5f))
-#define DEG_TO_RED01(value) ((float)((value) * (M_PI / 1800.0f)))
 // External variables
 
 extern uint8_t Pen_Status;

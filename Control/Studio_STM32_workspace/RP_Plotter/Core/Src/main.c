@@ -184,6 +184,7 @@ float P_PWM;
 
 // Mode & Status///////
 uint8_t Mode;
+uint8_t Last_Mode;
 uint8_t EmergencyState;
 uint8_t IsPress;
 uint8_t Pen_Status;
@@ -221,6 +222,10 @@ float P_kD_vel = 0.00f;
 float P_kP_pos = 2.85f;
 float P_kI_pos = 0.41f;
 float P_kD_pos = 0.2034f;
+
+float prev_TargetP = 0.0f, max_P_position = 0.0f;
+float prev_TargetR = 0.0f, max_R_position = 0.0f;
+float P_overshoot = 0.0f, R_overshoot = 0.0f;
 //////////////////////
 
 // Mode3///////////////
@@ -253,6 +258,7 @@ bool goCenter8 = true;
 // BaseSystem//////////
 uint8_t counter = 0;
 bool TenPointMode = false;
+bool Testbool_BaseSystem = false;
 
 bool Test_no_BaseSystem = false;
 float TargetR_BaseSystem = 0;
@@ -315,6 +321,8 @@ void Set_Servo(int Pen_Pos);
 void Reset_R();
 void Reset_P();
 void Workspace_limit();
+float updateAndGetOvershoot(float target, float *prev_target,
+		float *max_position, float current_position);
 
 bool PenDelay(void);
 // Cascade//////////
@@ -453,15 +461,6 @@ int main(void) {
 			default:
 				break;
 			}
-
-			if (TargetR_BaseSystem != Last_TargetR_BaseSystem) {
-				TargetR = TargetR_BaseSystem;
-				Last_TargetR_BaseSystem = TargetR_BaseSystem;
-			}
-			if (TargetP_BaseSystem != Last_Pen_BaseSystem) {
-				TargetP = TargetP_BaseSystem;
-				Last_TargetP_BaseSystem = TargetP_BaseSystem;
-			}
 			if (Pen_BaseSystem != Last_Pen_BaseSystem) {
 				Set_Servo(Pen_BaseSystem);
 				Last_Pen_BaseSystem = Pen_BaseSystem;
@@ -533,26 +532,39 @@ int main(void) {
 		//////////////////////// <<GOTO>> ////////////////////////////
 		if ((Mode == 2 && (base_status == 2 || Test_no_BaseSystem))
 				|| base_status == 8) {
-			REG16(REG_MOTION_STATUS) = 8;
 
-			if (TenPointMode) {
+			P_overshoot = updateAndGetOvershoot(TargetP, &prev_TargetP,
+					&max_P_position, Prismatic_QEIdata.mmPosition);
+			R_overshoot = updateAndGetOvershoot(TargetR, &prev_TargetR,
+					&max_R_position, Revolute_QEIdata.RadPosition);
+
+			if (base_status == 8) {
+				REG16(REG_MOTION_STATUS) = 8;
+			}
+
+			if (base_status == 8) {
+				TargetR = TargetR_BaseSystem;
+				TargetP = TargetP_BaseSystem;
+			} else if (TenPointMode) {
 				TargetR = TenPointArray[(counter * 2) + 1];
 				TargetP = TenPointArray[counter * 2];
 			}
 
 			if (CascadeControl_Step()) {
-				if (PenDelay()) {
-					if (TenPointMode) {
-						if (counter == 9) {
-							TenPointMode = false;
-							counter = 0;
-							Mode = 1;
-						} else {
-							counter++;
+				if (base_status == 8) {
+					REG16(REG_MOTION_STATUS) = 0;
+					REG16(REG_BASE_STATUS) = 0;
+				} else {
+					if (PenDelay()) {
+						if (TenPointMode) {
+							if (counter == 9) {
+								TenPointMode = false;
+								counter = 0;
+								Mode = 1;
+							} else {
+								counter++;
+							}
 						}
-					}
-					if (base_status == 8) {
-						REG16(REG_MOTION_STATUS) = 0;
 					}
 				}
 			}
@@ -784,7 +796,6 @@ int main(void) {
 				Mode = 0;
 			} else if (Receiver[2] < -30 && Receiver[4] < -30) {
 				Mode = 0;
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
 			} else if (Receiver[3] > 0 && IsPress == 0) {
 				IsPress = 1;
 				calibState = CALIB_IDLE;
@@ -814,11 +825,7 @@ int main(void) {
 						&& Receiver[4] < 30) {
 					Mode = 5;
 				} else if (Receiver[2] < -30 && Receiver[4] > 30) {
-//					if (TenPointMode) {
-//						Mode = 2;
-//					} else {
-						Mode = 6;
-//					}
+					Mode = 6;
 				} else if (Receiver[2] > -30 && Receiver[2] < 30
 						&& Receiver[4] > 30) {
 					Mode = 7;
@@ -835,9 +842,14 @@ int main(void) {
 
 			//////////////////////// <<STOP>> ////////////////////////////
 			if (Mode == 0) {
-				Set_Motor(0, 0);
-				Set_Motor(1, 0);
-				Set_Servo(0);
+				if (Last_Mode != Mode) {
+					Set_Motor(0, 0);
+					Set_Motor(1, 0);
+					Set_Servo(0);
+					Last_Mode = Mode;
+				}
+			} else {
+				Last_Mode = 255;
 			}
 			//////////////////////////////////////////////////////////////
 
@@ -965,7 +977,8 @@ int main(void) {
 
 					Point target_point = path_FIBO[current_index];
 
-					InverseKinematics(target_point.x, target_point.y, &TargetR, &TargetP);
+					InverseKinematics(target_point.x, target_point.y, &TargetR,
+							&TargetP);
 					Set_Servo(target_point.p);
 
 					R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
@@ -1752,9 +1765,30 @@ static void MX_GPIO_Init(void) {
 }
 
 /* USER CODE BEGIN 4 */
+float updateAndGetOvershoot(float target, float *prev_target,
+		float *max_position, float current_position) {
+	// Reset max_position if the target changes
+	if (target != *prev_target) {
+		*prev_target = target;
+		*max_position = current_position;
+	}
+
+	// Track maximum deviation from target (not just max raw position)
+	if (fabsf(current_position - target) > fabsf(*max_position - target)) {
+		*max_position = current_position;
+	}
+
+	if (target == 0.0f)
+		return 0.0f; // avoid division by zero
+
+	float overshoot = (fabsf(*max_position - target) / fabsf(target)) * 100.0f;
+	return overshoot;
+}
+
 bool PenDelay(void) {
 	static int state = 0;
 	unsigned long now = micros();
+	bool Done = false;
 
 	switch (state) {
 	case 0: // Start sequence with initial wait
@@ -1778,11 +1812,12 @@ bool PenDelay(void) {
 	case 3: // Waiting for third 500ms after servo set to 0
 		if (now - pen_delay_timer >= 500000UL) {
 			state = 0;
-			return true;
+			Done = true;
 		}
 		break;
 	}
-	return false;
+
+	return Done;
 }
 
 float map(float x, float in_min, float in_max, float out_min, float out_max) {
@@ -1893,113 +1928,113 @@ float PID_Update(float error, float kP, float kI, float kD, float dt,
 }
 
 void Revolute_PosVel_Update() {
-	// Collect data
+// Collect data
 	Revolute_QEIdata.TimeStamp[NEW] = micros();
 	Revolute_QEIdata.Position[NEW] = __HAL_TIM_GET_COUNTER(&htim4);
 
-	// Position within one turn
+// Position within one turn
 	Revolute_QEIdata.QEIPostion_1turn = Revolute_QEIdata.Position[NEW] % 16384;
 
-	// Calculate position difference
+// Calculate position difference
 	int32_t diffPosition_r = Revolute_QEIdata.Position[NEW]
 			- Revolute_QEIdata.Position[OLD];
 
-	// Handle wrap-around
+// Handle wrap-around
 	if (diffPosition_r > (65536 / 2))
 		diffPosition_r -= 65536;
 	else if (diffPosition_r < -(65536 / 2))
 		diffPosition_r += 65536;
 
-	// Time difference in seconds
+// Time difference in seconds
 	float diffTime_r = (Revolute_QEIdata.TimeStamp[NEW]
 			- Revolute_QEIdata.TimeStamp[OLD]) * 0.000001f;
 	if (diffTime_r == 0)
 		return;
 
-	// Raw angular velocity in counts/sec
+// Raw angular velocity in counts/sec
 	float Vel_counts_r = (float) diffPosition_r / diffTime_r;
 
-	// Raw angular acceleration in counts/sec²
+// Raw angular acceleration in counts/sec²
 	Revolute_QEIdata.QEIAcceleration = (Vel_counts_r
 			- Revolute_QEIdata.QEIVelocity) / diffTime_r;
 
-	// Store raw velocity
+// Store raw velocity
 	Revolute_QEIdata.QEIVelocity = Vel_counts_r;
 
-	// Angular velocity in rad/s
+// Angular velocity in rad/s
 	Revolute_QEIdata.Velocity = Vel_counts_r * (2.0f * M_PI / 16384.0f);
 	float R_alpha = 0.4f;
 	Revolute_QEIdata.Velocity_f = R_alpha * Revolute_QEIdata.Velocity
 			+ (1 - R_alpha) * Revolute_QEIdata.Velocity_f;
 
-	// Angular acceleration in rad/s²
+// Angular acceleration in rad/s²
 	Revolute_QEIdata.Acceleration = Revolute_QEIdata.QEIAcceleration
 			* (2.0f * M_PI / 16384.0f);
 
-	// Absolute position update
+// Absolute position update
 	Revolute_QEIdata.AbsolutePosition += diffPosition_r;
 
-	// Rad position
+// Rad position
 	Revolute_QEIdata.RadPosition = Revolute_QEIdata.AbsolutePosition
 			* (2.0f * M_PI / 16384.0f);
 
-	// Deg position
+// Deg position
 	Revolute_QEIdata.DegPosition = Revolute_QEIdata.RadPosition * 180 / M_PI;
 
-	// Store previous values
+// Store previous values
 	Revolute_QEIdata.Position[OLD] = Revolute_QEIdata.Position[NEW];
 	Revolute_QEIdata.TimeStamp[OLD] = Revolute_QEIdata.TimeStamp[NEW];
 }
 
 void Prismatic_PosVel_Update() {
-	// Collect data
+// Collect data
 	Prismatic_QEIdata.TimeStamp[NEW] = micros();
 	Prismatic_QEIdata.Position[NEW] = __HAL_TIM_GET_COUNTER(&htim3);
 
-	// Calculate position difference
+// Calculate position difference
 	int32_t diffPosition_p = Prismatic_QEIdata.Position[NEW]
 			- Prismatic_QEIdata.Position[OLD];
 
-	// Handle wrap-around
+// Handle wrap-around
 	if (diffPosition_p > (65536 / 2))
 		diffPosition_p -= 65536;
 	else if (diffPosition_p < -(65536 / 2))
 		diffPosition_p += 65536;
 
-	// Time difference in seconds
+// Time difference in seconds
 	float diffTime_p = (Prismatic_QEIdata.TimeStamp[NEW]
 			- Prismatic_QEIdata.TimeStamp[OLD]) * 0.000001f;
 	if (diffTime_p == 0)
 		return;
 
-	// Raw angular velocity in counts/sec
+// Raw angular velocity in counts/sec
 	float Vel_counts_p = (float) diffPosition_p / diffTime_p;
 
-	// Raw angular acceleration in counts/sec²
+// Raw angular acceleration in counts/sec²
 	Prismatic_QEIdata.QEIAcceleration = (Vel_counts_p
 			- Prismatic_QEIdata.QEIVelocity) / diffTime_p;
 
-	// Store raw velocity
+// Store raw velocity
 	Prismatic_QEIdata.QEIVelocity = Vel_counts_p;
 
-	// Velocity in mm/s
+// Velocity in mm/s
 	Prismatic_QEIdata.Velocity = Vel_counts_p * (10.0f / 8192.0f);
 	float P_alpha = 0.4f;
 	Prismatic_QEIdata.Velocity_f = P_alpha * Prismatic_QEIdata.Velocity
 			+ (1 - P_alpha) * Prismatic_QEIdata.Velocity_f;
 
-	// Acceleration in mm/s²
+// Acceleration in mm/s²
 	Prismatic_QEIdata.Acceleration = Prismatic_QEIdata.QEIAcceleration
 			* (10.0f / 8192.0f);
 
-	// Absolute position update
+// Absolute position update
 	Prismatic_QEIdata.AbsolutePosition += diffPosition_p;
 
-	// mm position
+// mm position
 	Prismatic_QEIdata.mmPosition = Prismatic_QEIdata.AbsolutePosition
 			* (10.0f / 8192.0f);
 
-	// Store previous values
+// Store previous values
 	Prismatic_QEIdata.Position[OLD] = Prismatic_QEIdata.Position[NEW];
 	Prismatic_QEIdata.TimeStamp[OLD] = Prismatic_QEIdata.TimeStamp[NEW];
 }
@@ -2040,11 +2075,11 @@ void Set_Servo(int Pen_Pos) {
 
 void Reset_R() {
 	Revolute_QEIdata.AbsolutePosition = M_PI_2 / (2.0f * M_PI / 16384.0f);
-	//	Revolute_QEIdata.RadPosition = M_PI_2;
+//	Revolute_QEIdata.RadPosition = M_PI_2;
 }
 void Reset_P() {
 	Prismatic_QEIdata.AbsolutePosition = -2.00 / (10.0f / 8192.0f);
-	//	Prismatic_QEIdata.mmPosition = 0;
+//	Prismatic_QEIdata.mmPosition = 0;
 }
 
 void Workspace_limit() {
@@ -2110,7 +2145,7 @@ void TrapezoidStep(void) {
 //	static float last_TargetR = 0.0f;
 //	static float last_TargetP = 0.0f;
 
-	// 2a) Detect setpoint jump (revolute, in radians)
+// 2a) Detect setpoint jump (revolute, in radians)
 	float r_diff = fabsf(TargetR - last_TargetR);
 	if (r_diff > 0.001f) {
 		// Re‐init revolute trapezoid: distance_to_go = R_Pos_Error (rad)
@@ -2119,7 +2154,7 @@ void TrapezoidStep(void) {
 		last_TargetR = TargetR;
 	}
 
-	// 2b) Detect setpoint jump (prismatic, in mm)
+// 2b) Detect setpoint jump (prismatic, in mm)
 	float p_diff = fabsf(TargetP - last_TargetP);
 	if (p_diff > 0.01f) {
 		// Re‐init prismatic trapezoid: distance_to_go = P_Pos_Error (mm)
@@ -2128,7 +2163,7 @@ void TrapezoidStep(void) {
 		last_TargetP = TargetP;
 	}
 
-	// 2c) Advance both trapezoids by 1 ms → update feedforward pos/vel/acc
+// 2c) Advance both trapezoids by 1 ms → update feedforward pos/vel/acc
 	Trapezoidal_Update(&revolute, 0.001f);
 	TargetRPos = revolute.current_position;
 	TargetRVel = revolute.current_velocity;
@@ -2146,7 +2181,7 @@ void PIDStep(void) {
 	static float P_Target_Velocity = 0.0f;
 
 	loop_counter1++;
-	// 3a) Outer‐loop (position) PID every 10 ms
+// 3a) Outer‐loop (position) PID every 10 ms
 	if (loop_counter1 >= 10) {
 		loop_counter1 = 0;
 
@@ -2168,7 +2203,7 @@ void PIDStep(void) {
 		P_Target_Velocity = TargetPVel + P_corr_vel;
 	}
 
-	// 3b) Inner‐loop (velocity) PID _every_ 1 ms:
+// 3b) Inner‐loop (velocity) PID _every_ 1 ms:
 	R_Velo_Error = R_Target_Velocity - Revolute_QEIdata.Velocity_f;
 	R_PWM = PID_Update(R_Velo_Error, R_kP_vel, R_kI_vel, R_kD_vel, 0.001f, // dt = 1 ms
 			-100.0f, +100.0f, &pid_r_v);
@@ -2199,33 +2234,33 @@ int ToleranceCheck(void) {
 int CascadeControl_Step(void) {
 	static uint64_t timestampState2 = 0;
 
-	// 1a) Convert desired‐angle (deg) → (rad) and compute current pos‐errors
-	// float TargetR = TargetR_Deg * (M_PI / 180.0f);
+// 1a) Convert desired‐angle (deg) → (rad) and compute current pos‐errors
+// float TargetR = TargetR_Deg * (M_PI / 180.0f);
 	R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
 	P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
 	R_Pos_Error_Deg = R_Pos_Error * (180.0f / M_PI);
 
-	// 1b) 1 ms timer check
+// 1b) 1 ms timer check
 	uint64_t nowtimestamp = micros();
 	if (nowtimestamp <= timestampState2) {
 		// Not yet 1 ms since last run → bail out
 		return 0;
 	}
-	// Advance to next 1 ms tick
+// Advance to next 1 ms tick
 	timestampState2 = nowtimestamp + 1000;
 
-	// 2) Trapezoid logic: init if needed + update (1 ms)
+// 2) Trapezoid logic: init if needed + update (1 ms)
 	TrapezoidStep();
 
-	// 3) PID logic: 10 ms outer, 1 ms inner
+// 3) PID logic: 10 ms outer, 1 ms inner
 	PIDStep();
 
-	// 4) Apply workspace limits (joint‐limits, etc.) and send the PWM commands
+// 4) Apply workspace limits (joint‐limits, etc.) and send the PWM commands
 	Workspace_limit();
 	Set_Motor(0, R_PWM);
 	Set_Motor(1, P_PWM);
 
-	// 5) Tolerance‐check + “lock & hold” (servo + zero motors) if arrived
+// 5) Tolerance‐check + “lock & hold” (servo + zero motors) if arrived
 	CheckTolerance = ToleranceCheck();
 	return CheckTolerance;
 //	return ToleranceCheck();
