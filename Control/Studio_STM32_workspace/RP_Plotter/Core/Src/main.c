@@ -225,6 +225,8 @@ float P_kD_pos = 0.2034f;
 
 float P_Overshoot_Percent;
 float R_Overshoot_Percent;
+static float lastTargetP = 0.0f;
+static float lastTargetR = 0.0f;
 //////////////////////
 
 // Mode3///////////////
@@ -1751,80 +1753,56 @@ static void MX_GPIO_Init(void) {
 
 /* USER CODE BEGIN 4 */
 void calculateOvershoot(void) {
-    // persistent state
+    // static state to remember last target and peak seen
     static float prevP = 0.0f, peakP = 0.0f;
-    static bool  reachedP = false;
     static float prevR = 0.0f, peakR = 0.0f;
-    static bool  reachedR = false;
 
+    // 1) on target-change, reset peaks back to exactly the new target
+    if (TargetP != prevP) {
+        prevP = TargetP;
+        peakP = TargetP;
+    }
+    if (TargetR != prevR) {
+        prevR = TargetR;
+        peakR = TargetR;
+    }
+
+    // 2) sample current positions
     float currP = Prismatic_QEIdata.mmPosition;
     float currR = Revolute_QEIdata.RadPosition;
 
-    // --- Prismatic channel ---
-    if (TargetP != prevP) {
-        // new move: reset
-        prevP     = TargetP;
-        peakP     = TargetP;
-        reachedP  = false;
+    // 3) update peak only if we truly overshot in the correct direction
+    if (TargetP > 0.0f) {
+        if (currP > peakP) peakP = currP;
+    } else if (TargetP < 0.0f) {
+        if (currP < peakP) peakP = currP;
+    }
+
+    if (TargetR > 0.0f) {
+        if (currR > peakR) peakR = currR;
+    } else if (TargetR < 0.0f) {
+        if (currR < peakR) peakR = currR;
+    }
+
+    // 4) compute % overshoot (zero if no overshoot or target==0)
+    if (TargetP == 0.0f) {
+        P_Overshoot_Percent = 0.0f;
+    } else if (TargetP > 0.0f && peakP > TargetP) {
+        P_Overshoot_Percent = ((peakP - TargetP) / TargetP) * 100.0f;
+    } else if (TargetP < 0.0f && peakP < TargetP) {
+        P_Overshoot_Percent = ((TargetP - peakP) / -TargetP) * 100.0f;
+    } else {
         P_Overshoot_Percent = 0.0f;
     }
 
-    if (!reachedP) {
-        // wait until we first cross the target
-        if ((TargetP > 0.0f && currP >= TargetP) ||
-            (TargetP < 0.0f && currP <= TargetP))
-        {
-            reachedP = true;
-            peakP    = currP;
-        }
-        else {
-            // not there yet → no overshoot
-            P_Overshoot_Percent = 0.0f;
-        }
-    }
-    else {
-        // we have reached the target at least once → track peak beyond it
-        if ((TargetP > 0.0f && currP > peakP) ||
-            (TargetP < 0.0f && currP < peakP))
-        {
-            peakP = currP;
-        }
-        // compute percent overshoot
-        if (TargetP != 0.0f) {
-            P_Overshoot_Percent = ((peakP - TargetP) / fabsf(TargetP)) * 100.0f;
-            if (P_Overshoot_Percent < 0.0f) P_Overshoot_Percent = 0.0f;
-        }
-    }
-
-    // --- Revolute channel (same logic) ---
-    if (TargetR != prevR) {
-        prevR     = TargetR;
-        peakR     = TargetR;
-        reachedR  = false;
+    if (TargetR == 0.0f) {
         R_Overshoot_Percent = 0.0f;
-    }
-
-    if (!reachedR) {
-        if ((TargetR > 0.0f && currR >= TargetR) ||
-            (TargetR < 0.0f && currR <= TargetR))
-        {
-            reachedR = true;
-            peakR    = currR;
-        }
-        else {
-            R_Overshoot_Percent = 0.0f;
-        }
-    }
-    else {
-        if ((TargetR > 0.0f && currR > peakR) ||
-            (TargetR < 0.0f && currR < peakR))
-        {
-            peakR = currR;
-        }
-        if (TargetR != 0.0f) {
-            R_Overshoot_Percent = ((peakR - TargetR) / fabsf(TargetR)) * 100.0f;
-            if (R_Overshoot_Percent < 0.0f) R_Overshoot_Percent = 0.0f;
-        }
+    } else if (TargetR > 0.0f && peakR > TargetR) {
+        R_Overshoot_Percent = ((peakR - TargetR) / TargetR) * 100.0f;
+    } else if (TargetR < 0.0f && peakR < TargetR) {
+        R_Overshoot_Percent = ((TargetR - peakR) / -TargetR) * 100.0f;
+    } else {
+        R_Overshoot_Percent = 0.0f;
     }
 }
 
