@@ -595,7 +595,7 @@ int main(void) {
 				break;
 
 			case CALIB_MOVE_P_TO_LIMIT:
-				Set_Motor(1, -15);
+				Set_Motor(1, -30);
 
 				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1 || P_Limit > 0) {
 					Set_Motor(1, 0);
@@ -609,14 +609,14 @@ int main(void) {
 				Set_Motor(1, 0);
 
 				if (micros() - calib_timer > 100000) {
-					Set_Motor(1, 15);
+					Set_Motor(1, 30);
 					calib_timer = micros();
 					P_Limit = 0;
 					calibState = CALIB_BACKOFF_P;
 				}
 
 			case CALIB_BACKOFF_P:
-				Set_Motor(1, 15);
+				Set_Motor(1, 30);
 
 				if (micros() - calib_timer > 100000) {
 					Set_Motor(1, 0);
@@ -630,7 +630,7 @@ int main(void) {
 				Set_Motor(1, 0);
 
 				if (micros() - calib_timer > 100000) {
-					Set_Motor(1, -5);
+					Set_Motor(1, -20);
 					calib_timer = micros();
 					P_Limit = 0;
 					calibState = CALIB_RETOUCH_P;
@@ -638,7 +638,7 @@ int main(void) {
 				break;
 
 			case CALIB_RETOUCH_P:
-				Set_Motor(1, -5);
+				Set_Motor(1, -20);
 
 				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == 1 || P_Limit > 0) {
 					Set_Motor(1, 0);
@@ -650,9 +650,9 @@ int main(void) {
 
 			case CALIB_MOVE_R_TO_LIMIT:
 				if (Cal_Side == 1)
-					Set_Motor(0, -30);
+					Set_Motor(0, -50);
 				else
-					Set_Motor(0, 30);
+					Set_Motor(0, 50);
 
 				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1 || R_Limit > 0) {
 					Set_Motor(0, 0);
@@ -667,9 +667,9 @@ int main(void) {
 
 				if (micros() - calib_timer > 100000) {
 					if (Cal_Side == 1)
-						Set_Motor(0, 30);
+						Set_Motor(0, 50);
 					else
-						Set_Motor(0, -30);
+						Set_Motor(0, -50);
 					calib_timer = micros();
 					R_Limit = 0;
 					calibState = CALIB_BACKOFF_R;
@@ -678,9 +678,9 @@ int main(void) {
 
 			case CALIB_BACKOFF_R:
 				if (Cal_Side == 1)
-					Set_Motor(0, 30);
+					Set_Motor(0, 50);
 				else
-					Set_Motor(0, -30);
+					Set_Motor(0, -50);
 
 				if (micros() - calib_timer > 200000) {
 					Set_Motor(0, 0);
@@ -696,9 +696,9 @@ int main(void) {
 
 				if (micros() - calib_timer > 100000) {
 					if (Cal_Side == 1)
-						Set_Motor(0, -25);
+						Set_Motor(0, -35);
 					else
-						Set_Motor(0, 25);
+						Set_Motor(0, 35);
 					calib_timer = micros();
 					R_Limit = 0;
 					calibState = CALIB_RETOUCH_R;
@@ -707,9 +707,9 @@ int main(void) {
 
 			case CALIB_RETOUCH_R:
 				if (Cal_Side == 1)
-					Set_Motor(0, -25);
+					Set_Motor(0, -35);
 				else
-					Set_Motor(0, 25);
+					Set_Motor(0, 35);
 
 				//				if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == 1 || R_Limit > 0) {
 				if (Z_index_R > 0) {
@@ -842,9 +842,9 @@ int main(void) {
 
 			//////////////////////// <<STOP>> ////////////////////////////
 			if (Mode == 0) {
+				Set_Motor(0, 0);
+				Set_Motor(1, 0);
 				if (Last_Mode != Mode) {
-					Set_Motor(0, 0);
-					Set_Motor(1, 0);
 					Set_Servo(0);
 					Last_Mode = Mode;
 				}
