@@ -334,7 +334,6 @@ float Trapezoidal_CalcTotalTime(float distance, float vmax, float amax);
 float Trapezoidal_CalcVmaxFromTime(float distance, float amax, float total_time);
 void InverseKinematics(float x, float y, float *r, float *p);
 int current_index = 0;
-int current_path_index = 0;
 void updatePathStep(Point *path_name, int path_length);
 //////////////////////
 
@@ -815,11 +814,11 @@ int main(void) {
 						&& Receiver[4] < 30) {
 					Mode = 5;
 				} else if (Receiver[2] < -30 && Receiver[4] > 30) {
-					if (TenPointMode) {
-						Mode = 2;
-					} else {
+//					if (TenPointMode) {
+//						Mode = 2;
+//					} else {
 						Mode = 6;
-					}
+//					}
 				} else if (Receiver[2] > -30 && Receiver[2] < 30
 						&& Receiver[4] > 30) {
 					Mode = 7;
@@ -950,28 +949,24 @@ int main(void) {
 					bool all_reached = revolute.finished && prismatic.finished
 							&& reachedR && reachedP;
 
-					if (current_index >= path_lengths[current_path_index]) {
+					int path_len = path_FIBO_length;
+
+					if (current_index >= path_len) {
 						if (all_reached) {
-							Set_Servo(0); // Pen up before switching path
-
-							current_path_index++;
-							if (current_path_index >= 14) {
-								current_path_index = 0;
-							}
-
-							current_index = 0;
+							Set_Servo(0);
+							Set_Motor(0, 0);
+							Set_Motor(1, 0);
 						}
 					} else {
-						// --- Handle stepping inside the current path ---
 						if (all_reached) {
 							current_index++;
 						}
 					}
 
-					Point target_point =
-							paths[current_path_index][current_index];
-					InverseKinematics(target_point.x, target_point.y, &TargetR,
-							&TargetP);
+					Point target_point = path_FIBO[current_index];
+
+					InverseKinematics(target_point.x, target_point.y, &TargetR, &TargetP);
+					Set_Servo(target_point.p);
 
 					R_Pos_Error = TargetR - Revolute_QEIdata.RadPosition;
 					P_Pos_Error = TargetP - Prismatic_QEIdata.mmPosition;
